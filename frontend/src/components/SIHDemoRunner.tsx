@@ -14,43 +14,43 @@ export const SIHDemoRunner: React.FC<SIHDemoRunnerProps> = ({ onSelectScenario }
   const scenarios = [
     {
       id: 1,
-      title: "1. Demand-First (Coimbatore 1000kg)",
-      desc: "Buyer Demand → Supply Match → Multi-Farmer Pooling → Net Realization → VRPTW Logistics Route → Order Tracking",
+      title: "1. Demand-First Flow (Buyer 1000kg)",
+      desc: "Buyer Demand → Supply Match → Multi-Farmer Pooling → Net Realization → Delivery Route → Order Tracking",
       badge: "RURAL DEMAND-FIRST",
       icon: ShoppingBag
     },
     {
       id: 2,
-      title: "2. Supply-First (Farmer Stock Discovery)",
-      desc: "Farmer Stock (500kg Tomato @ ₹28) → Discovery → Buyer/Consumer Ranking → Proposed Order",
+      title: "2. Supply-First Flow (Farmer Stock)",
+      desc: "Farmer Stock (500kg Tomato @ ₹28) → Discovery → Buyer Matching → Proposed Direct Order",
       badge: "FARMER SUPPLY-FIRST",
       icon: Sprout
     },
     {
       id: 3,
-      title: "3. Urban Price Transparency",
-      desc: "Farmer Price + Handling + Transport + 8% Wholesale Margin + 1.5% Fee = Consumer Price (ESTIMATED vs ACTUAL tags)",
-      badge: "URBAN TRANSPARENCY",
+      title: "3. Price Transparency Breakdown",
+      desc: "Farmer Price + Handling + Transport + Wholesale Margin + Fee = Final Price (ESTIMATED vs ACTUAL tags)",
+      badge: "PRICE TRANSPARENCY",
       icon: ShieldCheck
     },
     {
       id: 4,
-      title: "4. AI Demand Forecasting",
-      desc: "XGBoost Regressor → 15-Day Demand Prediction Curve, 95% Confidence Bounds, MAE/RMSE/MAPE Metrics",
-      badge: "AI DEMAND FORECAST",
+      title: "4. Expected Demand Forecast",
+      desc: "15-Day Demand Prediction Curve, 95% Confidence Bounds & Validation Evaluation Metrics",
+      badge: "DEMAND FORECAST",
       icon: Cpu
     },
     {
       id: 5,
-      title: "5. VRPTW Logistics Engine",
-      desc: "Google OR-Tools VRPTW Solver → Pickup Waypoints Sequence, Vehicle Capacity (75%), Freight Cost (₹4,158)",
-      badge: "FLEET OPTIMIZATION",
+      title: "5. Multi-Farm Pickup Route",
+      desc: "Pickup Waypoints Sequence, Vehicle Capacity (75%), Freight Cost (₹4,158)",
+      badge: "DELIVERY ROUTE",
       icon: Truck
     },
     {
       id: 6,
       title: "6. Multilingual Voice Assistant",
-      desc: "Voice Transcript → Extracted Entities → Pre-Submit Confirmation Screen → Publication (English + Tamil)",
+      desc: "Voice Transcript → Extracted Crop Details → Pre-Submit Confirmation Modal (English + Tamil)",
       badge: "VOICE ASSISTANCE",
       icon: Volume2
     }
@@ -66,7 +66,7 @@ export const SIHDemoRunner: React.FC<SIHDemoRunnerProps> = ({ onSelectScenario }
         "🌾 [2/6] Matching Engine found candidate pre-harvest declarations within radius",
         "👥 [3/6] Aggregated multi-farmer yield: Ramesh (600kg) + Suresh (400kg) = 1,000 kg total",
         "💰 [4/6] Calculated Net Realization: ₹25.75 / kg (85.8% direct farmer payout)",
-        "🚚 [5/6] Google OR-Tools solved optimal pickup waypoints sequence & freight cost",
+        "🚚 [5/6] Computed optimal pickup waypoints sequence & freight cost",
         "✅ [6/6] Order #a0813237 Confirmed & Dispatched! Status: IN_TRANSIT"
       ]);
     } else if (sc.id === 2) {
@@ -79,18 +79,18 @@ export const SIHDemoRunner: React.FC<SIHDemoRunnerProps> = ({ onSelectScenario }
     } else if (sc.id === 3) {
       setScenarioLogs([
         "🛒 [1/3] Consumer selected farm fresh Tomatoes",
-        "🔍 [2/3] Executing SIH26033 Urban Price Stack Auditor...",
+        "🔍 [2/3] Executing Transparent Price Breakdown Auditor...",
         "✅ [3/3] Price Stack: Farmer (₹24.00 ACTUAL) + Collection (₹1.00 EST) + Handling (₹1.50 EST) + Transport (₹2.00 EST) + Margin (₹1.92 EST) + Fee (₹0.36 ACTUAL) = Final ₹30.78 / kg"
       ]);
     } else if (sc.id === 4) {
       setScenarioLogs([
-        "🤖 [1/3] Loading XGBoost Regressor model artifact (v1.0-xgb-demo)...",
+        "🤖 [1/3] Loading Demand Forecast Model...",
         "📈 [2/3] Predicted 15-day demand for Tomato @ Nashik: 28,500.0 kg",
         "✅ [3/3] Validation Split Evaluation: MAE 600.4 kg, RMSE 784.8 kg, MAPE 1.87%"
       ]);
     } else if (sc.id === 5) {
       setScenarioLogs([
-        "🚚 [1/3] Invoking Google OR-Tools VRPTW Solver with vehicle capacity limits...",
+        "🚚 [1/3] Optimizing Multi-Farm Pickup Route with vehicle capacity limits...",
         "📍 [2/3] Computed waypoints sequence: Depot -> Stop #1 (4000kg) -> Stop #2 (3500kg) -> Pune Dropoff",
         "✅ [3/3] Transit Metrics: Total 174.2 km, 4.98 hrs, 75.0% Vehicle Utilization, Total Freight ₹4,158.20"
       ]);
@@ -104,17 +104,17 @@ export const SIHDemoRunner: React.FC<SIHDemoRunnerProps> = ({ onSelectScenario }
   };
 
   return (
-    <div className="glass-panel" style={{ marginBottom: '24px', border: '1px solid rgba(16,185,129,0.3)', background: 'linear-gradient(135deg, rgba(16,185,129,0.08), rgba(6,182,212,0.08))' }}>
+    <div className="glass-panel" style={{ marginBottom: '24px', border: '1.5px solid rgba(16,185,129,0.3)', background: 'linear-gradient(135deg, rgba(16,185,129,0.08), rgba(6,182,212,0.08))' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
         <div>
-          <span style={{ fontSize: '0.75rem', fontWeight: 800, padding: '3px 10px', borderRadius: '12px', background: '#10b981', color: '#fff' }}>
+          <span style={{ fontSize: '0.78rem', fontWeight: 800, padding: '4px 12px', borderRadius: '12px', background: '#10b981', color: '#fff' }}>
             SIH 2026 DEMO RUNNER
           </span>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '4px', color: '#f8fafc' }}>
-            AGRIFlow 3-Minute SIH Judges Demonstration Controller
+            AGRIFlow Live Interactive Scenario Controller
           </h2>
         </div>
-        <span style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>
+        <span style={{ fontSize: '0.85rem', color: '#cbd5e1' }}>
           One-Click Live End-to-End Interactive Scenario Triggers
         </span>
       </div>
@@ -129,24 +129,28 @@ export const SIHDemoRunner: React.FC<SIHDemoRunnerProps> = ({ onSelectScenario }
               key={sc.id}
               onClick={() => handleRunScenario(sc)}
               style={{
-                background: isActive ? 'rgba(16,185,129,0.15)' : 'rgba(0,0,0,0.3)',
-                padding: '14px',
-                borderRadius: '10px',
+                background: isActive ? 'rgba(16,185,129,0.18)' : 'rgba(0,0,0,0.35)',
+                padding: '16px',
+                borderRadius: '12px',
                 border: isActive ? '2px solid #10b981' : '1px solid rgba(255,255,255,0.08)',
                 cursor: 'pointer',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: '8px'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                <span style={{ fontSize: '0.72rem', fontWeight: 700, padding: '2px 8px', borderRadius: '10px', background: 'rgba(255,255,255,0.1)', color: '#38bdf8' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '0.75rem', fontWeight: 700, padding: '3px 10px', borderRadius: '10px', background: 'rgba(255,255,255,0.1)', color: '#38bdf8' }}>
                   {sc.badge}
                 </span>
-                <Play size={16} color={isActive ? "#10b981" : "#94a3b8"} />
+                <Play size={18} color={isActive ? "#10b981" : "#94a3b8"} />
               </div>
-              <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Icon size={16} color="#10b981" /> {sc.title}
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Icon size={18} color="#10b981" /> {sc.title}
               </h3>
-              <p style={{ fontSize: '0.78rem', color: '#cbd5e1', margin: 0 }}>
+              <p style={{ fontSize: '0.82rem', color: '#cbd5e1', margin: 0, lineHeight: 1.4 }}>
                 {sc.desc}
               </p>
             </div>
@@ -156,9 +160,9 @@ export const SIHDemoRunner: React.FC<SIHDemoRunnerProps> = ({ onSelectScenario }
 
       {/* Live Execution Logs Console */}
       {scenarioLogs.length > 0 && (
-        <div style={{ background: '#090d16', padding: '14px', borderRadius: '10px', border: '1px solid #334155', fontFamily: 'monospace', fontSize: '0.82rem' }}>
+        <div style={{ background: '#090d16', padding: '16px', borderRadius: '12px', border: '1px solid #334155', fontFamily: 'monospace', fontSize: '0.85rem' }}>
           <div style={{ fontWeight: 700, color: '#10b981', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Zap size={14} /> SIH Real-Time Scenario Execution Log Stream:
+            <Zap size={16} /> Real-Time Scenario Execution Log Stream:
           </div>
           {scenarioLogs.map((log, idx) => (
             <div key={idx} style={{ color: log.includes('✅') ? '#34d399' : '#cbd5e1', marginBottom: '4px' }}>

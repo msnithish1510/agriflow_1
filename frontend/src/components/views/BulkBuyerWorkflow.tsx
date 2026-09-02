@@ -65,7 +65,6 @@ export const BulkBuyerWorkflow: React.FC = () => {
       const res = await runMatching(demandId);
       setMatchingResults(res.match_details || res);
     } catch (err: any) {
-      // Fallback matching response
       setMatchingResults({
         demand_id: demandId,
         crop: 'Tomato',
@@ -107,53 +106,58 @@ export const BulkBuyerWorkflow: React.FC = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Overview Stat Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
-        <div className="glass-panel" style={{ borderLeft: '4px solid #38bdf8' }}>
-          <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>ACTIVE FUTURE DEMAND POSTS</span>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#38bdf8', marginTop: '4px' }}>
+        <div className="glass-panel" style={{ borderLeft: '5px solid #38bdf8' }}>
+          <span style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600 }}>ACTIVE BUYER DEMANDS</span>
+          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#38bdf8', marginTop: '4px' }}>
             {demands.length} Active Posts
           </div>
-          <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>Direct Farmer Broadcasting Active</div>
+          <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '2px' }}>Direct broadcast to smallholder farmers</div>
         </div>
 
-        <div className="glass-panel" style={{ borderLeft: '4px solid #10b981' }}>
-          <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>CONFIRMED BULK ORDERS</span>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', marginTop: '4px' }}>
+        <div className="glass-panel" style={{ borderLeft: '5px solid #10b981' }}>
+          <span style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600 }}>CONFIRMED FARMER ORDERS</span>
+          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#10b981', marginTop: '4px' }}>
             {orders.length} Confirmed Orders
           </div>
-          <div style={{ fontSize: '0.78rem', color: '#34d399' }}>Guaranteed Pre-Harvest Sourcing</div>
+          <div style={{ fontSize: '0.82rem', color: '#34d399', marginTop: '2px' }}>Guaranteed pre-harvest supply sourcing</div>
         </div>
       </div>
 
       {/* Post Demand Button */}
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <button className="btn-emerald" onClick={() => setShowPostModal(true)}>
-          <PlusCircle size={18} /> Post Future Bulk Demand
+        <button className="btn-emerald" onClick={() => setShowPostModal(true)} style={{ padding: '14px 22px' }}>
+          <PlusCircle size={20} /> Post Future Bulk Demand
         </button>
       </div>
 
       {/* Demand Posts History & Matching Tool */}
       <div className="glass-panel">
-        <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <ShoppingBag size={20} color="#38bdf8" /> My Future Crop Demand Posts
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <ShoppingBag size={22} color="#38bdf8" /> My Future Crop Demand Requirements
         </h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
           {demands.map(dem => (
-            <div key={dem.id} style={{ background: 'rgba(255,255,255,0.03)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span className="badge-tag badge-urban">{dem.status}</span>
-                <span style={{ fontWeight: 800, color: '#10b981' }}>₹{dem.max_price_per_kg}/kg</span>
+            <div key={dem.id} style={{ background: 'rgba(255,255,255,0.03)', padding: '18px', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '12px' }}>
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <span className="badge-tag badge-urban">{dem.status}</span>
+                  <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#10b981' }}>₹{dem.max_price_per_kg}/kg</span>
+                </div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f8fafc' }}>
+                  Required: {dem.required_quantity_kg.toLocaleString('en-IN')} kg
+                </h3>
+                <div style={{ fontSize: '0.88rem', color: '#cbd5e1', margin: '8px 0', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <div>📍 <strong>Location:</strong> {dem.delivery_address}</div>
+                  <div>📅 <strong>Target Date:</strong> {dem.target_delivery_date}</div>
+                </div>
               </div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Required: {dem.required_quantity_kg.toLocaleString('en-IN')} kg</h3>
-              <div style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: '8px 0' }}>
-                <div>📍 {dem.delivery_address}</div>
-                <div>📅 Target Date: {dem.target_delivery_date}</div>
-              </div>
+
               <button 
                 className="btn-emerald" 
-                style={{ width: '100%', fontSize: '0.85rem', padding: '8px' }}
+                style={{ width: '100%', fontSize: '0.92rem', padding: '12px', minHeight: '44px' }}
                 onClick={() => handleExecuteMatch(dem.id)}
               >
-                <Zap size={16} /> Match Nearby Farmer Supplies
+                <Zap size={18} /> {matchingLoading ? 'Matching Nearby Farmers...' : 'Match Nearby Farmer Supplies'}
               </button>
             </div>
           ))}
@@ -162,27 +166,27 @@ export const BulkBuyerWorkflow: React.FC = () => {
 
       {/* Matching Results Preview */}
       {matchingResults && (
-        <div className="glass-panel" style={{ border: '1px solid rgba(16,185,129,0.3)', background: 'rgba(16,185,129,0.05)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <div className="glass-panel" style={{ border: '1.5px solid #10b981', background: 'rgba(16,185,129,0.06)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
             <div>
-              <span className="badge-tag badge-rural">AI MATCH SUCCESS</span>
-              <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginTop: '4px' }}>
-                Pooled Multi-Farmer Yield for {matchingResults.matched_quantity_kg || 25000} kg
+              <span className="badge-tag badge-rural">MATCH RESULT</span>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '4px', color: '#f8fafc' }}>
+                Multi-Farmer Supply Pool for {(matchingResults.matched_quantity_kg || 25000).toLocaleString('en-IN')} kg
               </h3>
             </div>
-            <button className="btn-emerald" onClick={handleConfirmOrder}>
-              <CheckCircle2 size={18} /> Confirm & Place Order
+            <button className="btn-emerald" onClick={handleConfirmOrder} style={{ minHeight: '48px', padding: '12px 22px' }}>
+              <CheckCircle2 size={20} /> Confirm & Place Order
             </button>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
             {(matchingResults.participating_farmers || []).map((f: any, idx: number) => (
-              <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(0,0,0,0.3)', padding: '12px', borderRadius: '8px' }}>
+              <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(0,0,0,0.35)', padding: '14px 18px', borderRadius: '10px', alignItems: 'center' }}>
                 <div>
-                  <div style={{ fontWeight: 600 }}>{f.farmer_name || `Farmer #${f.farmer_id}`}</div>
-                  <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Yield Allocated: {f.allocated_quantity_kg?.toLocaleString('en-IN')} kg</div>
+                  <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#f8fafc' }}>{f.farmer_name || `Farmer #${f.farmer_id}`}</div>
+                  <div style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: '2px' }}>Allocated Yield: {f.allocated_quantity_kg?.toLocaleString('en-IN')} kg</div>
                 </div>
-                <div style={{ fontWeight: 700, color: '#10b981' }}>₹{f.price_per_kg || 24.5}/kg</div>
+                <div style={{ fontWeight: 800, color: '#10b981', fontSize: '1.1rem' }}>₹{f.price_per_kg || 24.5}/kg</div>
               </div>
             ))}
           </div>
@@ -191,20 +195,20 @@ export const BulkBuyerWorkflow: React.FC = () => {
 
       {/* Order Tracking */}
       <div className="glass-panel">
-        <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Truck size={20} color="#f59e0b" /> Confirmed Order Sourcing Lifecycle Tracker
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Truck size={22} color="#fbbf24" /> Confirmed Order Sourcing Lifecycle Tracker
         </h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {orders.map(ord => (
-            <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.3)', padding: '14px', borderRadius: '10px' }}>
+            <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.35)', padding: '16px 20px', borderRadius: '12px', borderLeft: '5px solid #10b981', flexWrap: 'wrap', gap: '10px' }}>
               <div>
                 <span className="badge-tag badge-rural">{ord.status}</span>
-                <h4 style={{ fontSize: '1rem', fontWeight: 700, marginTop: '4px' }}>Order #{ord.id.substring(0,8)}</h4>
-                <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>Matched Qty: {ord.total_matched_quantity_kg?.toLocaleString('en-IN')} kg</div>
+                <h4 style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: '4px', color: '#f8fafc' }}>Order #{ord.id.substring(0,8)}</h4>
+                <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '2px' }}>Matched Quantity: {ord.total_matched_quantity_kg?.toLocaleString('en-IN')} kg</div>
               </div>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#10b981' }}>₹{ord.agreed_farmer_price_per_kg}/kg</div>
-                <div style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>Total: ₹{ord.total_amount_inr?.toLocaleString('en-IN')}</div>
+                <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#10b981' }}>₹{ord.agreed_farmer_price_per_kg}/kg</div>
+                <div style={{ fontSize: '0.85rem', color: '#cbd5e1' }}>Total: ₹{ord.total_amount_inr?.toLocaleString('en-IN')}</div>
               </div>
             </div>
           ))}
@@ -213,36 +217,36 @@ export const BulkBuyerWorkflow: React.FC = () => {
 
       {/* Post Demand Modal */}
       {showPostModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(6px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100 }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '440px' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '16px' }}>Post Future Crop Bulk Demand</h3>
-            <form onSubmit={handlePostDemand} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100, padding: '16px' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '460px', border: '1.5px solid #38bdf8' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', color: '#f8fafc' }}>Post Future Crop Bulk Demand</h3>
+            <form onSubmit={handlePostDemand} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
-                <label style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Crop</label>
-                <select value={selectedCropId} onChange={e => setSelectedCropId(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '6px', background: '#090d16', color: '#fff', border: '1px solid #334155' }}>
+                <label style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Crop</label>
+                <select value={selectedCropId} onChange={e => setSelectedCropId(e.target.value)} className="input-large">
                   {crops.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
               <div>
-                <label style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Required Quantity (kg)</label>
-                <input type="number" value={qtyKg} onChange={e => setQtyKg(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '6px', background: '#090d16', color: '#fff', border: '1px solid #334155' }} />
+                <label style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Required Quantity (kg)</label>
+                <input type="number" value={qtyKg} onChange={e => setQtyKg(e.target.value)} className="input-large" />
               </div>
               <div>
-                <label style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Max Agreed Price (₹/kg)</label>
-                <input type="number" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '6px', background: '#090d16', color: '#fff', border: '1px solid #334155' }} />
+                <label style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Max Agreed Price (₹/kg)</label>
+                <input type="number" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} className="input-large" />
               </div>
               <div>
-                <label style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Target Delivery Date</label>
-                <input type="date" value={deliveryDate} onChange={e => setDeliveryDate(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '6px', background: '#090d16', color: '#fff', border: '1px solid #334155' }} />
+                <label style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Target Delivery Date</label>
+                <input type="date" value={deliveryDate} onChange={e => setDeliveryDate(e.target.value)} className="input-large" />
               </div>
               <div>
-                <label style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Delivery Location Address</label>
-                <input type="text" value={address} onChange={e => setAddress(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '6px', background: '#090d16', color: '#fff', border: '1px solid #334155' }} />
+                <label style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Delivery Location Address</label>
+                <input type="text" value={address} onChange={e => setAddress(e.target.value)} className="input-large" />
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', marginTop: '12px' }}>
-                <button type="submit" className="btn-emerald" style={{ flex: 1 }}>Broadcast Demand</button>
-                <button type="button" onClick={() => setShowPostModal(false)} style={{ padding: '8px 16px', background: 'transparent', color: '#94a3b8', border: '1px solid #334155', borderRadius: '8px', cursor: 'pointer' }}>Cancel</button>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '14px' }}>
+                <button type="submit" className="btn-emerald" style={{ flex: 1, minHeight: '48px' }}>Broadcast Demand</button>
+                <button type="button" onClick={() => setShowPostModal(false)} className="btn-secondary" style={{ minHeight: '48px' }}>Cancel</button>
               </div>
             </form>
           </div>

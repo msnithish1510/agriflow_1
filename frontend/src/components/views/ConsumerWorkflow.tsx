@@ -47,7 +47,7 @@ export const ConsumerWorkflow: React.FC = () => {
   const handlePlaceOrder = async (stock: AvailableStock) => {
     try {
       await createDirectConsumerOrder(stock.farmer_id, stock.crop_id, 25.0, stock.price_per_kg);
-      alert('Direct Order Placed! Produce will be delivered directly from farmer.');
+      alert('Direct Order Placed! Fresh produce will be delivered directly from the farmer.');
       loadData();
     } catch (err) {
       alert('Order submitted successfully!');
@@ -80,21 +80,25 @@ export const ConsumerWorkflow: React.FC = () => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Top Banner */}
-      <div className="glass-panel" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(6,182,212,0.15))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+      <div className="glass-panel" style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.15), rgba(6,182,212,0.15))', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', padding: '22px' }}>
         <div>
           <span className="badge-tag badge-rural">DIRECT FARMER TO CONSUMER</span>
-          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginTop: '4px' }}>Fresh Farm Produce & Transparent Pricing</h2>
-          <p style={{ fontSize: '0.85rem', color: '#cbd5e1' }}>Direct rural dispatch & transparent cost breakdown (Farmer + Logistics + Platform)</p>
+          <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginTop: '4px', color: '#f8fafc' }}>
+            Fresh Farm Produce & Transparent Pricing
+          </h2>
+          <p style={{ fontSize: '0.9rem', color: '#cbd5e1', marginTop: '2px' }}>
+            Direct rural dispatch & transparent cost breakdown (Farmer + Logistics + Platform)
+          </p>
         </div>
-        <button className="btn-emerald" onClick={() => setShowRequirementModal(true)}>
-          <PlusCircle size={18} /> Post Household Requirement
+        <button className="btn-emerald" onClick={() => setShowRequirementModal(true)} style={{ padding: '14px 22px' }}>
+          <PlusCircle size={20} /> Post Household Requirement
         </button>
       </div>
 
       {/* Nearby Farmer Stock Catalog */}
       <div className="glass-panel">
-        <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <ShoppingCart size={20} color="#10b981" /> Available Produce from Nearby Farmers
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <ShoppingCart size={22} color="#10b981" /> Available Fresh Produce from Nearby Farmers
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
           {nearbyStocks.map(stk => (
@@ -102,23 +106,30 @@ export const ConsumerWorkflow: React.FC = () => {
               key={stk.id} 
               onClick={() => handleSelectStock(stk)}
               style={{ 
-                background: selectedStock?.id === stk.id ? 'rgba(16,185,129,0.1)' : 'rgba(255,255,255,0.03)', 
-                padding: '16px', 
-                borderRadius: '12px', 
+                background: selectedStock?.id === stk.id ? 'rgba(16,185,129,0.12)' : 'rgba(255,255,255,0.03)', 
+                padding: '18px', 
+                borderRadius: '14px', 
                 border: selectedStock?.id === stk.id ? '2px solid #10b981' : '1px solid rgba(255,255,255,0.08)',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                gap: '12px'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <span className="badge-tag badge-rural">FARM FRESH</span>
-                <span style={{ fontWeight: 800, color: '#10b981' }}>₹{stk.price_per_kg}/kg</span>
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                  <span className="badge-tag badge-rural">FARM FRESH</span>
+                  <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#10b981' }}>₹{stk.price_per_kg}/kg</span>
+                </div>
+                <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f8fafc' }}>Farmer ID: {stk.farmer_id}</h4>
+                <div style={{ fontSize: '0.88rem', color: '#cbd5e1', margin: '6px 0', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <div>Stock Available: <strong>{stk.available_quantity_kg.toLocaleString('en-IN')} kg</strong></div>
+                  <div>Remaining Shelf Life: <strong>{stk.shelf_life_remaining_days} days</strong></div>
+                </div>
               </div>
-              <h4 style={{ fontSize: '1.1rem', fontWeight: 700 }}>Farmer ID: {stk.farmer_id}</h4>
-              <div style={{ fontSize: '0.85rem', color: '#cbd5e1', margin: '6px 0' }}>
-                <div>Stock Available: <strong>{stk.available_quantity_kg.toLocaleString('en-IN')} kg</strong></div>
-                <div>Remaining Shelf Life: <strong>{stk.shelf_life_remaining_days} days</strong></div>
-              </div>
-              <button className="btn-emerald" style={{ width: '100%', fontSize: '0.82rem', padding: '6px' }} onClick={(e) => { e.stopPropagation(); handlePlaceOrder(stk); }}>
+
+              <button className="btn-emerald" style={{ width: '100%', fontSize: '0.92rem', padding: '10px', minHeight: '44px' }} onClick={(e) => { e.stopPropagation(); handlePlaceOrder(stk); }}>
                 Buy Direct (₹{stk.price_per_kg}/kg)
               </button>
             </div>
@@ -129,21 +140,29 @@ export const ConsumerWorkflow: React.FC = () => {
       {/* Urban Transparent Price Breakdown */}
       {breakdown && (
         <div className="glass-panel">
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Calculator size={20} color="#f59e0b" /> Transparent Price Breakdown Widget
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Calculator size={22} color="#fbbf24" /> Transparent Price Breakdown Widget
           </h3>
-          <div style={{ background: 'rgba(0,0,0,0.3)', padding: '16px', borderRadius: '10px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px', fontSize: '0.82rem' }}>
-            <div style={{ background: 'rgba(16,185,129,0.1)', padding: '8px', borderRadius: '6px', borderLeft: '3px solid #10b981' }}>
-              <strong>Farmer Payout:</strong><br />₹{breakdown.farmer_price_per_kg}/kg ({breakdown.breakdown_percentages?.farmer_share}%)
+          <div style={{ background: 'rgba(0,0,0,0.3)', padding: '18px', borderRadius: '12px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', fontSize: '0.88rem' }}>
+            <div style={{ background: 'rgba(16,185,129,0.1)', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #10b981' }}>
+              <strong style={{ color: '#cbd5e1' }}>Farmer Payout:</strong><br />
+              <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#10b981' }}>₹{breakdown.farmer_price_per_kg}/kg</span>
+              <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>({breakdown.breakdown_percentages?.farmer_share}%)</div>
             </div>
-            <div style={{ background: 'rgba(245,158,11,0.1)', padding: '8px', borderRadius: '6px', borderLeft: '3px solid #f59e0b' }}>
-              <strong>Collection/Handling:</strong><br />₹{breakdown.collection_handling_fee}/kg ({breakdown.breakdown_percentages?.handling_share}%)
+            <div style={{ background: 'rgba(245,158,11,0.1)', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #f59e0b' }}>
+              <strong style={{ color: '#cbd5e1' }}>Collection/Handling:</strong><br />
+              <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fbbf24' }}>₹{breakdown.collection_handling_fee}/kg</span>
+              <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>({breakdown.breakdown_percentages?.handling_share}%)</div>
             </div>
-            <div style={{ background: 'rgba(6,182,212,0.1)', padding: '8px', borderRadius: '6px', borderLeft: '3px solid #06b6d4' }}>
-              <strong>Transport Logistics:</strong><br />₹{breakdown.transport_fee_per_kg}/kg ({breakdown.breakdown_percentages?.transport_share}%)
+            <div style={{ background: 'rgba(6,182,212,0.1)', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #06b6d4' }}>
+              <strong style={{ color: '#cbd5e1' }}>Transport Logistics:</strong><br />
+              <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#38bdf8' }}>₹{breakdown.transport_fee_per_kg}/kg</span>
+              <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>({breakdown.breakdown_percentages?.transport_share}%)</div>
             </div>
-            <div style={{ background: 'rgba(236,72,153,0.1)', padding: '8px', borderRadius: '6px', borderLeft: '3px solid #ec4899' }}>
-              <strong>Platform Fee:</strong><br />₹{breakdown.platform_coordination_fee}/kg ({breakdown.breakdown_percentages?.platform_share}%)
+            <div style={{ background: 'rgba(236,72,153,0.1)', padding: '12px', borderRadius: '8px', borderLeft: '4px solid #ec4899' }}>
+              <strong style={{ color: '#cbd5e1' }}>Platform Fee:</strong><br />
+              <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#f472b6' }}>₹{breakdown.platform_coordination_fee}/kg</span>
+              <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>({breakdown.breakdown_percentages?.platform_share}%)</div>
             </div>
           </div>
         </div>
@@ -151,18 +170,18 @@ export const ConsumerWorkflow: React.FC = () => {
 
       {/* Order Tracking */}
       <div className="glass-panel">
-        <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Truck size={20} color="#38bdf8" /> My Household Orders & Direct Delivery Tracking
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Truck size={22} color="#38bdf8" /> My Household Orders & Direct Delivery Tracking
         </h3>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {myOrders.map(ord => (
-            <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.3)', padding: '12px', borderRadius: '8px' }}>
+            <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.35)', padding: '16px 20px', borderRadius: '12px', borderLeft: '5px solid #10b981' }}>
               <div>
                 <span className="badge-tag badge-rural">{ord.status}</span>
-                <div style={{ fontWeight: 700, marginTop: '4px' }}>Order #{ord.id.substring(0,8)}</div>
-                <div style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Quantity: {ord.total_matched_quantity_kg} kg</div>
+                <div style={{ fontWeight: 700, fontSize: '1.05rem', marginTop: '4px', color: '#f8fafc' }}>Order #{ord.id.substring(0,8)}</div>
+                <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '2px' }}>Quantity: {ord.total_matched_quantity_kg} kg</div>
               </div>
-              <div style={{ fontWeight: 800, color: '#10b981' }}>₹{ord.total_amount_inr?.toLocaleString('en-IN')}</div>
+              <div style={{ fontWeight: 800, fontSize: '1.3rem', color: '#10b981' }}>₹{ord.total_amount_inr?.toLocaleString('en-IN')}</div>
             </div>
           ))}
         </div>
@@ -170,28 +189,28 @@ export const ConsumerWorkflow: React.FC = () => {
 
       {/* Household Requirement Modal */}
       {showRequirementModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(6px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100 }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '420px' }}>
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '16px' }}>Post Household Produce Requirement</h3>
-            <form onSubmit={handlePostRequirement} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 100, padding: '16px' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '440px', border: '1.5px solid #10b981' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', color: '#f8fafc' }}>Post Household Produce Requirement</h3>
+            <form onSubmit={handlePostRequirement} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div>
-                <label style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Crop</label>
-                <select value={selectedCropId} onChange={e => setSelectedCropId(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '6px', background: '#090d16', color: '#fff', border: '1px solid #334155' }}>
+                <label style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Crop</label>
+                <select value={selectedCropId} onChange={e => setSelectedCropId(e.target.value)} className="input-large">
                   {crops.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
               </div>
               <div>
-                <label style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Required Quantity (kg)</label>
-                <input type="number" value={reqQty} onChange={e => setReqQty(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '6px', background: '#090d16', color: '#fff', border: '1px solid #334155' }} />
+                <label style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Required Quantity (kg)</label>
+                <input type="number" value={reqQty} onChange={e => setReqQty(e.target.value)} className="input-large" />
               </div>
               <div>
-                <label style={{ fontSize: '0.8rem', color: '#94a3b8' }}>Target Delivery Date</label>
-                <input type="date" value={targetDate} onChange={e => setTargetDate(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '6px', background: '#090d16', color: '#fff', border: '1px solid #334155' }} />
+                <label style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '4px' }}>Target Delivery Date</label>
+                <input type="date" value={targetDate} onChange={e => setTargetDate(e.target.value)} className="input-large" />
               </div>
 
-              <div style={{ display: 'flex', gap: '10px', marginTop: '12px' }}>
-                <button type="submit" className="btn-emerald" style={{ flex: 1 }}>Submit Requirement</button>
-                <button type="button" onClick={() => setShowRequirementModal(false)} style={{ padding: '8px 16px', background: 'transparent', color: '#94a3b8', border: '1px solid #334155', borderRadius: '8px', cursor: 'pointer' }}>Cancel</button>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '14px' }}>
+                <button type="submit" className="btn-emerald" style={{ flex: 1, minHeight: '48px' }}>Submit Requirement</button>
+                <button type="button" onClick={() => setShowRequirementModal(false)} className="btn-secondary" style={{ minHeight: '48px' }}>Cancel</button>
               </div>
             </form>
           </div>

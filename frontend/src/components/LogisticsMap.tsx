@@ -64,16 +64,16 @@ export const LogisticsMap: React.FC = () => {
     <div className="glass-panel">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
         <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Truck size={20} color="#06b6d4" /> VRPTW Multi-Farmer Logistics & Route Map
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Truck size={22} color="#06b6d4" /> Delivery / Transport Route Map (போக்குவரத்து பாதை)
           </h2>
-          <p style={{ fontSize: '0.85rem', color: '#94a3b8' }}>
-            Google OR-Tools VRPTW Solver with vehicle capacity & time window constraints
+          <p style={{ fontSize: '0.88rem', color: '#cbd5e1', marginTop: '2px' }}>
+            Multi-farm collection pickup route and vehicle capacity tracker
           </p>
         </div>
 
-        <button className="btn-emerald" style={{ padding: '6px 12px', fontSize: '0.82rem' }} onClick={fetchRoute}>
-          Re-Optimize Route
+        <button className="btn-emerald" style={{ padding: '8px 16px', fontSize: '0.88rem', minHeight: '40px' }} onClick={fetchRoute}>
+          Recalculate Route
         </button>
       </div>
 
@@ -81,61 +81,55 @@ export const LogisticsMap: React.FC = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Stat Metric Cards */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
-            <div style={{ background: 'rgba(6,182,212,0.08)', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #06b6d4' }}>
-              <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>TOTAL DISTANCE</span>
-              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#38bdf8', marginTop: '2px' }}>
+            <div style={{ background: 'rgba(6,182,212,0.08)', padding: '16px', borderRadius: '12px', borderLeft: '4px solid #06b6d4' }}>
+              <span style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600 }}>TOTAL DISTANCE</span>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#38bdf8', marginTop: '4px' }}>
                 {routeData.total_distance_km} km
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>Est. Time: {routeData.estimated_transit_hours} hrs</div>
+              <div style={{ fontSize: '0.82rem', color: '#cbd5e1' }}>Est. Travel Time: {routeData.estimated_transit_hours} hrs</div>
             </div>
 
-            <div style={{ background: 'rgba(16,185,129,0.08)', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #10b981' }}>
-              <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>VEHICLE UTILIZATION</span>
-              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#10b981', marginTop: '2px' }}>
-                {routeData.vehicle_utilization?.utilization_percentage}%
+            <div style={{ background: 'rgba(16,185,129,0.08)', padding: '16px', borderRadius: '12px', borderLeft: '4px solid #10b981' }}>
+              <span style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600 }}>TRUCK CAPACITY</span>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#10b981', marginTop: '4px' }}>
+                {routeData.vehicle_utilization?.utilization_percentage}% Full
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>
+              <div style={{ fontSize: '0.82rem', color: '#cbd5e1' }}>
                 {routeData.vehicle_utilization?.total_picked_qty_kg?.toLocaleString('en-IN')} / {routeData.vehicle_utilization?.vehicle_capacity_kg?.toLocaleString('en-IN')} kg
               </div>
             </div>
 
-            <div style={{ background: 'rgba(245,158,11,0.08)', padding: '14px', borderRadius: '10px', borderLeft: '4px solid #f59e0b' }}>
-              <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>TOTAL FREIGHT COST</span>
-              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#f59e0b', marginTop: '2px' }}>
+            <div style={{ background: 'rgba(245,158,11,0.08)', padding: '16px', borderRadius: '12px', borderLeft: '4px solid #f59e0b' }}>
+              <span style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600 }}>TOTAL FREIGHT COST</span>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#fbbf24', marginTop: '4px' }}>
                 ₹{routeData.freight_cost_breakdown?.total_logistics_cost_inr?.toLocaleString('en-IN')}
               </div>
-              <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>Itemized Truck + Cold Chain</div>
+              <div style={{ fontSize: '0.82rem', color: '#cbd5e1' }}>Shared across pooled orders</div>
             </div>
           </div>
 
           {/* Interactive Route Polyline Sequence List */}
-          <div style={{ background: 'rgba(0,0,0,0.3)', padding: '14px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.08)' }}>
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#38bdf8', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Navigation size={16} /> Pickup & Delivery Waypoints Sequence ({routeData.optimization_engine})
+          <div style={{ background: 'rgba(0,0,0,0.3)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)' }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#38bdf8', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Navigation size={18} /> Pickup & Delivery Stop Sequence:
             </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {(routeData.ordered_route_waypoints || []).map((wp: any, idx: number) => (
-                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '10px 14px', borderRadius: '8px', borderLeft: wp.type === 'DEPOT' ? '3px solid #94a3b8' : (wp.type === 'PICKUP' ? '3px solid #10b981' : '3px solid #38bdf8') }}>
+                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '12px 16px', borderRadius: '10px', borderLeft: wp.type === 'DEPOT' ? '4px solid #94a3b8' : (wp.type === 'PICKUP' ? '4px solid #10b981' : '4px solid #38bdf8'), flexWrap: 'wrap', gap: '8px' }}>
                   <div>
-                    <div style={{ fontWeight: 700, fontSize: '0.9rem' }}>
+                    <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#f8fafc' }}>
                       Step #{wp.sequence_step}: {wp.name}
                     </div>
-                    <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
-                      Coordinates: ({wp.lat.toFixed(4)}, {wp.lng.toFixed(4)}) {wp.qty_kg > 0 && `| Quantity: ${wp.qty_kg} kg`}
+                    <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '2px' }}>
+                      {wp.qty_kg > 0 ? `Farmer Produce Pickup: ${wp.qty_kg.toLocaleString('en-IN')} kg` : 'Hub Location'}
                     </div>
                   </div>
-                  <span style={{ fontSize: '0.75rem', padding: '2px 8px', borderRadius: '12px', background: 'rgba(255,255,255,0.1)', color: '#cbd5e1' }}>
+                  <span style={{ fontSize: '0.8rem', padding: '3px 10px', borderRadius: '10px', background: 'rgba(255,255,255,0.1)', color: '#cbd5e1', fontWeight: 600 }}>
                     {wp.type}
                   </span>
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Disclaimer Box */}
-          <div style={{ background: 'rgba(245,158,11,0.05)', border: '1px solid rgba(245,158,11,0.2)', padding: '10px 14px', borderRadius: '8px', fontSize: '0.78rem', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <AlertCircle size={16} />
-            <span>{routeData.disclaimer}</span>
           </div>
         </div>
       )}

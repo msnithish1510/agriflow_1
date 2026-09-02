@@ -27,33 +27,33 @@ export const AdminWorkflow: React.FC = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       {/* Top Stat Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
-        <div className="glass-panel" style={{ borderLeft: '4px solid #10b981' }}>
-          <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>TOTAL TRADE VOLUME</span>
-          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#10b981', marginTop: '4px' }}>
+        <div className="glass-panel" style={{ borderLeft: '5px solid #10b981' }}>
+          <span style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600 }}>TOTAL TRADE VOLUME</span>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#10b981', marginTop: '4px' }}>
             ₹{totalVolumeInr.toLocaleString('en-IN')}
           </div>
-          <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>Direct Farmer Realization</div>
+          <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '2px' }}>Direct smallholder farmer realization</div>
         </div>
 
-        <div className="glass-panel" style={{ borderLeft: '4px solid #f59e0b' }}>
-          <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>PLATFORM FEE REVENUE (1.5%)</span>
-          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#f59e0b', marginTop: '4px' }}>
+        <div className="glass-panel" style={{ borderLeft: '5px solid #f59e0b' }}>
+          <span style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600 }}>PLATFORM COORDINATION FEE (1.5%)</span>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#fbbf24', marginTop: '4px' }}>
             ₹{platformRevenue.toLocaleString('en-IN')}
           </div>
-          <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>Nominal Coordination Fee</div>
+          <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '2px' }}>Nominal sustainability fee</div>
         </div>
 
-        <div className="glass-panel" style={{ borderLeft: '4px solid #06b6d4' }}>
-          <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>ACTIVE DEMAND VS SUPPLY</span>
-          <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#38bdf8', marginTop: '4px' }}>
-            {demands.length} Demands / {supplies.length} Supplies
+        <div className="glass-panel" style={{ borderLeft: '5px solid #06b6d4' }}>
+          <span style={{ fontSize: '0.85rem', color: '#cbd5e1', fontWeight: 600 }}>ACTIVE DEMAND VS CROP DETAILS</span>
+          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#38bdf8', marginTop: '4px' }}>
+            {demands.length} Demands / {supplies.length} Crops
           </div>
-          <div style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>SIH26033 Platform Operational</div>
+          <div style={{ fontSize: '0.82rem', color: '#cbd5e1', marginTop: '2px' }}>Direct platform network live</div>
         </div>
       </div>
 
       {/* Admin Modules */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '24px' }}>
         <AIForecastPanel />
         <LogisticsMap />
       </div>

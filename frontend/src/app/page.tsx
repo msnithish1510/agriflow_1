@@ -12,10 +12,12 @@ import { AdminWorkflow } from '@/components/views/AdminWorkflow';
 import { PriceBreakdownWidget } from '@/components/PriceBreakdownWidget';
 import { VoiceAssistantWidget } from '@/components/VoiceAssistantWidget';
 import { UserRole } from '@/types';
+import { Language } from '@/services/translations';
 
 export default function Home() {
   const [currentRole, setCurrentRole] = useState<UserRole>('FARMER');
   const [isUrbanMode, setIsUrbanMode] = useState(false);
+  const [language, setLanguage] = useState<Language>('en');
   const [activeScenarioId, setActiveScenarioId] = useState<number | null>(null);
 
   const handleScenarioSelect = (id: number) => {
@@ -28,12 +30,14 @@ export default function Home() {
   };
 
   return (
-    <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 20px 40px 20px' }}>
+    <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 16px 40px 16px' }}>
       <Navbar
         currentRole={currentRole}
         onRoleChange={setCurrentRole}
         isUrbanMode={isUrbanMode}
         onModeToggle={setIsUrbanMode}
+        language={language}
+        onLanguageChange={setLanguage}
       />
 
       {/* Interactive SIH 2026 Demo Controller Bar */}
@@ -41,7 +45,7 @@ export default function Home() {
 
       {/* Active Role Workflow View */}
       <div style={{ marginBottom: '24px' }}>
-        {currentRole === 'FARMER' && <FarmerWorkflow />}
+        {currentRole === 'FARMER' && <FarmerWorkflow language={language} />}
         {currentRole === 'FPO' && <FPOWorkflow />}
         {currentRole === 'BULK_BUYER' && <BulkBuyerWorkflow />}
         {currentRole === 'CONSUMER' && <ConsumerWorkflow />}
@@ -49,8 +53,8 @@ export default function Home() {
         {currentRole === 'ADMIN' && <AdminWorkflow />}
       </div>
 
-      {/* Auxiliary SIH Supporting Modules */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '24px' }}>
+      {/* Auxiliary Supporting Modules */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
         <PriceBreakdownWidget />
         <VoiceAssistantWidget />
       </div>

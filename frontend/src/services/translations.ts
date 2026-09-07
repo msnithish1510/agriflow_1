@@ -86,6 +86,53 @@ export interface TranslationDictionary {
     quantityInvalid: string;
     priceInvalid: string;
   };
+  voiceAssistant: {
+    panelTitle: string;
+    greeting: string;
+    tapToSpeak: string;
+    listening: string;
+    understanding: string;
+    detectingIntent: string;
+    checkingPermissions: string;
+    performingAction: string;
+    responseReady: string;
+    youSaid: string;
+    aiResponse: string;
+    suggestions: string;
+    mute: string;
+    unmute: string;
+    close: string;
+    demoMode: string;
+    demoModeLabel: string;
+    typeHere: string;
+    send: string;
+    confirm: string;
+    cancel: string;
+    micPermissionDenied: string;
+    micRequiredMessage: string;
+    typeInstead: string;
+    browserNotSupported: string;
+    networkError: string;
+    notUnderstood: string;
+    tryAgain: string;
+    stockNotAvailable: string;
+    confirmAction: string;
+    farmerSuggestions: string[];
+    consumerSuggestions: string[];
+    buyerSuggestions: string[];
+    generalSuggestions: string[];
+  };
+  tracking: {
+    trackOrder: string;
+    currentLocation: string;
+    estimatedArrival: string;
+    distanceRemaining: string;
+    deliveryDelayed: string;
+    deliveryJourney: string;
+    startSimulation: string;
+    pauseSimulation: string;
+    resetSimulation: string;
+  };
 }
 
 export const translations: Record<Language, TranslationDictionary> = {
@@ -174,6 +221,53 @@ export const translations: Record<Language, TranslationDictionary> = {
       general: "Something went wrong. Please try again.",
       quantityInvalid: "Please enter the quantity in kilograms.",
       priceInvalid: "Please enter a valid price in ₹ per kg."
+    },
+    voiceAssistant: {
+      panelTitle: "AGRIFlow Voice Assistant",
+      greeting: "👋 Hello! I am the AGRIFlow assistant. How can I help you?",
+      tapToSpeak: "Tap to Speak",
+      listening: "Listening...",
+      understanding: "Understanding...",
+      detectingIntent: "Detecting intent...",
+      checkingPermissions: "Checking permissions...",
+      performingAction: "Performing action...",
+      responseReady: "Response ready",
+      youSaid: "You said",
+      aiResponse: "AGRIFlow AI",
+      suggestions: "Suggestions",
+      mute: "Mute",
+      unmute: "Unmute",
+      close: "Close",
+      demoMode: "DEMO",
+      demoModeLabel: "Demo Mode",
+      typeHere: "Type your request...",
+      send: "Send",
+      confirm: "Confirm",
+      cancel: "Cancel",
+      micPermissionDenied: "Microphone access is required for voice input. Please allow microphone access in your browser.",
+      micRequiredMessage: "Microphone access is required for voice input. Please allow microphone access in your browser.",
+      typeInstead: "Type instead",
+      browserNotSupported: "MediaRecorder is not supported in this browser. Please use a modern browser or type your request.",
+      networkError: "Network error. Please check your connection and try again.",
+      notUnderstood: "Sorry, I couldn't understand that. Could you try again or tap a suggestion below?",
+      tryAgain: "Please try again.",
+      stockNotAvailable: "Stock management is available for farmer accounts.",
+      confirmAction: "Shall I proceed?",
+      farmerSuggestions: ["Show my stock", "What is the tomato price?", "Find buyers", "Show today's demand", "Show my orders"],
+      consumerSuggestions: ["Search products", "Check tomato price", "Track my order", "Find available products", "Show delivery status"],
+      buyerSuggestions: ["Search bulk stock", "Post demand", "Check available farmers", "Check bulk price", "Show my orders"],
+      generalSuggestions: ["Open farmer dashboard", "Show market pulse", "How does AGRIFlow work?", "Help", "Change language"]
+    },
+    tracking: {
+      trackOrder: "Track Your Order",
+      currentLocation: "Current Location",
+      estimatedArrival: "Estimated Arrival",
+      distanceRemaining: "Distance Remaining",
+      deliveryDelayed: "Delivery Delayed",
+      deliveryJourney: "Delivery Journey",
+      startSimulation: "Start Simulation",
+      pauseSimulation: "Pause",
+      resetSimulation: "Reset"
     }
   },
   ta: {
@@ -261,6 +355,53 @@ export const translations: Record<Language, TranslationDictionary> = {
       general: "ஏதோ தவறு நடந்துவிட்டது. மீண்டும் முயற்சிக்கவும்.",
       quantityInvalid: "தயவுசெய்து அளவைக் கிலோகிராமில் உள்ளிடவும்.",
       priceInvalid: "தயவுசெய்து சரியான விலையை உள்ளிடவும்."
+    },
+    voiceAssistant: {
+      panelTitle: "AGRIFlow குரல் உதவியாளர்",
+      greeting: "👋 வணக்கம்! நான் AGRIFlow உதவியாளர். உங்களுக்கு எப்படி உதவலாம்?",
+      tapToSpeak: "பேச தட்டவும்",
+      listening: "கேட்கிறது...",
+      understanding: "புரிந்துகொள்கிறது...",
+      detectingIntent: "நோக்கம் கண்டறிகிறது...",
+      checkingPermissions: "அனுமதிகள் சரிபார்க்கிறது...",
+      performingAction: "செயல் நிறைவேற்றுகிறது...",
+      responseReady: "பதில் தயார்",
+      youSaid: "நீங்கள் சொன்னது",
+      aiResponse: "AGRIFlow AI",
+      suggestions: "பரிந்துரைகள்",
+      mute: "ஒலி நிறுத்து",
+      unmute: "ஒலி இயக்கு",
+      close: "மூடு",
+      demoMode: "டெமோ",
+      demoModeLabel: "டெமோ முறை",
+      typeHere: "உங்கள் கோரிக்கையை தட்டச்சு செய்யவும்...",
+      send: "அனுப்பு",
+      confirm: "உறுதிப்படுத்து",
+      cancel: "ரத்து",
+      micPermissionDenied: "குரல் உள்ளீட்டிற்கு மைக்ரோஃபோன் அனுமதி தேவை. உங்கள் உலாவியில் Microphone permission-ஐ Allow செய்யவும்.",
+      micRequiredMessage: "குரல் உள்ளீட்டிற்கு மைக்ரோஃபோன் அனுமதி தேவை. உங்கள் உலாவியில் Microphone permission-ஐ Allow செய்யவும்.",
+      typeInstead: "தட்டச்சு செய்யவும்",
+      browserNotSupported: "உங்கள் உலாவியில் MediaRecorder வசதி கிடைக்கவில்லை. தயவுசெய்து புதுப்பித்த உலாவியைப் பயன்படுத்தவும் அல்லது தட்டச்சு செய்து முயற்சிக்கவும்.",
+      networkError: "நெட்வொர்க் பிழை. உங்கள் இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.",
+      notUnderstood: "மன்னிக்கவும், உங்கள் கோரிக்கையை புரிந்துகொள்ள முடியவில்லை. மீண்டும் முயற்சிக்கவும் அல்லது கீழே உள்ள பரிந்துரையைத் தட்டவும்.",
+      tryAgain: "மீண்டும் முயற்சிக்கவும்.",
+      stockNotAvailable: "ஸ்டாக் நிர்வாகம் விவசாயி கணக்குகளுக்கு மட்டுமே கிடைக்கும்.",
+      confirmAction: "நான் தொடரட்டுமா?",
+      farmerSuggestions: ["என் ஸ்டாக் காட்டு", "தக்காளி விலை என்ன?", "வாங்குபவர்களை காட்டு", "இன்றைய தேவை என்ன?", "என் ஆர்டர்களை காட்டு"],
+      consumerSuggestions: ["பொருட்களை தேடு", "தக்காளி விலை பார்க்க", "என் ஆர்டர் கண்காணி", "கிடைக்கும் பொருட்கள்", "டெலிவரி நிலை"],
+      buyerSuggestions: ["மொத்த ஸ்டாக் தேடு", "தேவை பதிவிடு", "விவசாயிகளை பார்க்க", "மொத்த விலை", "என் ஆர்டர்கள்"],
+      generalSuggestions: ["விவசாயி டாஷ்போர்டு திற", "மார்க்கெட் பல்ஸ் காட்டு", "AGRIFlow எப்படி வேலை செய்கிறது?", "உதவி", "மொழி மாற்று"]
+    },
+    tracking: {
+      trackOrder: "ஆர்டரை கண்காணிக்கவும்",
+      currentLocation: "தற்போதைய இருப்பிடம்",
+      estimatedArrival: "எதிர்பார்க்கப்படும் வருகை நேரம்",
+      distanceRemaining: "மீதமுள்ள தூரம்",
+      deliveryDelayed: "டெலிவரி தாமதமாகியுள்ளது",
+      deliveryJourney: "டெலிவரி பயணம்",
+      startSimulation: "சிமுலேஷன் தொடங்கு",
+      pauseSimulation: "நிறுத்து",
+      resetSimulation: "மீட்டமை"
     }
   }
 };

@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     # DB URL - defaults to local SQLite demo db if Postgres not configured
     DATABASE_URL: str = os.getenv("DATABASE_URL", "sqlite:///./agriflow_demo.db")
 
+    # Groq Whisper API Key for Speech-to-Text Transcription
+    GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
+
     class Config:
         case_sensitive = True
 

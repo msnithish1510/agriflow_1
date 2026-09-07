@@ -15,6 +15,9 @@ from app.api.v1.endpoints import (
     price_transparency,
     feeds,
     voice_assistant_endpoint,
+    voice_command_endpoint,
+    voice_transcription_endpoint,
+    tracking_endpoint,
     users
 )
 
@@ -35,4 +38,7 @@ api_router.include_router(ai_analytics.router, prefix="/ai", tags=["AI Forecasti
 api_router.include_router(price_transparency.router, prefix="/price-transparency", tags=["Price Breakdown"])
 api_router.include_router(feeds.router, prefix="/feeds", tags=["Unified Demand & Supply Feeds"])
 api_router.include_router(voice_assistant_endpoint.router, prefix="/voice", tags=["Voice Assistance"])
+api_router.include_router(voice_command_endpoint.router, prefix="/voice", tags=["Voice Command Processing"])
+api_router.include_router(voice_transcription_endpoint.router, prefix="/voice", tags=["Voice Transcription Engine"])
+api_router.include_router(tracking_endpoint.router, prefix="/tracking", tags=["Order & Shipment Live Tracking"])
 api_router.include_router(users.router, prefix="/users", tags=["Users Directory"])

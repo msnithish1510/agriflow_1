@@ -13,6 +13,7 @@ import {
   fetchAdvisoryGuidance
 } from '@/services/api';
 import { Language, translations } from '@/services/translations';
+import { OrderTrackingView } from '@/components/tracking/OrderTrackingView';
 
 interface FarmerWorkflowProps {
   language?: Language;
@@ -22,6 +23,7 @@ export const FarmerWorkflow: React.FC<FarmerWorkflowProps> = ({ language = 'en' 
   const t = translations[language] || translations.en;
 
   const [activeTab, setActiveTab] = useState<'dashboard' | 'supplies' | 'stocks' | 'demands' | 'orders' | 'notifications' | 'earnings'>('dashboard');
+  const [selectedTrackingId, setSelectedTrackingId] = useState<string | null>(null);
   const [crops, setCrops] = useState<Crop[]>([]);
   const [mySupplies, setMySupplies] = useState<ExpectedSupply[]>([]);
   const [myStocks, setMyStocks] = useState<AvailableStock[]>([]);
@@ -522,50 +524,75 @@ export const FarmerWorkflow: React.FC<FarmerWorkflowProps> = ({ language = 'en' 
       {/* 5. INCOMING ORDERS */}
       {/* ==================================================== */}
       {activeTab === 'orders' && (
-        <div className="glass-panel">
-          <div style={{ marginBottom: '18px' }}>
-            <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              🚚 {language === 'ta' ? 'உங்கள் ஆர்டர்கள் மற்றும் டெலிவரி' : 'Your Orders & Delivery Tracker'}
-            </h2>
-            <p style={{ fontSize: '0.85rem', color: '#cbd5e1' }}>
-              {language === 'ta' ? 'உறுதிசெய்யப்பட்ட ஆர்டர்கள் மற்றும் போக்குவரத்து நிலை' : 'Confirmed crop sales and direct pickup status'}
-            </p>
-          </div>
+        selectedTrackingId ? (
+          <OrderTrackingView
+            trackingId={selectedTrackingId}
+            language={language}
+            onBack={() => setSelectedTrackingId(null)}
+          />
+        ) : (
+          <div className="glass-panel">
+            <div style={{ marginBottom: '18px' }}>
+              <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                🚚 {language === 'ta' ? 'உங்கள் ஆர்டர்கள் மற்றும் டெலிவரி' : 'Your Orders & Delivery Tracker'}
+              </h2>
+              <p style={{ fontSize: '0.85rem', color: '#cbd5e1' }}>
+                {language === 'ta' ? 'உறுதிசெய்யப்பட்ட ஆர்டர்கள் மற்றும் போக்குவரத்து நிலை' : 'Confirmed crop sales and direct pickup status'}
+              </p>
+            </div>
 
-          {myOrders.length === 0 ? (
-            <div style={{ padding: '40px 20px', textAlign: 'center', color: '#94a3b8', background: 'rgba(0,0,0,0.2)', borderRadius: '12px' }}>
-              <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>🚚</div>
-              <p style={{ fontSize: '1rem', color: '#cbd5e1' }}>
-                {language === 'ta' ? 'இன்னும் ஆர்டர்கள் இல்லை.' : 'No confirmed orders yet.'}
-              </p>
-              <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '4px' }}>
-                {language === 'ta' ? 'பயிர் விவரங்களை உள்ளிட்ட பிறகு வாங்குபவர் ஆர்டர்கள் இங்கு தோன்றும்.' : 'Post your crop details to receive buyer matches and purchase orders.'}
-              </p>
-            </div>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {myOrders.map(ord => (
-                <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.35)', padding: '16px 20px', borderRadius: '12px', borderLeft: '5px solid #10b981', flexWrap: 'wrap', gap: '12px' }}>
-                  <div>
-                    <span className="badge-tag badge-rural">{ord.status}</span>
-                    <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginTop: '6px' }}>
-                      {language === 'ta' ? 'ஆர்டர் எண்' : 'Order'} #{ord.id.substring(0,8)}
-                    </h4>
-                    <div style={{ fontSize: '0.88rem', color: '#cbd5e1', marginTop: '2px' }}>
-                      {language === 'ta' ? 'மொத்த அளவு' : 'Quantity'}: {ord.total_matched_quantity_kg.toLocaleString('en-IN')} kg
+            {myOrders.length === 0 ? (
+              <div style={{ padding: '40px 20px', textAlign: 'center', color: '#94a3b8', background: 'rgba(0,0,0,0.2)', borderRadius: '12px' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '8px' }}>🚚</div>
+                <p style={{ fontSize: '1rem', color: '#cbd5e1' }}>
+                  {language === 'ta' ? 'இன்னும் ஆர்டர்கள் இல்லை.' : 'No confirmed orders yet.'}
+                </p>
+                <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '4px' }}>
+                  {language === 'ta' ? 'பயிர் விவரங்களை உள்ளிட்ட பிறகு வாங்குபவர் ஆர்டர்கள் இங்கு தோன்றும்.' : 'Post your crop details to receive buyer matches and purchase orders.'}
+                </p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                {myOrders.map(ord => (
+                  <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.35)', padding: '16px 20px', borderRadius: '12px', borderLeft: '5px solid #10b981', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <span className="badge-tag badge-rural">{ord.status}</span>
+                      <h4 style={{ fontSize: '1.1rem', fontWeight: 700, marginTop: '6px' }}>
+                        {language === 'ta' ? 'ஆர்டர் எண்' : 'Order'} #{ord.id.substring(0,8)}
+                      </h4>
+                      <div style={{ fontSize: '0.88rem', color: '#cbd5e1', marginTop: '2px' }}>
+                        {language === 'ta' ? 'மொத்த அளவு' : 'Quantity'}: {ord.total_matched_quantity_kg.toLocaleString('en-IN')} kg
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#10b981' }}>₹{ord.agreed_farmer_price_per_kg}/kg</div>
+                        <div style={{ fontSize: '0.9rem', color: '#cbd5e1', fontWeight: 600 }}>
+                          {language === 'ta' ? 'மொத்தத் தொகை' : 'Total'}: ₹{ord.total_amount_inr?.toLocaleString('en-IN')}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setSelectedTrackingId('AGR-2026-00125')}
+                        style={{
+                          background: 'linear-gradient(135deg, #10b981, #059669)',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '8px',
+                          padding: '10px 16px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          fontSize: '0.82rem',
+                        }}
+                      >
+                        {language === 'ta' ? 'பாதை வரைபடம் 🚚' : 'Track Live Map 🚚'}
+                      </button>
                     </div>
                   </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#10b981' }}>₹{ord.agreed_farmer_price_per_kg}/kg</div>
-                    <div style={{ fontSize: '0.9rem', color: '#cbd5e1', fontWeight: 600 }}>
-                      {language === 'ta' ? 'மொத்தத் தொகை' : 'Total'}: ₹{ord.total_amount_inr?.toLocaleString('en-IN')}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )
       )}
 
       {/* ==================================================== */}

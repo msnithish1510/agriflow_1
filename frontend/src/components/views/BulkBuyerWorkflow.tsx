@@ -4,11 +4,13 @@ import React, { useState, useEffect } from 'react';
 import { ShoppingBag, PlusCircle, Layers, Zap, CheckCircle2, Truck, Calendar, MapPin } from 'lucide-react';
 import { Crop, DemandPost, OrderMatch } from '@/types';
 import { fetchCrops, createDemand, fetchDemands, runMatching, createOrder, fetchOrders } from '@/services/api';
+import { OrderTrackingView } from '@/components/tracking/OrderTrackingView';
 
 export const BulkBuyerWorkflow: React.FC = () => {
   const [crops, setCrops] = useState<Crop[]>([]);
   const [demands, setDemands] = useState<DemandPost[]>([]);
   const [orders, setOrders] = useState<OrderMatch[]>([]);
+  const [selectedTrackingId, setSelectedTrackingId] = useState<string | null>(null);
   
   const [showPostModal, setShowPostModal] = useState(false);
   const [selectedCropId, setSelectedCropId] = useState('');
@@ -194,26 +196,51 @@ export const BulkBuyerWorkflow: React.FC = () => {
       )}
 
       {/* Order Tracking */}
-      <div className="glass-panel">
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Truck size={22} color="#fbbf24" /> Confirmed Order Sourcing Lifecycle Tracker
-        </h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {orders.map(ord => (
-            <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.35)', padding: '16px 20px', borderRadius: '12px', borderLeft: '5px solid #10b981', flexWrap: 'wrap', gap: '10px' }}>
-              <div>
-                <span className="badge-tag badge-rural">{ord.status}</span>
-                <h4 style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: '4px', color: '#f8fafc' }}>Order #{ord.id.substring(0,8)}</h4>
-                <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '2px' }}>Matched Quantity: {ord.total_matched_quantity_kg?.toLocaleString('en-IN')} kg</div>
+      {selectedTrackingId ? (
+        <OrderTrackingView
+          trackingId={selectedTrackingId}
+          language="en"
+          onBack={() => setSelectedTrackingId(null)}
+        />
+      ) : (
+        <div className="glass-panel">
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Truck size={22} color="#fbbf24" /> Confirmed Order Sourcing Lifecycle & Live Shipment Tracker
+          </h2>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {orders.map(ord => (
+              <div key={ord.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(0,0,0,0.35)', padding: '16px 20px', borderRadius: '12px', borderLeft: '5px solid #10b981', flexWrap: 'wrap', gap: '12px' }}>
+                <div>
+                  <span className="badge-tag badge-rural">{ord.status}</span>
+                  <h4 style={{ fontSize: '1.05rem', fontWeight: 700, marginTop: '4px', color: '#f8fafc' }}>Order #{ord.id.substring(0,8)}</h4>
+                  <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '2px' }}>Matched Quantity: {ord.total_matched_quantity_kg?.toLocaleString('en-IN')} kg</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#10b981' }}>₹{ord.agreed_farmer_price_per_kg}/kg</div>
+                    <div style={{ fontSize: '0.85rem', color: '#cbd5e1' }}>Total: ₹{ord.total_amount_inr?.toLocaleString('en-IN')}</div>
+                  </div>
+                  <button
+                    onClick={() => setSelectedTrackingId('AGR-2026-00125')}
+                    style={{
+                      background: 'linear-gradient(135deg, #10b981, #059669)',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '8px',
+                      padding: '10px 18px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      fontSize: '0.82rem',
+                    }}
+                  >
+                    Track Live Map 🚚
+                  </button>
+                </div>
               </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#10b981' }}>₹{ord.agreed_farmer_price_per_kg}/kg</div>
-                <div style={{ fontSize: '0.85rem', color: '#cbd5e1' }}>Total: ₹{ord.total_amount_inr?.toLocaleString('en-IN')}</div>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Post Demand Modal */}
       {showPostModal && (

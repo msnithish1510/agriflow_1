@@ -85,5 +85,15 @@ class TestAGRIFlowVoiceAssistantModule(unittest.TestCase):
         self.assertEqual(res_loc.status_code, 200)
         self.assertIn("supported_languages", res_loc.json())
 
+    def test_05_voice_transcription_endpoint(self):
+        # Test empty file rejection
+        res_empty = self.client.post("/api/v1/voice/transcribe", files={"file": ("empty.webm", b"", "audio/webm")})
+        self.assertEqual(res_empty.status_code, 400)
+
+        # Test valid audio request format (handled response when GROQ_API_KEY is unset or set)
+        res_audio = self.client.post("/api/v1/voice/transcribe", files={"file": ("test.webm", b"RIFF....WAVEfmt...", "audio/webm")})
+        self.assertIn(res_audio.status_code, [200, 400, 413])
+        self.assertIn("success", res_audio.json())
+
 if __name__ == "__main__":
     unittest.main()

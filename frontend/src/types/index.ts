@@ -133,3 +133,88 @@ export interface FarmerDashboardSummary {
   total_available_stock_kg: number;
   status: string;
 }
+
+// ============================================================
+// Voice Assistant Types
+// ============================================================
+
+export type VoiceIntent =
+  // Farmer intents
+  | 'CHECK_MY_STOCK'
+  | 'ADD_STOCK'
+  | 'UPDATE_STOCK'
+  | 'CHECK_DEMAND'
+  | 'FIND_BUYERS'
+  | 'CHECK_MY_ORDERS'
+  | 'CHECK_EARNINGS'
+  | 'CHECK_PRICE_GUIDANCE'
+  | 'CHECK_UNSOLD_RISK'
+  | 'CHECK_MARKET_PULSE'
+  | 'CHECK_NOTIFICATIONS'
+  // Consumer intents
+  | 'SEARCH_PRODUCT'
+  | 'CHECK_PRODUCT_PRICE'
+  | 'CHECK_FARMER_PRICE'
+  | 'PLACE_ORDER'
+  | 'TRACK_ORDER'
+  | 'CHECK_DELIVERY'
+  | 'FIND_AVAILABLE_PRODUCTS'
+  // Bulk buyer intents
+  | 'SEARCH_BULK_STOCK'
+  | 'POST_DEMAND'
+  | 'CHECK_FARMERS'
+  | 'CHECK_AVAILABLE_QUANTITY'
+  | 'CHECK_PRICE'
+  | 'CHECK_ORDERS'
+  // General intents
+  | 'GO_HOME'
+  | 'OPEN_MARKET_PULSE'
+  | 'OPEN_FARMER_DASHBOARD'
+  | 'OPEN_DEMO'
+  | 'HOW_AGRIFLOW_WORKS'
+  | 'CHANGE_LANGUAGE'
+  | 'HELP'
+  | 'UNKNOWN';
+
+export type ProcessingState =
+  | 'IDLE'
+  | 'LISTENING'
+  | 'UNDERSTANDING'
+  | 'DETECTING_INTENT'
+  | 'CHECKING_PERMISSIONS'
+  | 'PERFORMING_ACTION'
+  | 'RESPONSE_READY';
+
+export interface VoiceMessage {
+  id: string;
+  type: 'user' | 'assistant';
+  text: string;
+  timestamp: Date;
+  action?: VoiceAction;
+  confirmationData?: VoiceConfirmation;
+}
+
+export interface VoiceAction {
+  type: 'NAVIGATE' | 'CONFIRM' | 'INFO';
+  role?: UserRole;
+  tab?: string;
+}
+
+export interface VoiceConfirmation {
+  actionDescription: string;
+  intent: VoiceIntent;
+  entities: Record<string, string | number>;
+  confirmed?: boolean;
+}
+
+export interface VoiceConversationContext {
+  previousIntent?: VoiceIntent;
+  previousEntities?: Record<string, string | number>;
+  awaitingFollowUp?: string; // e.g. 'location', 'quantity', 'price'
+  turnCount: number;
+}
+
+export interface NavigateToTarget {
+  role?: UserRole;
+  tab?: string;
+}

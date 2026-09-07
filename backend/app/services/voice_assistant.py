@@ -194,4 +194,216 @@ class VoiceAssistantService:
             "grounded_data": grounded_data
         }
 
+    # ======================================================================
+    # Full Voice Command Processing (New Enhanced API)
+    # ======================================================================
+
+    INTENT_KEYWORDS = {
+        "CHECK_MY_STOCK": {
+            "en": ["my stock", "show stock", "current stock", "view stock"],
+            "ta": ["என் ஸ்டாக்", "ஸ்டாக் காட்டு", "கையிருப்பு"],
+            "roles": ["FARMER", "FPO"],
+            "action": {"type": "NAVIGATE", "role": "FARMER", "tab": "currentStock"},
+        },
+        "ADD_STOCK": {
+            "en": ["add stock", "add crop", "new stock"],
+            "ta": ["ஸ்டாக் சேர்", "பயிர் சேர்"],
+            "roles": ["FARMER", "FPO"],
+            "action": {"type": "NAVIGATE", "role": "FARMER", "tab": "myCrops"},
+            "confirm": True,
+        },
+        "CHECK_DEMAND": {
+            "en": ["demand", "today demand", "show demand", "what demand", "check demand"],
+            "ta": ["தேவை", "இன்றைய தேவை", "தேவை என்ன", "தேவையை காட்டு"],
+            "action": {"type": "NAVIGATE", "role": "FARMER", "tab": "buyerOpportunities"},
+        },
+        "FIND_BUYERS": {
+            "en": ["find buyer", "show buyer", "who is buying", "connect buyer"],
+            "ta": ["வாங்குபவர்", "வாங்குபவர்களை", "கண்டுபிடி"],
+            "roles": ["FARMER", "FPO"],
+            "action": {"type": "NAVIGATE", "role": "FARMER", "tab": "buyerOpportunities"},
+        },
+        "CHECK_MY_ORDERS": {
+            "en": ["my order", "show order", "orders", "order status", "track order"],
+            "ta": ["என் ஆர்டர்", "ஆர்டர் காட்டு", "ஆர்டர்களை"],
+            "action": {"type": "NAVIGATE", "tab": "orders"},
+        },
+        "CHECK_PRICE_GUIDANCE": {
+            "en": ["price", "what price", "suggested price", "market price", "tomato price", "onion price"],
+            "ta": ["விலை", "விலை என்ன", "சந்தை விலை"],
+            "action": {"type": "NAVIGATE", "role": "FARMER", "tab": "suggestedPrice"},
+        },
+        "CHECK_NOTIFICATIONS": {
+            "en": ["notification", "alert", "alerts"],
+            "ta": ["அறிவிப்பு"],
+            "action": {"type": "NAVIGATE", "tab": "alerts"},
+        },
+        "OPEN_FARMER_DASHBOARD": {
+            "en": ["farmer dashboard", "open dashboard", "go to dashboard"],
+            "ta": ["விவசாயி டாஷ்போர்டு", "டாஷ்போர்டு திற"],
+            "action": {"type": "NAVIGATE", "role": "FARMER", "tab": "overview"},
+        },
+        "OPEN_MARKET_PULSE": {
+            "en": ["market pulse", "market data", "pulse"],
+            "ta": ["மார்க்கெட்", "மார்க்கெட் பல்ஸ்"],
+            "action": {"type": "NAVIGATE", "role": "FARMER", "tab": "overview"},
+        },
+        "HELP": {
+            "en": ["help", "what can you do", "commands"],
+            "ta": ["உதவி", "என்ன செய்ய முடியும்"],
+            "action": {"type": "INFO"},
+        },
+    }
+
+    RESPONSE_TEMPLATES = {
+        "CHECK_MY_STOCK": {
+            "en": "Opening your current stock inventory.",
+            "ta": "உங்கள் தற்போதைய கையிருப்பைத் திறக்கிறது.",
+        },
+        "ADD_STOCK": {
+            "en": "You are about to add stock. Please confirm the details.",
+            "ta": "நீங்கள் ஸ்டாக் சேர்க்கப் போகிறீர்கள். விவரங்களை உறுதிப்படுத்தவும்.",
+        },
+        "CHECK_DEMAND": {
+            "en": "Today's demand is high. Multiple buyers are actively looking for fresh produce.",
+            "ta": "இன்று அதிக தேவை உள்ளது. பல வாங்குபவர்கள் புதிய பொருட்களை தீவிரமாக தேடுகிறார்கள்.",
+        },
+        "FIND_BUYERS": {
+            "en": "Found verified buyers in your region offering competitive prices.",
+            "ta": "உங்கள் பகுதியில் போட்டி விலையில் சரிபார்க்கப்பட்ட வாங்குபவர்கள் கிடைத்தனர்.",
+        },
+        "CHECK_MY_ORDERS": {
+            "en": "Opening your orders dashboard.",
+            "ta": "உங்கள் ஆர்டர் டாஷ்போர்டை திறக்கிறது.",
+        },
+        "CHECK_PRICE_GUIDANCE": {
+            "en": "Showing current market price guidance and suggested price ranges.",
+            "ta": "தற்போதைய சந்தை விலை வழிகாட்டி மற்றும் பரிந்துரைக்கப்பட்ட விலை வரம்புகளைக் காட்டுகிறது.",
+        },
+        "CHECK_NOTIFICATIONS": {
+            "en": "Opening your notifications.",
+            "ta": "உங்கள் அறிவிப்புகளைத் திறக்கிறது.",
+        },
+        "OPEN_FARMER_DASHBOARD": {
+            "en": "Opening the farmer dashboard.",
+            "ta": "விவசாயி டாஷ்போர்டைத் திறக்கிறது.",
+        },
+        "OPEN_MARKET_PULSE": {
+            "en": "Opening Market Pulse — showing live demand and supply data.",
+            "ta": "மார்க்கெட் பல்ஸ் திறக்கிறது — நேரடி தேவை மற்றும் வரத்து தகவல்களைக் காட்டுகிறது.",
+        },
+        "HELP": {
+            "en": "I can help you with: checking stock, viewing demand, finding buyers, checking prices, tracking orders, and navigating AGRIFlow.",
+            "ta": "நான் உதவ முடியும்: ஸ்டாக் சரிபார்க்க, தேவை பார்க்க, வாங்குபவர்களை கண்டுபிடிக்க, விலைகளை சரிபார்க்க, ஆர்டர்களை கண்காணிக்க.",
+        },
+        "UNKNOWN": {
+            "en": "Sorry, I couldn't understand that. Could you try again or use a suggestion?",
+            "ta": "மன்னிக்கவும், புரிந்துகொள்ள முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+        },
+    }
+
+    FARMER_SUGGESTIONS_EN = ["Show my stock", "Show tomato demand", "Find buyers", "Check price", "Show orders"]
+    FARMER_SUGGESTIONS_TA = ["என் ஸ்டாக் காட்டு", "தக்காளி தேவை", "வாங்குபவர்கள்", "விலை பார்", "ஆர்டர்கள்"]
+    BUYER_SUGGESTIONS_EN = ["Search bulk stock", "Post demand", "Check farmers", "My orders"]
+    CONSUMER_SUGGESTIONS_EN = ["Search products", "Track order", "Check price"]
+
+    def process_voice_command(
+        self,
+        text: str,
+        language: str = "en",
+        user_role: str = "FARMER",
+        context: dict = None
+    ) -> dict:
+        """
+        Full voice command processing with intent detection, role validation,
+        entity extraction, and bilingual response generation.
+        """
+        text_lower = text.lower().strip()
+
+        # 1. Detect intent
+        detected_intent = "UNKNOWN"
+        best_score = 0
+
+        for intent_name, intent_data in self.INTENT_KEYWORDS.items():
+            score = 0
+            all_keywords = intent_data.get("en", []) + intent_data.get("ta", [])
+            for keyword in all_keywords:
+                if keyword.lower() in text_lower:
+                    score += len(keyword)
+
+            if score > best_score:
+                # Check role restriction
+                allowed_roles = intent_data.get("roles")
+                if allowed_roles is None or user_role in allowed_roles or user_role == "ADMIN":
+                    best_score = score
+                    detected_intent = intent_name
+
+        # 2. Extract entities
+        entities = {}
+        extracted_crop = None
+        for key, val in self.CROPS_MAP.items():
+            if key in text_lower:
+                extracted_crop = val
+                entities["crop"] = val
+                break
+
+        qty_match = re.search(r'(\d+[\.,]?\d*)\s*(kg|kilo|கிலோ)', text_lower)
+        if qty_match:
+            entities["quantity"] = float(qty_match.group(1))
+
+        price_match = re.search(r'(?:₹|rs\.?)\s*(\d+[\.,]?\d*)', text_lower)
+        if price_match:
+            entities["price"] = float(price_match.group(1))
+
+        # 3. Generate response
+        lang_key = "ta" if language == "ta" else "en"
+        templates = self.RESPONSE_TEMPLATES.get(detected_intent, self.RESPONSE_TEMPLATES["UNKNOWN"])
+        response = templates.get(lang_key, templates.get("en", ""))
+
+        # Enhance response with entity info
+        if extracted_crop and detected_intent in ["CHECK_DEMAND", "CHECK_PRICE_GUIDANCE", "FIND_BUYERS"]:
+            base_price = {"Tomato": 28, "Onion": 22, "Potato": 18, "Wheat": 22.5}.get(extracted_crop, 25)
+            if detected_intent == "CHECK_PRICE_GUIDANCE":
+                if lang_key == "ta":
+                    response = f"இன்றைய சராசரி {extracted_crop} விலை ₹{base_price}/கிலோ. பரிந்துரை: ₹{base_price-4}-₹{base_price+4}/கிலோ."
+                else:
+                    response = f"Today's average {extracted_crop} price is ₹{base_price}/kg. Suggested range: ₹{base_price-4}-₹{base_price+4}/kg."
+            elif detected_intent == "CHECK_DEMAND":
+                if lang_key == "ta":
+                    response = f"இன்று {extracted_crop}-க்கு அதிக தேவை உள்ளது. 3 வாங்குபவர்கள் ₹{base_price-4}-₹{base_price+2}/கிலோ விலையில் வாங்கத் தயாராக உள்ளனர்."
+                else:
+                    response = f"Today's {extracted_crop} demand is high. 3 buyers offering ₹{base_price-4}-₹{base_price+2}/kg."
+            elif detected_intent == "FIND_BUYERS":
+                if lang_key == "ta":
+                    response = f"உங்கள் {extracted_crop}-க்கு 3 சரிபார்க்கப்பட்ட வாங்குபவர்கள் ₹{base_price-4}-₹{base_price+4}/கிலோ விலையில் கிடைத்தனர்."
+                else:
+                    response = f"Found 3 verified buyers for {extracted_crop} offering ₹{base_price-4}-₹{base_price+4}/kg."
+
+        # 4. Get action
+        intent_data = self.INTENT_KEYWORDS.get(detected_intent, {})
+        action = intent_data.get("action", {"type": "INFO"})
+        requires_confirmation = intent_data.get("confirm", False)
+
+        # 5. Role-specific suggestions
+        if lang_key == "ta":
+            suggestions = self.FARMER_SUGGESTIONS_TA if user_role in ["FARMER", "FPO"] else self.FARMER_SUGGESTIONS_EN
+        else:
+            if user_role in ["FARMER", "FPO"]:
+                suggestions = self.FARMER_SUGGESTIONS_EN
+            elif user_role == "BULK_BUYER":
+                suggestions = self.BUYER_SUGGESTIONS_EN
+            elif user_role == "CONSUMER":
+                suggestions = self.CONSUMER_SUGGESTIONS_EN
+            else:
+                suggestions = self.FARMER_SUGGESTIONS_EN
+
+        return {
+            "intent": detected_intent,
+            "response": response,
+            "action": action,
+            "requires_confirmation": requires_confirmation,
+            "suggestions": suggestions,
+            "entities": entities,
+        }
+
 voice_assistant_service = VoiceAssistantService()

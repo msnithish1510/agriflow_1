@@ -52,6 +52,20 @@ class MatchStatus(str, enum.Enum):
     DELIVERED = "DELIVERED"
     CANCELLED = "CANCELLED"
 
+class TrackingStatus(str, enum.Enum):
+    ORDER_PLACED = "ORDER_PLACED"
+    ORDER_CONFIRMED = "ORDER_CONFIRMED"
+    FARMER_PREPARING = "FARMER_PREPARING"
+    READY_FOR_PICKUP = "READY_FOR_PICKUP"
+    PICKED_UP = "PICKED_UP"
+    AT_COLLECTION_CENTER = "AT_COLLECTION_CENTER"
+    IN_TRANSIT = "IN_TRANSIT"
+    NEAR_DESTINATION = "NEAR_DESTINATION"
+    OUT_FOR_DELIVERY = "OUT_FOR_DELIVERY"
+    DELIVERED = "DELIVERED"
+    DELIVERY_FAILED = "DELIVERY_FAILED"
+    CANCELLED = "CANCELLED"
+
 class NotificationType(str, enum.Enum):
     DEMAND_ALERT = "DEMAND_ALERT"
     HARVEST_MATCH = "HARVEST_MATCH"
@@ -194,6 +208,39 @@ class ShipmentRoute(Base):
     total_distance_km = Column(Float, nullable=False)
     estimated_transit_hours = Column(Float, nullable=False)
     route_status = Column(String, default="SCHEDULED")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class ShipmentTracking(Base):
+    __tablename__ = "shipment_trackings"
+    id = Column(String, primary_key=True, default=generate_uuid)
+    tracking_id = Column(String(50), unique=True, nullable=False)
+    order_id = Column(String, ForeignKey("order_matches.id"), nullable=True)
+    farmer_id = Column(String, ForeignKey("users.id"), nullable=True)
+    buyer_id = Column(String, ForeignKey("users.id"), nullable=True)
+    logistics_partner_id = Column(String, ForeignKey("users.id"), nullable=True)
+
+    farmer_name = Column(String(120), nullable=True)
+    buyer_name = Column(String(120), nullable=True)
+    crop_name = Column(String(80), nullable=True)
+    quantity_kg = Column(Float, default=500.0)
+
+    pickup_location = Column(JSON, nullable=False)
+    destination_location = Column(JSON, nullable=False)
+    current_latitude = Column(Float, nullable=False)
+    current_longitude = Column(Float, nullable=False)
+    current_location_name = Column(String(150), nullable=False)
+
+    route = Column(JSON, nullable=False)
+    distance_remaining_km = Column(Float, default=45.0)
+    estimated_transit_minutes = Column(Integer, default=55)
+    expected_delivery_time = Column(DateTime, nullable=True)
+
+    current_status = Column(SQLEnum(TrackingStatus), default=TrackingStatus.IN_TRANSIT)
+    driver_name = Column(String(100), default="Murugan Logistics (TN-37-AZ-4421)")
+    vehicle_number = Column(String(50), default="TN-37-AZ-4421")
+
+    history = Column(JSON, default=list)
+    last_updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     created_at = Column(DateTime, default=datetime.utcnow)
 
 class Notification(Base):

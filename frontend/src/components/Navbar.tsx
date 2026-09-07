@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserRole } from '@/types';
 import { useLanguage } from '@/i18n';
 import { 
   Sprout, ShoppingBag, ShieldCheck, Truck, Users, Home, Globe, 
-  Menu, X, ChevronDown, Activity, Sparkles, SlidersHorizontal 
+  Menu, X, ChevronDown, Check, Sparkles, Bell, User
 } from 'lucide-react';
+import { AuthModal } from './ui/AuthModal';
 
 interface NavbarProps {
   activeView: string;
@@ -29,16 +30,26 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const currentLangObj = languages.find(l => l.code === language) || languages[0];
 
-  const roles: { id: UserRole; label: string; icon: any }[] = [
-    { id: 'FARMER', label: t.common.roles.FARMER, icon: Sprout },
-    { id: 'BULK_BUYER', label: t.common.roles.BULK_BUYER, icon: ShoppingBag },
-    { id: 'CONSUMER', label: t.common.roles.CONSUMER, icon: Home },
-    { id: 'LOGISTICS_PARTNER', label: t.common.roles.LOGISTICS_PARTNER, icon: Truck },
-    { id: 'FPO', label: t.common.roles.FPO, icon: Users },
-    { id: 'ADMIN', label: t.common.roles.ADMIN, icon: ShieldCheck }
+  const roles: { id: UserRole; label: string; icon: any; color: string }[] = [
+    { id: 'FARMER', label: t.common.roles.FARMER, icon: Sprout, color: '#16A34A' },
+    { id: 'BULK_BUYER', label: t.common.roles.BULK_BUYER, icon: ShoppingBag, color: '#0EA5E9' },
+    { id: 'CONSUMER', label: t.common.roles.CONSUMER, icon: Home, color: '#F59E0B' },
+    { id: 'LOGISTICS_PARTNER', label: t.common.roles.LOGISTICS_PARTNER, icon: Truck, color: '#8B5CF6' },
+    { id: 'FPO', label: t.common.roles.FPO, icon: Users, color: '#10B981' },
+    { id: 'ADMIN', label: t.common.roles.ADMIN, icon: ShieldCheck, color: '#F43F5E' }
   ];
 
   const navLinks = [
@@ -53,32 +64,40 @@ export const Navbar: React.FC<NavbarProps> = ({
   const handleNavClick = (viewId: string) => {
     onNavigate(viewId);
     setMobileMenuOpen(false);
+    setRoleDropdownOpen(false);
+    setLangDropdownOpen(false);
   };
 
   const currentRoleObj = roles.find(r => r.id === currentRole) || roles[0];
   const CurrentRoleIcon = currentRoleObj.icon;
 
   return (
-    <header style={{
-      position: 'sticky',
-      top: 0,
-      zIndex: 100,
-      backdropFilter: 'blur(16px)',
-      WebkitBackdropFilter: 'blur(16px)',
-      background: 'rgba(8, 13, 22, 0.92)',
-      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-      marginBottom: '20px'
-    }}>
-      <div className="app-container">
-        {/* Top Navbar Row */}
+    <>
+      <header style={{
+        position: 'sticky',
+        top: '12px',
+        zIndex: 100,
+        margin: '0 auto 20px auto',
+        maxWidth: '1360px',
+        width: 'calc(100% - 24px)',
+        transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+      }}>
         <div style={{
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          background: scrolled ? 'rgba(255, 255, 255, 0.92)' : 'rgba(255, 255, 255, 0.82)',
+          border: '1px solid rgba(255, 255, 255, 0.95)',
+          borderRadius: '24px',
+          boxShadow: scrolled 
+            ? '0 16px 36px -10px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(22, 163, 74, 0.05), inset 0 1px 1px #ffffff'
+            : '0 10px 30px -8px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1px 1px #ffffff',
+          padding: '8px 16px 8px 20px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          minHeight: '68px',
-          gap: '16px'
+          gap: '12px'
         }}>
-          {/* Brand Logo & Tagline */}
+          {/* 1. Brand Logo & Tagline */}
           <div 
             onClick={() => handleNavClick('home')}
             style={{ 
@@ -86,21 +105,22 @@ export const Navbar: React.FC<NavbarProps> = ({
               alignItems: 'center', 
               gap: '12px', 
               cursor: 'pointer',
-              userSelect: 'none'
+              userSelect: 'none',
+              flexShrink: 0
             }}
           >
             <div style={{
-              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-              width: '42px',
-              height: '42px',
+              background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
+              width: '40px',
+              height: '40px',
               borderRadius: '12px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.3rem',
+              fontSize: '1.25rem',
               color: '#ffffff',
-              boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)',
-              flexShrink: 0
+              boxShadow: '0 4px 14px rgba(22, 163, 74, 0.35)',
+              border: '1px solid rgba(255, 255, 255, 0.4)'
             }}>
               🌱
             </div>
@@ -108,60 +128,69 @@ export const Navbar: React.FC<NavbarProps> = ({
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{
                   fontSize: '1.35rem',
-                  fontWeight: 800,
+                  fontWeight: 900,
                   letterSpacing: '-0.5px',
-                  background: 'linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
+                  color: '#17221C'
                 }}>
                   AGRIFlow
                 </span>
                 <span style={{
-                  fontSize: '0.72rem',
+                  fontSize: '0.68rem',
                   padding: '2px 8px',
-                  borderRadius: '10px',
-                  background: 'rgba(16, 185, 129, 0.18)',
-                  color: '#34d399',
-                  border: '1px solid rgba(16, 185, 129, 0.3)',
-                  fontWeight: 700
+                  borderRadius: '20px',
+                  background: 'rgba(22, 163, 74, 0.1)',
+                  color: '#15803D',
+                  border: '1px solid rgba(22, 163, 74, 0.25)',
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
                 }}>
+                  <span className="pulse-dot" style={{ width: '6px', height: '6px' }} />
                   SIH26033
                 </span>
               </div>
-              <div style={{ fontSize: '0.76rem', color: '#94a3b8', fontWeight: 500 }}>
+              <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 500, letterSpacing: '0.01em' }}>
                 {t.common.tagline}
               </div>
             </div>
           </div>
 
-          {/* Desktop Navigation Links */}
+          {/* 2. Desktop Navigation Links */}
           <nav style={{
-            display: 'none',
+            display: 'flex',
             alignItems: 'center',
             gap: '4px'
-          }} className="desktop-nav">
-            {navLinks.map(link => {
+          }} className="hide-on-mobile">
+            {navLinks.map((link) => {
               const isActive = activeView === link.id;
               return (
                 <button
                   key={link.id}
                   onClick={() => handleNavClick(link.id)}
                   style={{
-                    padding: '8px 14px',
-                    borderRadius: '10px',
-                    border: 'none',
-                    background: isActive ? 'rgba(16, 185, 129, 0.15)' : 'transparent',
-                    color: isActive ? '#34d399' : '#cbd5e1',
+                    background: isActive ? 'rgba(22, 163, 74, 0.10)' : 'transparent',
+                    color: isActive ? '#15803D' : '#334155',
                     fontWeight: isActive ? 700 : 500,
                     fontSize: '0.9rem',
+                    padding: '8px 14px',
+                    borderRadius: '12px',
+                    border: isActive ? '1px solid rgba(22, 163, 74, 0.25)' : '1px solid transparent',
                     cursor: 'pointer',
-                    transition: 'all 0.15s ease'
+                    transition: 'all 0.15s ease',
+                    whiteSpace: 'nowrap'
                   }}
                   onMouseEnter={(e) => {
-                    if (!isActive) e.currentTarget.style.color = '#ffffff';
+                    if (!isActive) {
+                      e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+                      e.currentTarget.style.color = '#17221C';
+                    }
                   }}
                   onMouseLeave={(e) => {
-                    if (!isActive) e.currentTarget.style.color = '#cbd5e1';
+                    if (!isActive) {
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.color = '#334155';
+                    }
                   }}
                 >
                   {link.label}
@@ -170,47 +199,71 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Right Controls: Scope, Language, Persona Switcher */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {/* Scope Mode (Rural / Urban) - Desktop */}
-            <div style={{ display: 'none', background: 'rgba(0,0,0,0.4)', padding: '3px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.08)' }} className="desktop-controls">
-              <button
-                onClick={() => onModeToggle(false)}
-                title={t.common.ruralScope}
-                style={{
-                  padding: '5px 10px',
-                  borderRadius: '9px',
-                  border: 'none',
-                  background: !isUrbanMode ? 'linear-gradient(135deg, #10b981, #059669)' : 'transparent',
-                  color: !isUrbanMode ? '#ffffff' : '#94a3b8',
-                  fontWeight: 700,
-                  fontSize: '0.78rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                🌾 {language === 'ta' ? 'கிராமப்புறம்' : language === 'hi' ? 'ग्रामीण' : language === 'te' ? 'గ్రామీణ' : language === 'ml' ? 'ഗ്രാമീണ' : language === 'kn' ? 'ಗ್ರಾಮೀಣ' : 'Rural'}
-              </button>
-              <button
-                onClick={() => onModeToggle(true)}
-                title={t.common.urbanScope}
-                style={{
-                  padding: '5px 10px',
-                  borderRadius: '9px',
-                  border: 'none',
-                  background: isUrbanMode ? 'linear-gradient(135deg, #06b6d4, #0284c7)' : 'transparent',
-                  color: isUrbanMode ? '#ffffff' : '#94a3b8',
-                  fontWeight: 700,
-                  fontSize: '0.78rem',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                🏙️ {language === 'ta' ? 'நகர்ப்புறம்' : language === 'hi' ? 'शहरी' : language === 'te' ? 'పట్టణ' : language === 'ml' ? 'നഗര' : language === 'kn' ? 'ನಗರ' : 'Urban'}
-              </button>
+          {/* 3. Action Controls: Scope Toggle, 6-Lang Switcher, Persona, Auth */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            
+            {/* Scope Mode Switch (Rural vs. Urban) */}
+            <div 
+              onClick={() => onModeToggle(!isUrbanMode)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '5px 10px',
+                borderRadius: '12px',
+                background: 'rgba(0, 0, 0, 0.03)',
+                border: '1px solid rgba(0, 0, 0, 0.06)',
+                cursor: 'pointer',
+                userSelect: 'none',
+                transition: 'all 0.2s ease'
+              }}
+              title="Toggle Pre-Harvest Scope"
+              className="hide-on-mobile"
+            >
+              <span style={{ fontSize: '0.8rem' }}>{isUrbanMode ? '🏙️' : '🌾'}</span>
+              <span style={{ 
+                fontSize: '0.78rem', 
+                fontWeight: 700, 
+                color: isUrbanMode ? '#0284C7' : '#15803D' 
+              }}>
+                {isUrbanMode ? 'Urban 150km' : 'Rural 50km'}
+              </span>
             </div>
 
-            {/* Global 6-Language Dropdown */}
+            {/* Notification Bell */}
+            <button
+              onClick={() => alert('🌾 Live Agricultural Alerts:\n• Tomato demand surge in Chennai (+28%)\n• 4 cold-chain trucks available in Erode\n• Minimum Price advisory updated for Salem')}
+              style={{
+                background: 'rgba(255, 255, 255, 0.85)',
+                border: '1px solid rgba(0, 0, 0, 0.08)',
+                borderRadius: '12px',
+                width: '38px',
+                height: '38px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#334155',
+                cursor: 'pointer',
+                position: 'relative',
+                transition: 'all 0.2s ease'
+              }}
+              title="Live Agricultural Notifications"
+              aria-label="Notifications"
+            >
+              <Bell size={18} />
+              <span style={{
+                position: 'absolute',
+                top: '7px',
+                right: '7px',
+                width: '7px',
+                height: '7px',
+                background: '#EF4444',
+                borderRadius: '50%',
+                boxShadow: '0 0 4px #EF4444'
+              }} />
+            </button>
+
+            {/* 6-LANGUAGE DROPDOWN SELECTOR */}
             <div style={{ position: 'relative' }}>
               <button
                 onClick={() => {
@@ -221,328 +274,363 @@ export const Navbar: React.FC<NavbarProps> = ({
                   display: 'flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: '7px 11px',
-                  borderRadius: '11px',
-                  background: 'rgba(255, 255, 255, 0.06)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  color: '#f8fafc',
-                  fontWeight: 600,
-                  fontSize: '0.84rem',
+                  padding: '7px 12px',
+                  borderRadius: '12px',
+                  background: langDropdownOpen ? 'rgba(22, 163, 74, 0.1)' : 'rgba(255, 255, 255, 0.85)',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease'
+                  color: '#17221C',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.02)'
                 }}
                 aria-label="Select Language"
-                aria-expanded={langDropdownOpen}
               >
-                <Globe size={16} style={{ color: '#10b981' }} />
-                <span className="lang-label">{currentLangObj.nativeName}</span>
-                <ChevronDown size={14} style={{ transform: langDropdownOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                <Globe size={16} color="#16A34A" />
+                <span>{currentLangObj.nativeName}</span>
+                <ChevronDown size={14} style={{
+                  transform: langDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.2s ease',
+                  color: '#64748B'
+                }} />
               </button>
 
               {langDropdownOpen && (
-                <>
-                  <div 
-                    style={{ position: 'fixed', inset: 0, zIndex: 998 }} 
-                    onClick={() => setLangDropdownOpen(false)} 
-                  />
-                  <div style={{
-                    position: 'absolute',
-                    top: 'calc(100% + 8px)',
-                    right: 0,
-                    width: '180px',
-                    background: '#091512',
-                    border: '1px solid rgba(16, 185, 129, 0.25)',
-                    borderRadius: '12px',
-                    padding: '6px',
-                    boxShadow: '0 20px 35px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(16, 185, 129, 0.15)',
-                    backdropFilter: 'blur(16px)',
-                    zIndex: 999,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '2px'
+                <div style={{
+                  position: 'absolute',
+                  top: '115%',
+                  right: 0,
+                  background: 'rgba(255, 255, 255, 0.98)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  borderRadius: '16px',
+                  padding: '8px',
+                  minWidth: '210px',
+                  boxShadow: '0 16px 36px -8px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04)',
+                  zIndex: 200,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px'
+                }}>
+                  <div style={{ 
+                    fontSize: '0.72rem', 
+                    fontWeight: 700, 
+                    color: '#64748B', 
+                    padding: '6px 10px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
                   }}>
-                    <div style={{
-                      padding: '6px 10px',
-                      fontSize: '0.68rem',
-                      fontWeight: 700,
-                      color: '#6ee7b7',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
-                      marginBottom: '4px'
-                    }}>
-                      {t.common.appName} Languages
-                    </div>
-                    {languages.map(lang => {
-                      const isSelected = language === lang.code;
-                      return (
-                        <button
-                          key={lang.code}
-                          onClick={() => {
-                            setLanguage(lang.code);
-                            setLangDropdownOpen(false);
-                          }}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            width: '100%',
-                            padding: '8px 10px',
-                            borderRadius: '8px',
-                            border: 'none',
-                            background: isSelected ? 'rgba(16, 185, 129, 0.18)' : 'transparent',
-                            color: isSelected ? '#34d399' : '#e2e8f0',
-                            fontWeight: isSelected ? 700 : 500,
-                            fontSize: '0.84rem',
-                            cursor: 'pointer',
-                            textAlign: 'left',
-                            transition: 'all 0.15s ease'
-                          }}
-                        >
-                          <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            <span style={{ fontWeight: 600 }}>{lang.nativeName}</span>
-                            <span style={{ fontSize: '0.68rem', color: isSelected ? '#10b981' : '#94a3b8' }}>
-                              {lang.label}
-                            </span>
-                          </div>
-                          {isSelected && <span style={{ color: '#10b981', fontWeight: 800 }}>✓</span>}
-                        </button>
-                      );
-                    })}
+                    Select Language / மொழி
                   </div>
-                </>
+                  {languages.map((lang) => {
+                    const isSelected = lang.code === language;
+                    return (
+                      <button
+                        key={lang.code}
+                        onClick={() => {
+                          setLanguage(lang.code);
+                          setLangDropdownOpen(false);
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          padding: '9px 12px',
+                          borderRadius: '10px',
+                          background: isSelected ? 'rgba(22, 163, 74, 0.1)' : 'transparent',
+                          border: 'none',
+                          cursor: 'pointer',
+                          textAlign: 'left',
+                          transition: 'all 0.15s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isSelected) e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSelected) e.currentTarget.style.background = 'transparent';
+                        }}
+                      >
+                        <div>
+                          <div style={{ 
+                            fontSize: '0.9rem', 
+                            fontWeight: isSelected ? 700 : 500,
+                            color: isSelected ? '#15803D' : '#17221C'
+                          }}>
+                            {lang.nativeName}
+                          </div>
+                          <div style={{ fontSize: '0.74rem', color: '#64748B' }}>
+                            {lang.label}
+                          </div>
+                        </div>
+                        {isSelected && <Check size={16} color="#16A34A" />}
+                      </button>
+                    );
+                  })}
+                </div>
               )}
             </div>
 
-            {/* Persona / Role Selector Dropdown */}
-            <div style={{ position: 'relative' }}>
+            {/* ROLE PERSONA SWITCHER */}
+            <div style={{ position: 'relative' }} className="hide-on-mobile">
               <button
-                onClick={() => setRoleDropdownOpen(!roleDropdownOpen)}
+                onClick={() => {
+                  setRoleDropdownOpen(!roleDropdownOpen);
+                  setLangDropdownOpen(false);
+                }}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '8px',
-                  padding: '8px 14px',
+                  padding: '7px 12px',
                   borderRadius: '12px',
-                  background: 'rgba(255, 255, 255, 0.05)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
-                  color: '#f8fafc',
-                  fontWeight: 600,
-                  fontSize: '0.86rem',
+                  background: 'rgba(255, 255, 255, 0.85)',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
                   cursor: 'pointer',
-                  minHeight: '40px'
+                  color: '#17221C',
+                  fontSize: '0.85rem',
+                  fontWeight: 600,
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.02)'
                 }}
+                aria-label="Switch Persona"
               >
-                <CurrentRoleIcon size={16} color="#10b981" />
-                <span className="persona-label">{currentRoleObj.label}</span>
-                <ChevronDown size={14} color="#94a3b8" />
+                <div style={{
+                  width: '24px',
+                  height: '24px',
+                  borderRadius: '6px',
+                  background: `${currentRoleObj.color}18`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: currentRoleObj.color
+                }}>
+                  <CurrentRoleIcon size={14} />
+                </div>
+                <span>{currentRoleObj.label}</span>
+                <ChevronDown size={14} style={{
+                  transform: roleDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.2s ease',
+                  color: '#64748B'
+                }} />
               </button>
 
               {roleDropdownOpen && (
-                <>
-                  <div 
-                    style={{ position: 'fixed', inset: 0, zIndex: 110 }} 
-                    onClick={() => setRoleDropdownOpen(false)} 
-                  />
-                  <div style={{
-                    position: 'absolute',
-                    right: 0,
-                    top: 'calc(100% + 8px)',
-                    width: '240px',
-                    background: '#0f172a',
-                    border: '1px solid rgba(255, 255, 255, 0.12)',
-                    borderRadius: '14px',
-                    padding: '8px',
-                    boxShadow: '0 16px 36px rgba(0, 0, 0, 0.6)',
-                    zIndex: 120,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '4px'
+                <div style={{
+                  position: 'absolute',
+                  top: '115%',
+                  right: 0,
+                  background: 'rgba(255, 255, 255, 0.98)',
+                  backdropFilter: 'blur(20px)',
+                  WebkitBackdropFilter: 'blur(20px)',
+                  border: '1px solid rgba(0, 0, 0, 0.08)',
+                  borderRadius: '16px',
+                  padding: '8px',
+                  minWidth: '220px',
+                  boxShadow: '0 16px 36px -8px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04)',
+                  zIndex: 200,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '4px'
+                }}>
+                  <div style={{ 
+                    fontSize: '0.72rem', 
+                    fontWeight: 700, 
+                    color: '#64748B', 
+                    padding: '6px 10px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em'
                   }}>
-                    <div style={{ padding: '6px 10px', fontSize: '0.74rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>
-                      {t.common.changeRole}
-                    </div>
-                    {roles.map(r => {
-                      const Icon = r.icon;
-                      const isSelected = currentRole === r.id;
-                      return (
-                        <button
-                          key={r.id}
-                          onClick={() => {
-                            onRoleChange(r.id);
-                            setRoleDropdownOpen(false);
-                            onNavigate('dashboard');
-                          }}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
-                            padding: '10px 12px',
-                            borderRadius: '10px',
-                            border: 'none',
-                            background: isSelected ? 'rgba(16, 185, 129, 0.15)' : 'transparent',
-                            color: isSelected ? '#34d399' : '#cbd5e1',
-                            fontWeight: isSelected ? 700 : 500,
-                            fontSize: '0.88rem',
-                            cursor: 'pointer',
-                            textAlign: 'left',
-                            transition: 'all 0.15s ease'
-                          }}
-                        >
-                          <Icon size={16} color={isSelected ? '#10b981' : '#94a3b8'} />
-                          <span>{r.label}</span>
-                        </button>
-                      );
-                    })}
+                    Ecosystem Persona
                   </div>
-                </>
+                  {roles.map((r) => {
+                    const RoleIcon = r.icon;
+                    const isSelected = r.id === currentRole;
+                    return (
+                      <button
+                        key={r.id}
+                        onClick={() => {
+                          onRoleChange(r.id);
+                          setRoleDropdownOpen(false);
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '10px',
+                          padding: '9px 12px',
+                          borderRadius: '10px',
+                          background: isSelected ? 'rgba(22, 163, 74, 0.1)' : 'transparent',
+                          border: 'none',
+                          cursor: 'pointer',
+                          textAlign: 'left',
+                          transition: 'all 0.15s ease'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isSelected) e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSelected) e.currentTarget.style.background = 'transparent';
+                        }}
+                      >
+                        <div style={{
+                          width: '24px',
+                          height: '24px',
+                          borderRadius: '6px',
+                          background: `${r.color}18`,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: r.color
+                        }}>
+                          <RoleIcon size={14} />
+                        </div>
+                        <div style={{ flex: 1, fontSize: '0.88rem', fontWeight: isSelected ? 700 : 500, color: '#17221C' }}>
+                          {r.label}
+                        </div>
+                        {isSelected && <Check size={16} color="#16A34A" />}
+                      </button>
+                    );
+                  })}
+                </div>
               )}
             </div>
 
-            {/* Mobile Hamburger Button */}
+            {/* USER / AUTH PROFILE BUTTON */}
+            <button
+              onClick={() => setAuthModalOpen(true)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '7px 14px',
+                borderRadius: '12px',
+                background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                color: '#ffffff',
+                fontSize: '0.85rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 2px 10px rgba(22, 163, 74, 0.3)',
+                userSelect: 'none'
+              }}
+              title="User Account & Login"
+            >
+              <User size={15} />
+              <span className="hide-on-mobile">Login</span>
+            </button>
+
+            {/* MOBILE HAMBURGER BUTTON */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="mobile-hamburger"
               style={{
                 display: 'none',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '40px',
-                height: '40px',
+                background: 'rgba(255, 255, 255, 0.85)',
+                border: '1px solid rgba(0, 0, 0, 0.08)',
                 borderRadius: '10px',
-                border: '1px solid rgba(255,255,255,0.1)',
-                background: 'rgba(255,255,255,0.05)',
-                color: '#f8fafc',
-                cursor: 'pointer'
+                padding: '8px',
+                cursor: 'pointer',
+                color: '#17221C',
+                alignItems: 'center',
+                justifyContent: 'center'
               }}
-              aria-label="Toggle Navigation Menu"
+              className="show-on-mobile"
+              aria-label="Toggle navigation menu"
             >
-              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
+
           </div>
         </div>
 
-        {/* Mobile Navigation Drawer */}
+        {/* MOBILE NAVIGATION DRAWER */}
         {mobileMenuOpen && (
           <div style={{
-            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-            padding: '16px 0 20px 0',
+            marginTop: '10px',
+            background: 'rgba(255, 255, 255, 0.96)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.9)',
+            borderRadius: '20px',
+            padding: '18px',
+            boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.12)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '8px'
+            gap: '12px'
           }}>
-            {navLinks.map(link => {
-              const isActive = activeView === link.id;
-              return (
-                <button
-                  key={link.id}
-                  onClick={() => handleNavClick(link.id)}
-                  style={{
-                    padding: '12px 16px',
-                    borderRadius: '10px',
-                    border: 'none',
-                    background: isActive ? 'rgba(16, 185, 129, 0.18)' : 'rgba(255,255,255,0.03)',
-                    color: isActive ? '#34d399' : '#f8fafc',
-                    fontWeight: isActive ? 700 : 600,
-                    fontSize: '0.95rem',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <span>{link.label}</span>
-                  {isActive && <span style={{ color: '#10b981' }}>✓</span>}
-                </button>
-              );
-            })}
-
-            {/* Mobile Scope Toggle */}
-            <div style={{
-              display: 'flex',
-              gap: '8px',
-              marginTop: '8px',
-              paddingTop: '12px',
-              borderTop: '1px solid rgba(255,255,255,0.06)'
-            }}>
-              <button
-                onClick={() => onModeToggle(false)}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>
+                Navigation Menu
+              </span>
+              <div 
+                onClick={() => onModeToggle(!isUrbanMode)}
                 style={{
-                  flex: 1,
-                  padding: '10px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '4px 10px',
                   borderRadius: '10px',
-                  border: 'none',
-                  background: !isUrbanMode ? 'linear-gradient(135deg, #10b981, #059669)' : 'rgba(255,255,255,0.06)',
-                  color: '#ffffff',
+                  background: 'rgba(0, 0, 0, 0.04)',
+                  fontSize: '0.78rem',
                   fontWeight: 700,
-                  fontSize: '0.85rem',
-                  cursor: 'pointer'
+                  color: isUrbanMode ? '#0284C7' : '#15803D'
                 }}
               >
-                🌾 {t.common.ruralScope}
-              </button>
-              <button
-                onClick={() => onModeToggle(true)}
-                style={{
-                  flex: 1,
-                  padding: '10px',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: isUrbanMode ? 'linear-gradient(135deg, #06b6d4, #0284c7)' : 'rgba(255,255,255,0.06)',
-                  color: '#ffffff',
-                  fontWeight: 700,
-                  fontSize: '0.85rem',
-                  cursor: 'pointer'
-                }}
-              >
-                🏙️ {t.common.urbanScope}
-              </button>
+                <span>{isUrbanMode ? '🏙️' : '🌾'}</span>
+                <span>{isUrbanMode ? 'Urban 150km' : 'Rural 50km'}</span>
+              </div>
             </div>
 
-            {/* Mobile 6-Language Selector Grid */}
-            <div style={{
-              marginTop: '8px',
-              paddingTop: '12px',
-              borderTop: '1px solid rgba(255,255,255,0.06)'
-            }}>
-              <div style={{
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                color: '#94a3b8',
-                marginBottom: '8px',
-                paddingLeft: '4px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}>
-                <Globe size={14} style={{ color: '#10b981' }} />
-                <span>Language / மொழி / भाषा</span>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              {navLinks.map((link) => {
+                const isActive = activeView === link.id;
+                return (
+                  <button
+                    key={link.id}
+                    onClick={() => handleNavClick(link.id)}
+                    style={{
+                      background: isActive ? 'rgba(22, 163, 74, 0.12)' : 'rgba(0, 0, 0, 0.02)',
+                      color: isActive ? '#15803D' : '#17221C',
+                      fontWeight: isActive ? 700 : 500,
+                      fontSize: '0.88rem',
+                      padding: '12px',
+                      borderRadius: '12px',
+                      border: isActive ? '1px solid rgba(22, 163, 74, 0.3)' : '1px solid rgba(0, 0, 0, 0.05)',
+                      textAlign: 'center',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    {link.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Mobile Persona Switcher */}
+            <div style={{ paddingTop: '8px', borderTop: '1px solid rgba(0, 0, 0, 0.06)' }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#64748B', marginBottom: '8px' }}>
+                Select Active Persona
               </div>
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '6px'
-              }}>
-                {languages.map(lang => {
-                  const isSelected = language === lang.code;
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
+                {roles.map((r) => {
+                  const isSelected = r.id === currentRole;
                   return (
                     <button
-                      key={lang.code}
-                      onClick={() => setLanguage(lang.code)}
+                      key={r.id}
+                      onClick={() => {
+                        onRoleChange(r.id);
+                        setMobileMenuOpen(false);
+                      }}
                       style={{
-                        padding: '8px 4px',
-                        borderRadius: '8px',
-                        border: isSelected ? '1px solid #10b981' : '1px solid rgba(255,255,255,0.08)',
-                        background: isSelected ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.03)',
-                        color: isSelected ? '#34d399' : '#e2e8f0',
+                        padding: '8px 6px',
+                        borderRadius: '10px',
+                        background: isSelected ? 'rgba(22, 163, 74, 0.12)' : 'rgba(0, 0, 0, 0.02)',
+                        border: isSelected ? '1px solid #16A34A' : '1px solid rgba(0, 0, 0, 0.05)',
+                        color: isSelected ? '#15803D' : '#334155',
+                        fontSize: '0.78rem',
                         fontWeight: isSelected ? 700 : 500,
-                        fontSize: '0.8rem',
-                        cursor: 'pointer',
-                        textAlign: 'center'
+                        cursor: 'pointer'
                       }}
                     >
-                      {lang.nativeName}
+                      {r.label}
                     </button>
                   );
                 })}
@@ -550,29 +638,26 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
         )}
-      </div>
+      </header>
 
-      <style jsx>{`
-        @media (min-width: 900px) {
-          .desktop-nav {
+      {/* Authentication Modal */}
+      <AuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        currentRole={currentRole}
+        onRoleChange={onRoleChange}
+      />
+
+      <style jsx global>{`
+        @media (max-width: 900px) {
+          .hide-on-mobile {
+            display: none !important;
+          }
+          .show-on-mobile {
             display: flex !important;
-          }
-          .desktop-controls {
-            display: flex !important;
-          }
-        }
-        @media (max-width: 899px) {
-          .mobile-hamburger {
-            display: flex !important;
-          }
-          .persona-label {
-            display: none;
-          }
-          .lang-label {
-            display: none;
           }
         }
       `}</style>
-    </header>
+    </>
   );
 };

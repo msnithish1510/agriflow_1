@@ -42,22 +42,30 @@ export const Modal: React.FC<ModalProps> = ({
       aria-modal="true"
     >
       <div className="modal-content" style={{ maxWidth }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '12px' }}>
-          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc' }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          marginBottom: '20px', 
+          borderBottom: '1px solid rgba(0, 0, 0, 0.08)', 
+          paddingBottom: '12px' 
+        }}>
+          <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#17221C' }}>
             {title}
           </h3>
           <button
             onClick={onClose}
             style={{
-              background: 'rgba(255,255,255,0.06)',
+              background: 'rgba(0, 0, 0, 0.05)',
               border: 'none',
               borderRadius: '8px',
               padding: '6px',
               cursor: 'pointer',
-              color: '#94a3b8',
+              color: '#64748B',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              transition: 'all 0.2s ease'
             }}
             aria-label="Close modal"
           >

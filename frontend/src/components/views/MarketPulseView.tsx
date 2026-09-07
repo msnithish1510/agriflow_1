@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/i18n';
 import { 
   TrendingUp, TrendingDown, Activity, AlertCircle, Sparkles, MapPin, 
-  Calendar, Layers, ArrowUpRight, ArrowDownRight, CheckCircle2, Info 
+  Calendar, Layers, ArrowUpRight, ArrowDownRight, CheckCircle2, Info, 
+  BarChart3, RefreshCw
 } from 'lucide-react';
 import { AIForecastPanel } from '../AIForecastPanel';
 
@@ -17,7 +18,7 @@ export const MarketPulseView: React.FC = () => {
     Tomato: { en: 'Tomato', ta: 'தக்காளி', hi: 'टमाटर', te: 'టమోటా', ml: 'തക്കാളി', kn: 'ಟೊಮೆಟೊ' },
     Onion: { en: 'Onion', ta: 'வெங்காயம்', hi: 'प्याज', te: 'ఉల్లిపాయ', ml: 'ഉള്ളി', kn: 'ಈರುಳ್ಳಿ' },
     Potato: { en: 'Potato', ta: 'உருளைக்கிழங்கு', hi: 'आलू', te: 'బంగాళాదుంప', ml: 'ഉരുളക്കിഴങ്ങ്', kn: 'ಆಲೂಗಡ್ಡೆ' },
-    Wheat: { en: 'Wheat', ta: 'கோதுமை', hi: 'गेहूं', te: 'గోధుమలు', ml: 'ഗോതമ്പ്', kn: 'ಗೋಧಿ' },
+    Wheat: { en: 'Wheat', ta: 'கோதுமை', hi: 'गेहूं', te: 'గోధుಮలు', ml: 'ഗോതമ്പ്', kn: 'ಗೋಧಿ' },
     Moong: { en: 'Moong', ta: 'பயறு (Moong)', hi: 'मूंग दाल', te: 'పెసలు', ml: 'ചെറുപയർ', kn: 'ಹೆಸರುಕಾಳು' }
   };
 
@@ -37,26 +38,30 @@ export const MarketPulseView: React.FC = () => {
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       
       {/* Header Banner */}
-      <div className="glass-panel" style={{
-        background: 'linear-gradient(135deg, rgba(16,185,129,0.12) 0%, rgba(6,182,212,0.12) 100%)',
-        border: '1px solid rgba(16,185,129,0.3)',
-        padding: '24px'
+      <div className="glass-card-primary" style={{
+        background: 'linear-gradient(135deg, rgba(22, 163, 74, 0.12) 0%, rgba(14, 165, 233, 0.08) 50%, rgba(255, 255, 255, 0.9) 100%)',
+        border: '1px solid rgba(22, 163, 74, 0.25)',
+        boxShadow: '0 10px 30px -5px rgba(22, 163, 74, 0.08)',
+        padding: '28px 24px'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span className="badge-tag badge-rural">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <span className="badge-tag badge-rural" style={{ padding: '4px 10px', fontSize: '0.78rem' }}>
                 <Activity size={14} /> LIVE DISTRICT RADAR
               </span>
-              <span style={{ fontSize: '0.8rem', color: '#38bdf8' }}>● Real-Time AI Evaluator</span>
+              <span style={{ fontSize: '0.82rem', color: '#0284C7', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span className="pulse-dot" style={{ width: '6px', height: '6px' }} />
+                Real-Time AI Evaluator
+              </span>
             </div>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f8fafc' }}>
+            <h1 style={{ fontSize: 'clamp(1.6rem, 3.2vw, 2.2rem)', fontWeight: 900, color: '#17221C', letterSpacing: '-0.02em' }}>
               {t.marketPulse.title}
             </h1>
-            <p style={{ fontSize: '0.92rem', color: '#cbd5e1', marginTop: '4px' }}>
+            <p style={{ fontSize: '0.94rem', color: '#64748B', marginTop: '6px', maxWidth: '750px', lineHeight: 1.6 }}>
               {t.marketPulse.subtitle}
             </p>
           </div>
@@ -66,7 +71,7 @@ export const MarketPulseView: React.FC = () => {
               value={selectedDistrict}
               onChange={(e) => setSelectedDistrict(e.target.value)}
               className="input-large"
-              style={{ width: 'auto', minHeight: '44px', padding: '8px 14px', fontSize: '0.9rem' }}
+              style={{ width: 'auto', minHeight: '44px', padding: '8px 16px', fontSize: '0.92rem' }}
             >
               <option value="Nashik">Nashik (நாசிக்)</option>
               <option value="Pune">Pune (புனே)</option>
@@ -79,149 +84,158 @@ export const MarketPulseView: React.FC = () => {
 
       {/* AI Market Insight Notice */}
       <div style={{
-        background: 'rgba(16, 185, 129, 0.08)',
-        border: '1px solid rgba(16, 185, 129, 0.3)',
-        padding: '16px 20px',
+        background: 'rgba(22, 163, 74, 0.08)',
+        border: '1px solid rgba(22, 163, 74, 0.25)',
+        padding: '18px 22px',
         borderRadius: '16px',
         display: 'flex',
         alignItems: 'flex-start',
-        gap: '14px'
+        gap: '16px',
+        boxShadow: '0 4px 14px rgba(22, 163, 74, 0.05)'
       }}>
         <div style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '10px',
-          background: 'rgba(16, 185, 129, 0.2)',
+          width: '42px',
+          height: '42px',
+          borderRadius: '12px',
+          background: 'rgba(22, 163, 74, 0.15)',
+          color: '#16A34A',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           flexShrink: 0
         }}>
-          <Sparkles size={20} color="#10b981" />
+          <Sparkles size={22} />
         </div>
         <div>
-          <div style={{ fontWeight: 800, fontSize: '1rem', color: '#34d399', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {t.marketPulse.aiInsightTitle}
-            <span style={{ fontSize: '0.72rem', background: 'rgba(16,185,129,0.2)', padding: '2px 8px', borderRadius: '8px' }}>XGBoost Regressor v1.0</span>
+          <div style={{ fontWeight: 800, color: '#17221C', fontSize: '1rem', marginBottom: '4px' }}>
+            AI Pre-Harvest Market Advisory • {selectedDistrict}
           </div>
-          <p style={{ fontSize: '0.9rem', color: '#cbd5e1', marginTop: '4px', lineHeight: 1.5 }}>
-            {t.marketPulse.aiInsightText}
-          </p>
-        </div>
-      </div>
-
-      {/* Demand vs Supply Gap Highlights */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
-        <div className="glass-panel" style={{ borderLeft: '5px solid #10b981' }}>
-          <span style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600, textTransform: 'uppercase' }}>
-            {t.marketPulse.currentDemand}
-          </span>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#10b981', marginTop: '6px' }}>
-            1,48,500 kg
-          </div>
-          <div style={{ fontSize: '0.85rem', color: '#34d399', marginTop: '4px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <ArrowUpRight size={16} /> +22% vs. previous 15-day cycle
-          </div>
-        </div>
-
-        <div className="glass-panel" style={{ borderLeft: '5px solid #38bdf8' }}>
-          <span style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600, textTransform: 'uppercase' }}>
-            {t.marketPulse.expectedSupply}
-          </span>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#38bdf8', marginTop: '6px' }}>
-            1,12,000 kg
-          </div>
-          <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '4px' }}>
-            From 48 registered farmer groups
-          </div>
-        </div>
-
-        <div className="glass-panel" style={{ borderLeft: '5px solid #f59e0b' }}>
-          <span style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600, textTransform: 'uppercase' }}>
-            {t.marketPulse.demandSupplyGap}
-          </span>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#fbbf24', marginTop: '6px' }}>
-            -36,500 kg Deficit
-          </div>
-          <div style={{ fontSize: '0.85rem', color: '#fbbf24', marginTop: '4px' }}>
-            High selling opportunity for late-stage farmers
+          <div style={{ fontSize: '0.88rem', color: '#64748B', lineHeight: 1.5 }}>
+            {selectedCrop} demand is expected to peak in the next 10-14 days (+18% forward institutional commitments). Farmers with ready crops are advised to declare harvests early to lock guaranteed purchase contracts above ₹26.00/kg.
           </div>
         </div>
       </div>
 
-      {/* Embedded Deep AI Forecast Panel */}
-      <div>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '14px', color: '#f8fafc' }}>
-          📈 15-Day Predictive Demand Curve ({selectedDistrict})
-        </h2>
-        <AIForecastPanel />
-      </div>
+      {/* ==================================================== */}
+      {/* 1. EMBEDDED AI FORECAST PANEL                       */}
+      {/* ==================================================== */}
+      <AIForecastPanel selectedCrop={selectedCrop} />
 
-      {/* Trending Crops Table */}
+      {/* ==================================================== */}
+      {/* 2. COMMODITY PRICE TICKER & DEMAND METRICS          */}
+      {/* ==================================================== */}
       <div className="glass-panel">
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', color: '#f8fafc' }}>
-          🔥 {t.marketPulse.trendingCrops}
-        </h2>
-        
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <div>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#17221C' }}>
+              {t.marketPulse.trendingCrops}
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: '#64748B' }}>
+              Live wholesale mandi spot rates vs. forward contracted floor prices
+            </p>
+          </div>
+          <span className="badge-tag badge-completed">Updated 10m ago</span>
+        </div>
+
         <div className="table-responsive">
           <table className="table-modern">
             <thead>
               <tr>
-                <th>Crop</th>
+                <th>Crop Name</th>
                 <th>Category</th>
-                <th>Indicative Price</th>
-                <th>15-Day Change</th>
-                <th>Demand Index</th>
-                <th>Market Pulse</th>
+                <th>Pre-Harvest Demand Index</th>
+                <th>Avg Fair Price</th>
+                <th>7-Day Trend</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              {trendingCrops.map((c, i) => (
-                <tr key={i}>
-                  <td style={{ fontWeight: 700, color: '#f8fafc' }}>
-                    {cropNamesByLang[c.name]?.[language] || c.name}
-                  </td>
-                  <td>{c.category}</td>
-                  <td style={{ fontWeight: 800, color: '#10b981' }}>{c.price}</td>
-                  <td style={{ color: c.trend === 'UP' ? '#34d399' : '#94a3b8', fontWeight: 700 }}>
-                    {c.change}
-                  </td>
-                  <td>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <div style={{ width: '80px', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
-                        <div style={{ width: `${c.demandIndex}%`, height: '100%', background: c.demandIndex > 85 ? '#10b981' : '#f59e0b' }} />
+              {trendingCrops.map(item => {
+                const localizedName = cropNamesByLang[item.name]?.[language] || item.name;
+                const isUp = item.trend === 'UP';
+                return (
+                  <tr key={item.name}>
+                    <td style={{ fontWeight: 800, color: '#17221C' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '1.2rem' }}>
+                          {item.name === 'Tomato' ? '🍅' : item.name === 'Onion' ? '🧅' : item.name === 'Potato' ? '🥔' : item.name === 'Wheat' ? '🌾' : '🌱'}
+                        </span>
+                        <div>
+                          <div>{localizedName}</div>
+                          <div style={{ fontSize: '0.74rem', color: '#64748B' }}>{item.name}</div>
+                        </div>
                       </div>
-                      <span style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>{c.demandIndex}/100</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`badge-tag ${c.demandIndex > 85 ? 'badge-completed' : 'badge-pending'}`}>
-                      {c.demandIndex > 85 ? '🟢 High Demand' : '🟡 Stable'}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td>
+                      <span className="badge-tag badge-rural" style={{ fontSize: '0.75rem' }}>
+                        {item.category}
+                      </span>
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <div style={{
+                          flex: 1,
+                          height: '6px',
+                          background: 'rgba(0, 0, 0, 0.06)',
+                          borderRadius: '9999px',
+                          overflow: 'hidden',
+                          maxWidth: '100px'
+                        }}>
+                          <div style={{ width: `${item.demandIndex}%`, height: '100%', background: '#16A34A' }} />
+                        </div>
+                        <span style={{ fontWeight: 800, fontSize: '0.88rem' }}>{item.demandIndex}/100</span>
+                      </div>
+                    </td>
+                    <td style={{ fontWeight: 800, color: '#15803D', fontSize: '1rem' }}>
+                      {item.price}
+                    </td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: isUp ? '#15803D' : '#D97706', fontWeight: 700 }}>
+                        {isUp ? <ArrowUpRight size={16} /> : <TrendingDown size={16} />}
+                        <span>{item.change}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <button
+                        className="btn-secondary"
+                        onClick={() => setSelectedCrop(item.name)}
+                        style={{ padding: '6px 12px', fontSize: '0.8rem', minHeight: '32px' }}
+                      >
+                        Forecast
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Regional Procurement Demand Summary */}
+      {/* ==================================================== */}
+      {/* 3. REGIONAL SOURCING DEMAND CLUSTERS                */}
+      {/* ==================================================== */}
       <div className="glass-panel">
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', color: '#f8fafc' }}>
-          📍 Regional Sourcing Hotspots
-        </h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
-          {regionalDemands.map((r, idx) => (
-            <div key={idx} className="surface-card" style={{ borderLeft: idx === 0 ? '4px solid #10b981' : '1px solid rgba(255,255,255,0.1)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc' }}>{r.district}</h3>
-                <span className="badge-tag badge-rural">{r.status}</span>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#17221C', marginBottom: '16px' }}>
+          Regional Sourcing Clusters & Procurement Hubs
+        </h3>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gap: '16px'
+        }}>
+          {regionalDemands.map(reg => (
+            <div key={reg.district} className="surface-card" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontWeight: 800, color: '#17221C', fontSize: '1.1rem' }}>{reg.district}</span>
+                <span className="badge-tag badge-matched" style={{ fontSize: '0.74rem' }}>{reg.status}</span>
               </div>
-              <div style={{ fontSize: '0.88rem', color: '#cbd5e1', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>Open Buyer Demands: <strong>{r.openDemands}</strong></div>
-                <div>Aggregated Volume: <strong style={{ color: '#38bdf8' }}>{r.totalVolumeKg.toLocaleString('en-IN')} kg</strong></div>
-                <div>Top Crop: <strong>{r.topCrop}</strong></div>
+              <div style={{ fontSize: '1.5rem', fontWeight: 900, color: '#0EA5E9' }}>
+                {(reg.totalVolumeKg / 1000).toFixed(1)} Tonnes
+              </div>
+              <div style={{ fontSize: '0.85rem', color: '#64748B' }}>
+                <div>Open Demands: <strong>{reg.openDemands} contracts</strong></div>
+                <div>Primary Focus: <strong>{reg.topCrop}</strong></div>
               </div>
             </div>
           ))}

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useLanguage } from '@/i18n';
-import { Sprout, ShieldCheck, Heart, Globe, ArrowRight, ExternalLink } from 'lucide-react';
+import { Sprout, ShieldCheck, Heart, Globe, ArrowRight, ExternalLink, Sparkles } from 'lucide-react';
 import { UserRole } from '@/types';
 
 interface FooterProps {
@@ -15,97 +15,106 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onRoleSelect }) => {
 
   return (
     <footer style={{
-      marginTop: '60px',
-      borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-      background: 'rgba(9, 13, 22, 0.95)',
-      paddingTop: '48px',
-      paddingBottom: '36px'
+      marginTop: '64px',
+      borderTop: '1px solid rgba(0, 0, 0, 0.08)',
+      background: 'rgba(255, 255, 255, 0.85)',
+      backdropFilter: 'blur(20px)',
+      WebkitBackdropFilter: 'blur(20px)',
+      paddingTop: '52px',
+      paddingBottom: '36px',
+      boxShadow: '0 -10px 30px rgba(0, 0, 0, 0.02), inset 0 1px 0 #ffffff'
     }}>
       <div className="app-container">
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
           gap: '36px',
-          marginBottom: '40px'
+          marginBottom: '44px'
         }}>
           {/* Brand & Purpose Column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div style={{
-                background: 'linear-gradient(135deg, #10b981, #059669)',
-                width: '38px',
-                height: '38px',
-                borderRadius: '10px',
+                background: 'linear-gradient(135deg, #16A34A, #15803D)',
+                width: '40px',
+                height: '40px',
+                borderRadius: '12px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: '1.2rem',
+                fontSize: '1.25rem',
                 color: '#fff',
-                boxShadow: '0 4px 12px rgba(16,185,129,0.3)'
+                boxShadow: '0 4px 14px rgba(22, 163, 74, 0.3)',
+                border: '1px solid rgba(255, 255, 255, 0.3)'
               }}>
                 🌱
               </div>
-              <span style={{ fontSize: '1.3rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '-0.5px' }}>
+              <span style={{ fontSize: '1.35rem', fontWeight: 900, color: '#17221C', letterSpacing: '-0.5px' }}>
                 AGRIFlow
               </span>
             </div>
 
-            <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.6 }}>
+            <p style={{ fontSize: '0.9rem', color: '#64748B', lineHeight: 1.65 }}>
               {t.footer.aboutText}
             </p>
 
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              borderRadius: '8px',
-              background: 'rgba(16, 185, 129, 0.1)',
-              border: '1px solid rgba(16, 185, 129, 0.25)',
-              color: '#34d399',
-              fontSize: '0.78rem',
-              fontWeight: 700,
+              gap: '8px',
+              padding: '8px 14px',
+              borderRadius: '12px',
+              background: 'rgba(22, 163, 74, 0.08)',
+              border: '1px solid rgba(22, 163, 74, 0.2)',
+              fontSize: '0.82rem',
+              color: '#15803D',
+              fontWeight: 600,
               width: 'fit-content'
             }}>
               <ShieldCheck size={16} />
-              {t.footer.sihBadge}
+              <span>Smart India Hackathon • SIH26033</span>
             </div>
           </div>
 
-          {/* Quick Links Column */}
+          {/* Quick Navigation */}
           <div>
-            <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc', marginBottom: '16px', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+            <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#17221C', marginBottom: '16px' }}>
               {t.footer.quickLinks}
             </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.9rem' }}>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
                 { id: 'home', label: t.nav.home },
                 { id: 'how-it-works', label: t.nav.howItWorks },
                 { id: 'market-pulse', label: t.nav.marketPulse },
                 { id: 'price-transparency', label: t.nav.priceTransparency },
-                { id: 'demo', label: t.nav.interactiveDemo },
-                { id: 'dashboard', label: t.nav.farmerPortal }
-              ].map(item => (
-                <li key={item.id}>
+                { id: 'demo', label: t.nav.interactiveDemo }
+              ].map((link) => (
+                <li key={link.id}>
                   <button
-                    onClick={() => onNavigate && onNavigate(item.id)}
+                    onClick={() => onNavigate?.(link.id)}
                     style={{
-                      background: 'transparent',
+                      background: 'none',
                       border: 'none',
-                      color: '#cbd5e1',
-                      cursor: 'pointer',
+                      color: '#64748B',
                       fontSize: '0.9rem',
-                      padding: '2px 0',
+                      cursor: 'pointer',
+                      padding: 0,
                       textAlign: 'left',
-                      display: 'flex',
+                      display: 'inline-flex',
                       alignItems: 'center',
                       gap: '6px',
-                      transition: 'color 0.2s ease'
+                      transition: 'all 0.2s ease'
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#10b981')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#cbd5e1')}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = '#16A34A';
+                      e.currentTarget.style.transform = 'translateX(4px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = '#64748B';
+                      e.currentTarget.style.transform = 'translateX(0)';
+                    }}
                   >
-                    <span>›</span> {item.label}
+                    <span>{link.label}</span>
                   </button>
                 </li>
               ))}
@@ -114,115 +123,113 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate, onRoleSelect }) => {
 
           {/* Stakeholder Portals */}
           <div>
-            <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc', marginBottom: '16px', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
+            <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#17221C', marginBottom: '16px' }}>
               {t.footer.stakeholders}
             </h4>
-            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.9rem' }}>
+            <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {[
-                { role: 'FARMER' as UserRole, label: t.common.roles.FARMER },
-                { role: 'BULK_BUYER' as UserRole, label: t.common.roles.BULK_BUYER },
-                { role: 'CONSUMER' as UserRole, label: t.common.roles.CONSUMER },
-                { role: 'LOGISTICS_PARTNER' as UserRole, label: t.common.roles.LOGISTICS_PARTNER },
-                { role: 'FPO' as UserRole, label: t.common.roles.FPO },
-                { role: 'ADMIN' as UserRole, label: t.common.roles.ADMIN }
-              ].map(p => (
-                <li key={p.role}>
+                { role: 'FARMER' as UserRole, label: t.common.roles.FARMER, icon: '🌾' },
+                { role: 'BULK_BUYER' as UserRole, label: t.common.roles.BULK_BUYER, icon: '🏢' },
+                { role: 'CONSUMER' as UserRole, label: t.common.roles.CONSUMER, icon: '🥗' },
+                { role: 'LOGISTICS_PARTNER' as UserRole, label: t.common.roles.LOGISTICS_PARTNER, icon: '🚚' },
+                { role: 'FPO' as UserRole, label: t.common.roles.FPO, icon: '🤝' },
+                { role: 'ADMIN' as UserRole, label: t.common.roles.ADMIN, icon: '🛡️' }
+              ].map((item) => (
+                <li key={item.role}>
                   <button
                     onClick={() => {
-                      if (onRoleSelect) onRoleSelect(p.role);
-                      if (onNavigate) onNavigate('dashboard');
+                      onRoleSelect?.(item.role);
+                      onNavigate?.('dashboard');
                     }}
                     style={{
-                      background: 'transparent',
+                      background: 'none',
                       border: 'none',
-                      color: '#cbd5e1',
-                      cursor: 'pointer',
+                      color: '#64748B',
                       fontSize: '0.9rem',
-                      padding: '2px 0',
+                      cursor: 'pointer',
+                      padding: 0,
                       textAlign: 'left',
-                      display: 'flex',
+                      display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '6px',
-                      transition: 'color 0.2s ease'
+                      gap: '8px',
+                      transition: 'all 0.2s ease'
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#38bdf8')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#cbd5e1')}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = '#16A34A';
+                      e.currentTarget.style.transform = 'translateX(4px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = '#64748B';
+                      e.currentTarget.style.transform = 'translateX(0)';
+                    }}
                   >
-                    <span>›</span> {p.label}
+                    <span>{item.icon}</span>
+                    <span>{item.label}</span>
                   </button>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Language & Trust Statement */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
-              {t.nav.language} (Language)
+          {/* Multilingual Support Strip */}
+          <div>
+            <h4 style={{ fontSize: '1rem', fontWeight: 800, color: '#17221C', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Globe size={18} color="#16A34A" />
+              <span>{t.footer.accessibility}</span>
             </h4>
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '8px'
-            }}>
-              {languages.map(lang => {
-                const isSelected = language === lang.code;
+            <p style={{ fontSize: '0.85rem', color: '#64748B', marginBottom: '14px', lineHeight: 1.5 }}>
+              Switch interface to your preferred regional language:
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+              {languages.map((l) => {
+                const isActive = l.code === language;
                 return (
                   <button
-                    key={lang.code}
-                    onClick={() => setLanguage(lang.code)}
+                    key={l.code}
+                    onClick={() => setLanguage(l.code)}
                     style={{
-                      padding: '8px 12px',
+                      background: isActive ? 'rgba(22, 163, 74, 0.12)' : 'rgba(0, 0, 0, 0.03)',
+                      color: isActive ? '#15803D' : '#334155',
+                      border: isActive ? '1px solid rgba(22, 163, 74, 0.35)' : '1px solid rgba(0, 0, 0, 0.06)',
                       borderRadius: '10px',
-                      border: isSelected ? '1px solid #10b981' : '1px solid rgba(255,255,255,0.1)',
-                      background: isSelected ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.04)',
-                      color: isSelected ? '#34d399' : '#94a3b8',
-                      fontWeight: isSelected ? 700 : 500,
+                      padding: '8px 10px',
                       fontSize: '0.82rem',
+                      fontWeight: isActive ? 700 : 500,
                       cursor: 'pointer',
+                      textAlign: 'left',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       transition: 'all 0.2s ease'
                     }}
                   >
-                    <span>{lang.nativeName}</span>
-                    {isSelected && <span style={{ color: '#10b981', fontSize: '0.75rem', fontWeight: 800 }}>✓</span>}
+                    <span>{l.nativeName}</span>
+                    {isActive && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#16A34A' }} />}
                   </button>
                 );
               })}
             </div>
-
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid rgba(255, 255, 255, 0.07)',
-              borderRadius: '12px',
-              padding: '12px 14px',
-              fontSize: '0.78rem',
-              color: '#94a3b8',
-              lineHeight: 1.5
-            }}>
-              {t.footer.transparencyNotice}
-            </div>
           </div>
         </div>
 
-        {/* Copyright Bar */}
+        {/* Bottom copyright bar */}
         <div style={{
-          borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-          paddingTop: '20px',
+          paddingTop: '24px',
+          borderTop: '1px solid rgba(0, 0, 0, 0.06)',
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
           flexWrap: 'wrap',
-          gap: '12px',
-          fontSize: '0.82rem',
-          color: '#64748b'
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '16px',
+          fontSize: '0.85rem',
+          color: '#64748B'
         }}>
-          <div>{t.footer.copyright}</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span>🌱</span>
-            <span>{t.common.tagline}</span>
+          <div>
+            {t.footer.copyright}
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span>Built for Indian Farmers & Consumers with</span>
+            <Heart size={14} color="#EF4444" fill="#EF4444" />
           </div>
         </div>
       </div>

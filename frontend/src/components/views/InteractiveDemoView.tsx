@@ -24,7 +24,7 @@ export const InteractiveDemoView: React.FC = () => {
       desc: t.demo.scenario1Desc,
       badge: "DEMAND-FIRST WORKFLOW",
       icon: ShoppingBag,
-      color: "#10b981",
+      color: "#16A34A",
       steps: [
         { label: "1. Buyer Posts Demand", desc: "Bulk Buyer posts 'Need 500 kg Tomato for Coimbatore DC @ ₹28/kg' with target delivery in 3 days." },
         { label: "2. AI Identifies Farmers", desc: "Matching Engine scans registered pre-harvest declarations within 50km radius and ranks candidate smallholders." },
@@ -41,7 +41,7 @@ export const InteractiveDemoView: React.FC = () => {
       desc: t.demo.scenario2Desc,
       badge: "UNSOLD STOCK DISCOVERY",
       icon: Sprout,
-      color: "#38bdf8",
+      color: "#0EA5E9",
       steps: [
         { label: "1. Farmer Declares Stock", desc: "Farmer Murugan harvests 300 kg Tomato with no advance buyer in local village." },
         { label: "2. AI Scans Regional Demand", desc: "AGRIFlow discovery agent queries institutional canteens and retail buyers within 60km." },
@@ -57,7 +57,7 @@ export const InteractiveDemoView: React.FC = () => {
       desc: t.demo.scenario3Desc,
       badge: "PRICE TRANSPARENCY AUDIT",
       icon: ShieldCheck,
-      color: "#fbbf24",
+      color: "#F59E0B",
       steps: [
         { label: "1. Consumer Selects Produce", desc: "Urban household adds 25 kg organic Tomatoes to direct procurement cart." },
         { label: "2. Real-Time Price Stack Audit", desc: "System itemizes direct farmer price + handling + cold transit + retail distribution." },
@@ -70,7 +70,7 @@ export const InteractiveDemoView: React.FC = () => {
       desc: t.demo.scenario4Desc,
       badge: "MULTILINGUAL VOICE",
       icon: Volume2,
-      color: "#c084fc",
+      color: "#8B5CF6",
       steps: [
         { label: "1. Farmer Speaks Details", desc: "Farmer taps microphone and speaks: 'நாளை 500 கிலோ தக்காளி அறுவடை உள்ளது, விலை 28 ரூபாய்'." },
         { label: "2. Entity Extraction Engine", desc: "AI extracts: Crop=Tomato, Quantity=500kg, Date=Tomorrow, TargetPrice=₹28." },
@@ -99,242 +99,196 @@ export const InteractiveDemoView: React.FC = () => {
       if (step < currentScenario.steps.length) {
         const s = currentScenario.steps[step];
         setCurrentStepIndex(step + 1);
-        setLogs(prev => [...prev, `[Step ${step + 1}/${currentScenario.steps.length}] ${s.label} — ${s.desc}`]);
+        setLogs(prev => [...prev, `[SIMULATION ${new Date().toLocaleTimeString()}] Stage ${step + 1}: ${s.label} -> Completed.`]);
         step++;
       } else {
         clearInterval(interval);
         setIsSimulating(false);
+        setLogs(prev => [...prev, `[SUCCESS] End-to-End simulation completed successfully with verified payouts.`]);
       }
-    }, 900);
-  };
-
-  const handleNextStep = () => {
-    if (currentStepIndex < currentScenario.steps.length) {
-      const nextIdx = currentStepIndex;
-      const s = currentScenario.steps[nextIdx];
-      setCurrentStepIndex(nextIdx + 1);
-      setLogs(prev => [...prev, `[Step ${nextIdx + 1}/${currentScenario.steps.length}] ${s.label} — ${s.desc}`]);
-    }
-  };
-
-  const handleReset = () => {
-    setCurrentStepIndex(0);
-    setIsSimulating(false);
-    setLogs([]);
+    }, 1000);
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       
       {/* Header Banner */}
-      <div className="glass-panel" style={{
-        background: 'linear-gradient(135deg, rgba(16,185,129,0.14) 0%, rgba(6,182,212,0.14) 100%)',
-        border: '1px solid rgba(16,185,129,0.3)',
-        padding: '24px'
+      <div className="glass-card-primary" style={{
+        background: 'linear-gradient(135deg, rgba(22, 163, 74, 0.12) 0%, rgba(139, 92, 246, 0.08) 50%, rgba(255, 255, 255, 0.9) 100%)',
+        border: '1px solid rgba(22, 163, 74, 0.25)',
+        boxShadow: '0 10px 30px -5px rgba(22, 163, 74, 0.08)',
+        padding: '28px 24px'
       }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span className="badge-tag badge-rural">
-                <Sparkles size={14} /> JUDGE-READY DEMO RUNNER
-              </span>
-              <span style={{ fontSize: '0.8rem', color: '#38bdf8' }}>Smart India Hackathon 2026</span>
-            </div>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f8fafc' }}>
-              {t.demo.title}
-            </h1>
-            <p style={{ fontSize: '0.92rem', color: '#cbd5e1', marginTop: '4px' }}>
-              {t.demo.subtitle}
-            </p>
-          </div>
-
-          <div style={{ display: 'flex', gap: '10px' }}>
-            <button 
-              className="btn-emerald" 
-              onClick={handleRunFullSimulation}
-              disabled={isSimulating}
-              style={{ minHeight: '44px', padding: '10px 22px' }}
-            >
-              <Play size={18} />
-              {isSimulating ? t.demo.runningText : t.demo.runButton}
-            </button>
-            <button 
-              className="btn-secondary" 
-              onClick={handleReset}
-              disabled={isSimulating}
-              style={{ minHeight: '44px', padding: '10px 16px' }}
-            >
-              <RotateCcw size={16} />
-            </button>
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+          <span className="badge-tag badge-rural" style={{ padding: '4px 10px', fontSize: '0.78rem' }}>
+            <Zap size={14} /> LIVE SIMULATION RUNNER
+          </span>
+          <span style={{ fontSize: '0.82rem', color: '#15803D', fontWeight: 700 }}>
+            ● SIH26033 Interactive Demonstration
+          </span>
         </div>
+        <h1 style={{ fontSize: 'clamp(1.6rem, 3.2vw, 2.2rem)', fontWeight: 900, color: '#17221C', letterSpacing: '-0.02em' }}>
+          {t.demo.title}
+        </h1>
+        <p style={{ fontSize: '0.94rem', color: '#64748B', marginTop: '6px', maxWidth: '750px', lineHeight: 1.6 }}>
+          {t.demo.subtitle}
+        </p>
       </div>
 
-      {/* Scenario Selector Tabs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
-        {scenarios.map(sc => {
-          const Icon = sc.icon;
-          const isSelected = activeScenarioId === sc.id;
+      {/* Scenario Selection Grid */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+        gap: '16px'
+      }}>
+        {scenarios.map(s => {
+          const isSelected = s.id === activeScenarioId;
+          const SIcon = s.icon;
           return (
             <div
-              key={sc.id}
-              onClick={() => handleSelectScenario(sc.id)}
-              className="action-card"
+              key={s.id}
+              onClick={() => handleSelectScenario(s.id)}
+              className="glass-card-primary"
               style={{
-                borderLeft: isSelected ? `5px solid ${sc.color}` : '1px solid rgba(255,255,255,0.1)',
-                background: isSelected ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.02)',
-                boxShadow: isSelected ? '0 8px 24px rgba(0,0,0,0.4)' : 'none'
+                borderTop: `4px solid ${s.color}`,
+                cursor: 'pointer',
+                background: isSelected ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.75)',
+                boxShadow: isSelected ? `0 12px 28px -6px ${s.color}35` : '0 4px 12px rgba(0,0,0,0.02)'
               }}
             >
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                  <span className="badge-tag" style={{ background: `${sc.color}22`, color: sc.color, border: `1px solid ${sc.color}44` }}>
-                    {sc.badge}
-                  </span>
-                  <div style={{ width: '30px', height: '30px', borderRadius: '8px', background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Icon size={16} color={sc.color} />
-                  </div>
-                </div>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#f8fafc', marginTop: '4px' }}>
-                  {sc.title}
-                </h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <span className="badge-tag" style={{ background: `${s.color}15`, color: s.color, fontSize: '0.74rem' }}>
+                  {s.badge}
+                </span>
+                <SIcon size={20} color={s.color} />
               </div>
-              <div style={{ fontSize: '0.82rem', color: '#94a3b8', lineHeight: 1.4 }}>
-                {sc.desc}
-              </div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#17221C', marginBottom: '6px' }}>
+                {s.title}
+              </h3>
+              <p style={{ fontSize: '0.86rem', color: '#64748B', lineHeight: 1.5 }}>
+                {s.desc}
+              </p>
             </div>
           );
         })}
       </div>
 
-      {/* Active Scenario Flow Visualizer */}
-      <div className="glass-panel" style={{ border: `1.5px solid ${currentScenario.color}44` }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+      {/* Active Scenario Pipeline Runner */}
+      <div className="glass-panel" style={{ padding: '32px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '24px' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <CurrentIcon size={24} color={currentScenario.color} />
-              <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#f8fafc' }}>
-                {currentScenario.title}
-              </h2>
+            <div style={{ fontSize: '0.8rem', color: currentScenario.color, fontWeight: 800, textTransform: 'uppercase' }}>
+              CURRENT SCENARIO #{currentScenario.id}
             </div>
-            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', marginTop: '4px' }}>
-              {currentScenario.desc}
-            </p>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 900, color: '#17221C' }}>
+              {currentScenario.title}
+            </h2>
           </div>
 
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button 
-              className="btn-emerald" 
-              onClick={handleNextStep}
-              disabled={isSimulating || currentStepIndex >= currentScenario.steps.length}
-              style={{ padding: '8px 18px', fontSize: '0.88rem', minHeight: '40px' }}
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button
+              className="btn-emerald"
+              onClick={handleRunFullSimulation}
+              disabled={isSimulating}
+              style={{ padding: '10px 22px', fontSize: '0.95rem' }}
             >
-              <span>{t.demo.nextStepBtn}</span>
-              <ArrowRight size={16} />
+              <Play size={18} />
+              <span>{isSimulating ? 'Simulating Pipeline...' : 'Run Auto Simulation'}</span>
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={() => {
+                setCurrentStepIndex(0);
+                setLogs([]);
+              }}
+              style={{ padding: '10px 18px', fontSize: '0.95rem' }}
+            >
+              <RotateCcw size={16} />
+              <span>Reset</span>
             </button>
           </div>
         </div>
 
-        {/* Step Progression Timeline */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
-          {currentScenario.steps.map((step, idx) => {
-            const isCompleted = currentStepIndex > idx;
-            const isCurrent = currentStepIndex === idx + 1;
+        {/* Step Sequence Timeline */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '28px' }}>
+          {currentScenario.steps.map((st, i) => {
+            const isDone = currentStepIndex > i;
+            const isCurrent = currentStepIndex === i + 1;
             return (
-              <div
-                key={idx}
+              <div 
+                key={i} 
+                className="surface-card"
                 style={{
                   display: 'flex',
                   alignItems: 'flex-start',
-                  gap: '14px',
-                  padding: '14px 18px',
-                  borderRadius: '12px',
-                  background: isCurrent 
-                    ? `${currentScenario.color}18` 
-                    : isCompleted 
-                    ? 'rgba(255,255,255,0.03)' 
-                    : 'rgba(255,255,255,0.01)',
-                  border: isCurrent 
-                    ? `1px solid ${currentScenario.color}` 
-                    : '1px solid rgba(255,255,255,0.06)',
-                  transition: 'all 0.2s ease'
+                  gap: '16px',
+                  padding: '16px',
+                  border: isCurrent ? `1.5px solid ${currentScenario.color}` : '1px solid rgba(0,0,0,0.06)',
+                  background: isCurrent ? `${currentScenario.color}08` : isDone ? 'rgba(22, 163, 74, 0.05)' : '#ffffff'
                 }}
               >
                 <div style={{
-                  width: '28px',
-                  height: '28px',
+                  width: '32px',
+                  height: '32px',
                   borderRadius: '50%',
-                  background: isCompleted ? '#10b981' : isCurrent ? currentScenario.color : '#1e293b',
-                  color: '#ffffff',
+                  background: isDone ? '#16A34A' : isCurrent ? currentScenario.color : 'rgba(0,0,0,0.06)',
+                  color: isDone || isCurrent ? '#ffffff' : '#64748B',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
+                  fontSize: '0.85rem',
                   fontWeight: 800,
-                  fontSize: '0.82rem',
-                  flexShrink: 0,
-                  marginTop: '2px'
+                  flexShrink: 0
                 }}>
-                  {isCompleted ? <Check size={16} /> : idx + 1}
+                  {isDone ? <Check size={18} /> : i + 1}
                 </div>
-                <div>
-                  <div style={{
-                    fontWeight: 700,
-                    fontSize: '0.96rem',
-                    color: isCurrent ? '#ffffff' : isCompleted ? '#34d399' : '#cbd5e1'
-                  }}>
-                    {step.label}
-                  </div>
-                  <div style={{ fontSize: '0.85rem', color: isCurrent ? '#e2e8f0' : '#94a3b8', marginTop: '2px' }}>
-                    {step.desc}
-                  </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 800, color: '#17221C', fontSize: '0.98rem' }}>{st.label}</div>
+                  <div style={{ fontSize: '0.88rem', color: '#64748B', marginTop: '4px', lineHeight: 1.5 }}>{st.desc}</div>
                 </div>
+                <span className="badge-tag" style={{
+                  fontSize: '0.72rem',
+                  background: isDone ? 'rgba(22, 163, 74, 0.12)' : isCurrent ? `${currentScenario.color}15` : 'rgba(0,0,0,0.04)',
+                  color: isDone ? '#15803D' : isCurrent ? currentScenario.color : '#94A3B8'
+                }}>
+                  {isDone ? 'COMPLETED' : isCurrent ? 'EXECUTING' : 'PENDING'}
+                </span>
               </div>
             );
           })}
         </div>
 
-        {/* Live Simulation Execution Logs */}
-        <div style={{
-          background: 'rgba(0, 0, 0, 0.45)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          borderRadius: '12px',
-          padding: '16px'
-        }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-            <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              🖥️ {t.demo.simulationLogs}
-            </span>
-            {currentStepIndex >= currentScenario.steps.length && (
-              <span className="badge-tag badge-completed">
-                {t.demo.completedBadge}
+        {/* Live Simulation Terminal Output */}
+        <div>
+          <h4 style={{ fontSize: '0.92rem', fontWeight: 800, color: '#17221C', marginBottom: '8px' }}>
+            Simulation Terminal Output:
+          </h4>
+          <div style={{
+            background: '#0F172A',
+            borderRadius: '14px',
+            padding: '16px 20px',
+            fontFamily: 'monospace',
+            fontSize: '0.84rem',
+            color: '#34D399',
+            minHeight: '110px',
+            maxHeight: '220px',
+            overflowY: 'auto',
+            lineHeight: 1.6
+          }}>
+            {logs.length === 0 ? (
+              <span style={{ color: '#64748B' }}>
+                &gt; Simulation runner ready. Click "Run Auto Simulation" to execute end-to-end workflow...
               </span>
-            )}
-          </div>
-
-          {logs.length > 0 ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontFamily: 'monospace', fontSize: '0.84rem' }}>
-              {logs.map((log, i) => (
-                <div key={i} style={{ color: i === logs.length - 1 ? '#34d399' : '#cbd5e1' }}>
+            ) : (
+              logs.map((log, index) => (
+                <div key={index} style={{ marginBottom: '4px' }}>
                   {log}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <div style={{ color: '#64748b', fontSize: '0.85rem' }}>
-              Click <strong>"{t.demo.runButton}"</strong> or <strong>"{t.demo.nextStepBtn}"</strong> above to begin this interactive scenario.
-            </div>
-          )}
+              ))
+            )}
+          </div>
         </div>
       </div>
-
-      {/* Auxiliary interactive widget for Scenario 3 or 4 */}
-      {activeScenarioId === 3 && (
-        <PriceBreakdownWidget />
-      )}
-
-      {activeScenarioId === 4 && (
-        <VoiceAssistantWidget />
-      )}
 
     </div>
   );

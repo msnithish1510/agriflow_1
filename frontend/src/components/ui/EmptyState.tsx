@@ -17,28 +17,35 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div style={{
-      padding: '40px 24px',
+      padding: '48px 24px',
       textAlign: 'center',
-      background: 'rgba(255, 255, 255, 0.02)',
-      border: '1px dashed rgba(255, 255, 255, 0.12)',
-      borderRadius: '16px',
+      background: 'rgba(255, 255, 255, 0.70)',
+      border: '1.5px dashed rgba(22, 163, 74, 0.35)',
+      borderRadius: '20px',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      gap: '12px'
+      gap: '14px',
+      backdropFilter: 'blur(12px)',
+      boxShadow: '0 4px 16px rgba(0, 0, 0, 0.02)'
     }}>
-      <div style={{ fontSize: '2.5rem' }}>{icon}</div>
-      <h4 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f8fafc' }}>
+      <div style={{
+        fontSize: '2.6rem',
+        filter: 'drop-shadow(0 4px 10px rgba(22, 163, 74, 0.15))'
+      }}>
+        {icon}
+      </div>
+      <h4 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#17221C' }}>
         {title}
       </h4>
       {message && (
-        <p style={{ fontSize: '0.9rem', color: '#94a3b8', maxWidth: '420px', margin: '0 auto' }}>
+        <p style={{ fontSize: '0.92rem', color: '#64748B', maxWidth: '440px', margin: '0 auto', lineHeight: 1.6 }}>
           {message}
         </p>
       )}
       {actionLabel && onAction && (
-        <button className="btn-emerald" onClick={onAction} style={{ marginTop: '8px', minHeight: '42px', padding: '8px 20px' }}>
+        <button className="btn-emerald" onClick={onAction} style={{ marginTop: '8px', minHeight: '44px', padding: '10px 24px' }}>
           {actionLabel}
         </button>
       )}

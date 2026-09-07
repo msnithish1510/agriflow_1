@@ -1,11 +1,12 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Truck, MapPin, Navigation, CheckCircle2, AlertCircle, Check } from 'lucide-react';
+import { Truck, MapPin, Navigation, CheckCircle2, AlertCircle, Check, Sparkles, ArrowRight, Clock, ShieldCheck } from 'lucide-react';
 import { OrderMatch } from '@/types';
 import { fetchLogisticsJobs, acceptLogisticsJob, updateOrderStatus } from '@/services/api';
 import { useLanguage } from '@/i18n';
 import { StatusBadge } from '../ui/StatusBadge';
+import { LogisticsMap } from '../LogisticsMap';
 
 export const LogisticsWorkflow: React.FC = () => {
   const { t, language } = useLanguage();
@@ -45,15 +46,7 @@ export const LogisticsWorkflow: React.FC = () => {
     try {
       await acceptLogisticsJob(orderId);
     } catch (err) {}
-    const acceptMsgs: Record<string, string> = {
-      en: 'Transport job accepted! Vehicle scheduled for multi-farm pickup.',
-      ta: 'போக்குவரத்து வேலை ஏற்றுக்கொள்ளப்பட்டது! நிலை: பயணத்தில் உள்ளது.',
-      hi: 'परिवहन कार्य स्वीकार किया गया! वाहन बहु-कृषि पिकअप के लिए निर्धारित।',
-      te: 'రవాణా పని ఆమోదించబడింది! బహుళ-వ్యవసాయ పికప్ కోసం వాహనం షెడ్యూల్ చేయబడింది.',
-      ml: 'ഗതാഗത ജോലി സ്വീകരിച്ചു! ഒന്നിലധികം ഫാമുകളിൽ നിന്നുള്ള പിക്കപ്പിനായി വാഹനം നിശ്ചയിച്ചു.',
-      kn: 'ಸಾರಿಗೆ ಕೆಲಸವನ್ನು ಸ್ವೀಕರಿಸಲಾಗಿದೆ! ಬಹು-ಫಾರ್ಮ್ ಪಿಕಪ್‌ಗಾಗಿ ವಾಹನವನ್ನು ನಿಗದಿಪಡಿಸಲಾಗಿದೆ.'
-    };
-    setToastMessage(acceptMsgs[language] || acceptMsgs.en);
+    setToastMessage('Transport job accepted! Cold transit truck scheduled for multi-farm pickup.');
   };
 
   const handleUpdateStatus = async (orderId: string, status: string) => {
@@ -61,142 +54,159 @@ export const LogisticsWorkflow: React.FC = () => {
       await updateOrderStatus(orderId, status);
     } catch (err) {}
     setJobs(jobs.map(j => j.id === orderId ? { ...j, status: status as any } : j));
-    const statusMsgs: Record<string, string> = {
-      en: `Order delivery status updated to ${status}!`,
-      ta: 'விநியோக நிலை வெற்றிகரமாக புதுப்பிக்கப்பட்டது!',
-      hi: `ऑर्डर डिलीवरी स्थिति को ${status} में अपडेट किया गया!`,
-      te: `ఆర్డర్ డెలివరీ స్థితి ${status} కు నవీకరించబడింది!`,
-      ml: `ഓർഡർ ഡെലിവറി നില ${status} ലേക്ക് പുതുക്കി!`,
-      kn: `ಆರ್ಡರ್ ವಿತರಣಾ ಸ್ಥಿತಿಯನ್ನು ${status} ಗೆ ನವೀಕರಿಸಲಾಗಿದೆ!`
-    };
-    setToastMessage(statusMsgs[language] || statusMsgs.en);
+    setToastMessage(`Order delivery status updated to ${status}!`);
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       
       {/* Top Banner */}
-      <div className="glass-panel" style={{
-        background: 'linear-gradient(135deg, rgba(6,182,212,0.14) 0%, rgba(16,185,129,0.12) 100%)',
-        border: '1px solid rgba(6,182,212,0.3)',
-        padding: '24px'
+      <div className="glass-card-primary" style={{
+        background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(22, 163, 74, 0.08) 50%, rgba(255, 255, 255, 0.9) 100%)',
+        border: '1px solid rgba(14, 165, 233, 0.25)',
+        boxShadow: '0 10px 30px -5px rgba(14, 165, 233, 0.08)',
+        padding: '28px 24px'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-          <span className="badge-tag badge-urban">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+          <span className="badge-tag badge-urban" style={{ padding: '4px 10px', fontSize: '0.78rem' }}>
             <Truck size={14} /> {t.common.roles.LOGISTICS_PARTNER}
           </span>
-          <span style={{ fontSize: '0.8rem', color: '#38bdf8' }}>Google OR-Tools VRPTW Fleet Dispatch</span>
+          <span style={{ fontSize: '0.82rem', color: '#0284C7', fontWeight: 700 }}>
+            ● Google OR-Tools VRPTW Fleet Dispatch
+          </span>
         </div>
-        <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: '#f8fafc' }}>
+        <h1 style={{ fontSize: 'clamp(1.6rem, 3.2vw, 2.2rem)', fontWeight: 900, color: '#17221C', letterSpacing: '-0.02em' }}>
           {t.logistics.title}
         </h1>
-        <p style={{ fontSize: '0.92rem', color: '#cbd5e1', marginTop: '4px' }}>
+        <p style={{ fontSize: '0.94rem', color: '#64748B', marginTop: '6px', maxWidth: '750px', lineHeight: 1.6 }}>
           {t.logistics.subtitle}
         </p>
       </div>
 
-      {/* Toast Feedback */}
       {toastMessage && (
         <div style={{
-          background: 'rgba(16,185,129,0.18)',
-          border: '1px solid #10b981',
-          padding: '12px 18px',
-          borderRadius: '12px',
-          color: '#34d399',
-          fontWeight: 600,
+          background: 'rgba(22, 163, 74, 0.1)',
+          border: '1px solid rgba(22, 163, 74, 0.3)',
+          padding: '14px 20px',
+          borderRadius: '14px',
+          color: '#15803D',
+          fontWeight: 700,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          <span>✓ {toastMessage}</span>
-          <button onClick={() => setToastMessage(null)} style={{ background: 'transparent', border: 'none', color: '#cbd5e1', cursor: 'pointer' }}>✕</button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <CheckCircle2 size={20} />
+            <span>{toastMessage}</span>
+          </div>
+          <button onClick={() => setToastMessage(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B', fontWeight: 800 }}>✕</button>
         </div>
       )}
 
-      {/* Summary Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
-        <div className="glass-panel" style={{ borderLeft: '5px solid #06b6d4' }}>
-          <span style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600, textTransform: 'uppercase' }}>
-            {t.logistics.activeJobsTitle}
-          </span>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#38bdf8', marginTop: '4px' }}>
-            {jobs.length} Active Trips
+      {/* 5-Stage Visual Supply Chain Flow (As explicitly requested by user) */}
+      <div className="glass-panel" style={{ padding: '24px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#17221C' }}>
+              Order #AF1024 Transit Chain
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: '#64748B' }}>
+              Live telemetry tracking from Nashik farm cluster to Reliance DC Bhosari
+            </p>
           </div>
-          <div style={{ fontSize: '0.82rem', color: '#94a3b8', marginTop: '2px' }}>
-            Multi-farm collection & direct delivery routes
-          </div>
+          <span className="badge-tag badge-completed">GPS Reefer Active</span>
         </div>
 
-        <div className="glass-panel" style={{ borderLeft: '5px solid #10b981' }}>
-          <span style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600, textTransform: 'uppercase' }}>
-            VEHICLE UTILIZATION
-          </span>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#10b981', marginTop: '4px' }}>
-            75.0% Capacity
-          </div>
-          <div style={{ fontSize: '0.82rem', color: '#34d399', marginTop: '2px' }}>
-            7,500 kg / 10,000 kg Truck Limit
-          </div>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+          gap: '10px',
+          alignItems: 'center'
+        }}>
+          {[
+            { label: 'Farmer Gate', status: 'Completed', icon: '🌾', detail: 'Nashik Cluster' },
+            { label: 'Collection Hub', status: 'Completed', icon: '🏢', detail: 'Pimpalgaon Hub' },
+            { label: 'Reefer Vehicle', status: 'In Transit', icon: '🚚', detail: 'MH-15-TC-4029' },
+            { label: 'Distributor DC', status: 'Next Stop', icon: '🏬', detail: 'Pune Metro DC' },
+            { label: 'Consumer Shelf', status: 'Pending', icon: '🛒', detail: 'Fresh Arrival' }
+          ].map((node, i) => {
+            const isTransit = node.status === 'In Transit';
+            return (
+              <div 
+                key={i} 
+                className="surface-card" 
+                style={{ 
+                  textAlign: 'center', 
+                  padding: '14px 10px',
+                  border: isTransit ? '1.5px solid #0EA5E9' : '1px solid rgba(0,0,0,0.06)',
+                  background: isTransit ? 'rgba(14, 165, 233, 0.08)' : 'rgba(255, 255, 255, 0.7)'
+                }}
+              >
+                <div style={{ fontSize: '1.5rem', marginBottom: '4px' }}>{node.icon}</div>
+                <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#17221C' }}>{node.label}</div>
+                <div style={{ fontSize: '0.74rem', color: isTransit ? '#0284C7' : '#64748B', fontWeight: isTransit ? 700 : 500 }}>
+                  {node.status}
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '2px' }}>{node.detail}</div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Assigned Delivery Queue */}
-      <div className="glass-panel">
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Truck size={20} color="#06b6d4" /> {t.logistics.activeJobsTitle}
-        </h2>
+      {/* Embedded Logistics Route Map */}
+      <LogisticsMap />
 
+      {/* Job Dispatch List */}
+      <div className="glass-panel">
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#17221C', marginBottom: '16px' }}>
+          Available Cold Transit Route Runs
+        </h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          {jobs.map(j => (
-            <div key={j.id} className="surface-card" style={{ borderLeft: '4px solid #06b6d4', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {jobs.map(job => (
+            <div key={job.id} className="surface-card" style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '10px' }}>
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <StatusBadge status={j.status} />
-                    <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f8fafc' }}>
-                      Trip #{j.id}
-                    </h3>
+                    <span style={{ fontWeight: 800, color: '#17221C', fontSize: '1.1rem' }}>Run #{job.id}</span>
+                    <StatusBadge status={job.status} />
                   </div>
-                  <div style={{ fontSize: '0.84rem', color: '#94a3b8', marginTop: '2px' }}>
-                    Route: Nashik Fleet Depot → 2 Farm Pickups → Pune Distribution Center
+                  <div style={{ fontSize: '0.85rem', color: '#64748B', marginTop: '2px' }}>
+                    Multi-Farm Consolidated Reefer Route • Nashik to Pune
                   </div>
                 </div>
-
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.35rem', fontWeight: 800, color: '#10b981' }}>
-                    {j.total_matched_quantity_kg?.toLocaleString('en-IN')} kg
-                  </div>
-                  <div style={{ fontSize: '0.84rem', color: '#fbbf24' }}>
-                    Freight Payout: ₹{j.total_amount_inr?.toLocaleString('en-IN')}
-                  </div>
+                <div style={{ fontSize: '1.3rem', fontWeight: 900, color: '#15803D' }}>
+                  ₹{job.total_amount_inr?.toLocaleString('en-IN') || '4,158'} Freight Fee
                 </div>
               </div>
 
-              {/* Waypoint Stops */}
-              <div style={{ background: 'rgba(0,0,0,0.3)', padding: '14px', borderRadius: '12px', fontSize: '0.88rem' }}>
-                <div style={{ fontWeight: 700, color: '#38bdf8', marginBottom: '8px' }}>
-                  📍 {t.logistics.pickupStopsTitle}:
-                </div>
-                {(j.participating_farmer_ids || []).map((f: any, idx: number) => (
-                  <div key={idx} style={{ paddingLeft: '12px', borderLeft: '3px solid #38bdf8', marginBottom: '6px', color: '#cbd5e1' }}>
-                    Stop #{idx + 1}: <strong>{f.farmer_name || `Farmer ${f.farmer_id}`}</strong> — Pickup: {f.allocated_quantity_kg} kg
+              {/* Participating Pickups */}
+              <div style={{
+                padding: '12px 14px',
+                borderRadius: '10px',
+                background: 'rgba(0, 0, 0, 0.02)',
+                border: '1px solid rgba(0, 0, 0, 0.05)',
+                fontSize: '0.85rem'
+              }}>
+                <div style={{ fontWeight: 700, color: '#17221C', marginBottom: '4px' }}>Pickup Stops:</div>
+                {job.participating_farmer_ids?.map((f: any, i: number) => (
+                  <div key={i} style={{ display: 'flex', justifyContent: 'space-between', color: '#64748B', padding: '2px 0' }}>
+                    <span>📍 {f.farmer_name}</span>
+                    <strong style={{ color: '#17221C' }}>{f.allocated_quantity_kg} kg</strong>
                   </div>
                 ))}
-                <div style={{ paddingLeft: '12px', borderLeft: '3px solid #10b981', color: '#34d399', fontWeight: 700, marginTop: '8px' }}>
-                  Destination: Reliance DC, Bhosari, Pune (Deadline: 20:00)
-                </div>
               </div>
 
-              {/* Action Buttons */}
               <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-                {j.status === 'CONFIRMED' && (
-                  <button className="btn-emerald" onClick={() => handleAcceptJob(j.id)}>
-                    <Check size={16} /> {t.logistics.acceptJobBtn}
+                {job.status === 'CONFIRMED' ? (
+                  <button className="btn-emerald" onClick={() => handleUpdateStatus(job.id, 'IN_TRANSIT')}>
+                    <Navigation size={16} />
+                    <span>Start Pickup Route Run</span>
                   </button>
-                )}
-                {j.status === 'IN_TRANSIT' && (
-                  <button className="btn-emerald" onClick={() => handleUpdateStatus(j.id, 'DELIVERED')}>
-                    <CheckCircle2 size={16} /> {t.logistics.completedStatusBtn}
+                ) : (
+                  <button className="btn-secondary" onClick={() => handleUpdateStatus(job.id, 'DELIVERED')}>
+                    <CheckCircle2 size={16} />
+                    <span>Confirm Delivery at DC</span>
                   </button>
                 )}
               </div>

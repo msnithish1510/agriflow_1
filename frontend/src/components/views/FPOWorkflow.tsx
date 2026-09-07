@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Users, Layers, Zap, ShoppingBag, CheckCircle, MapPin } from 'lucide-react';
+import { Users, Layers, Zap, ShoppingBag, CheckCircle, MapPin, Sparkles, ArrowRight } from 'lucide-react';
 import { ExpectedSupply, OrderMatch } from '@/types';
 import { fetchExpectedSupplies, fetchOrders, runMatching } from '@/services/api';
 import { useLanguage } from '@/i18n';
@@ -26,50 +26,51 @@ export const FPOWorkflow: React.FC = () => {
   const totalAggregatedKg = supplies.reduce((acc, s) => acc + (s.expected_quantity_kg || 0), 0);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
       
       {/* Top Banner */}
-      <div className="glass-panel" style={{
-        background: 'linear-gradient(135deg, rgba(16,185,129,0.14) 0%, rgba(139,92,246,0.12) 100%)',
-        border: '1px solid rgba(16,185,129,0.3)',
-        padding: '24px'
+      <div className="glass-card-primary" style={{
+        background: 'linear-gradient(135deg, rgba(22, 163, 74, 0.12) 0%, rgba(139, 92, 246, 0.08) 50%, rgba(255, 255, 255, 0.9) 100%)',
+        border: '1px solid rgba(22, 163, 74, 0.25)',
+        boxShadow: '0 10px 30px -5px rgba(22, 163, 74, 0.08)',
+        padding: '28px 24px'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-          <span className="badge-tag badge-rural">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+          <span className="badge-tag badge-rural" style={{ padding: '4px 10px', fontSize: '0.78rem' }}>
             <Users size={14} /> {t.common.roles.FPO}
           </span>
-          <span style={{ fontSize: '0.8rem', color: '#34d399' }}>Collective Yield Sourcing</span>
+          <span style={{ fontSize: '0.82rem', color: '#15803D', fontWeight: 700 }}>● Collective Yield Sourcing</span>
         </div>
-        <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: '#f8fafc' }}>
+        <h1 style={{ fontSize: 'clamp(1.6rem, 3.2vw, 2.2rem)', fontWeight: 900, color: '#17221C', letterSpacing: '-0.02em' }}>
           {t.fpo.title}
         </h1>
-        <p style={{ fontSize: '0.92rem', color: '#cbd5e1', marginTop: '4px' }}>
+        <p style={{ fontSize: '0.94rem', color: '#64748B', marginTop: '6px', maxWidth: '750px', lineHeight: 1.6 }}>
           {t.fpo.subtitle}
         </p>
       </div>
 
       {/* Summary Stat Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
-        <div className="glass-panel" style={{ borderLeft: '5px solid #10b981' }}>
-          <span style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600, textTransform: 'uppercase' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px' }}>
+        <div className="glass-card-primary" style={{ borderLeft: '4px solid #16A34A', padding: '22px' }}>
+          <span style={{ fontSize: '0.82rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             {t.fpo.combinedYieldTitle}
           </span>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#10b981', marginTop: '4px' }}>
+          <div style={{ fontSize: '2.1rem', fontWeight: 900, color: '#15803D', marginTop: '6px', letterSpacing: '-0.02em' }}>
             {totalAggregatedKg.toLocaleString('en-IN')} kg
           </div>
-          <div style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '2px' }}>
+          <div style={{ fontSize: '0.84rem', color: '#64748B', marginTop: '4px' }}>
             Aggregated across {supplies.length} smallholder members
           </div>
         </div>
 
-        <div className="glass-panel" style={{ borderLeft: '5px solid #38bdf8' }}>
-          <span style={{ fontSize: '0.82rem', color: '#cbd5e1', fontWeight: 600, textTransform: 'uppercase' }}>
+        <div className="glass-card-primary" style={{ borderLeft: '4px solid #0EA5E9', padding: '22px' }}>
+          <span style={{ fontSize: '0.82rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             ACTIVE CONTRACT POOLS
           </span>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#38bdf8', marginTop: '4px' }}>
+          <div style={{ fontSize: '2.1rem', fontWeight: 900, color: '#0284C7', marginTop: '6px', letterSpacing: '-0.02em' }}>
             {orders.length || 2} Bulk Contracts
           </div>
-          <div style={{ fontSize: '0.85rem', color: '#34d399', marginTop: '2px' }}>
+          <div style={{ fontSize: '0.84rem', color: '#15803D', marginTop: '4px', fontWeight: 600 }}>
             Direct corporate institutional fulfillment
           </div>
         </div>
@@ -77,25 +78,25 @@ export const FPOWorkflow: React.FC = () => {
 
       {/* Member Supply Directory */}
       <div className="glass-panel">
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Users size={20} color="#10b981" /> {t.fpo.memberDirectoryTitle}
+        <h2 style={{ fontSize: '1.35rem', fontWeight: 900, marginBottom: '18px', color: '#17221C', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Users size={22} color="#16A34A" /> {t.fpo.memberDirectoryTitle}
         </h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '18px' }}>
           {supplies.map(sup => (
-            <div key={sup.id} className="surface-card" style={{ borderLeft: '4px solid #10b981' }}>
+            <div key={sup.id} className="surface-card" style={{ borderLeft: '4px solid #16A34A', padding: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
                 <StatusBadge status={sup.status} />
-                <span style={{ fontWeight: 800, fontSize: '1.2rem', color: '#10b981' }}>
+                <span style={{ fontWeight: 900, fontSize: '1.3rem', color: '#15803D' }}>
                   ₹{sup.min_price_per_kg}/kg
                 </span>
               </div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#17221C' }}>
                 {sup.farmer_id}
               </h3>
-              <div style={{ fontSize: '0.88rem', color: '#cbd5e1', marginTop: '6px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <div>Committed Yield: <strong style={{ color: '#fff' }}>{sup.expected_quantity_kg?.toLocaleString('en-IN')} kg</strong></div>
-                <div>Harvest Date: <strong style={{ color: '#38bdf8' }}>{sup.expected_harvest_date}</strong></div>
+              <div style={{ fontSize: '0.88rem', color: '#64748B', marginTop: '8px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div>Committed Yield: <strong style={{ color: '#17221C' }}>{sup.expected_quantity_kg?.toLocaleString('en-IN')} kg</strong></div>
+                <div>Harvest Date: <strong style={{ color: '#0284C7' }}>{sup.expected_harvest_date}</strong></div>
                 <div>Grade: <span>{sup.quality_grade}</span></div>
               </div>
             </div>

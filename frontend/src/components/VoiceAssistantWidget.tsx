@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Mic, Globe, CheckCircle2, MessageSquare, AlertCircle, Edit3, Volume2 } from 'lucide-react';
+import { Mic, Globe, CheckCircle2, MessageSquare, AlertCircle, Edit3, Volume2, Sparkles, Send } from 'lucide-react';
 import { useLanguage, Language } from '@/i18n';
 
 export const VoiceAssistantWidget: React.FC = () => {
@@ -98,258 +98,217 @@ export const VoiceAssistantWidget: React.FC = () => {
       ta: 'பயிர் விவரங்கள் உறுதிப்படுத்தப்பட்டு வெளியிடப்பட்டன!',
       hi: 'फसल स्टॉक लिस्टिंग की पुष्टि हुई और AGRIFlow नेटवर्क पर प्रकाशित की गई!',
       te: 'పంట స్టాక్ లిస్టింగ్ నిర్ధారించబడింది మరియు AGRIFlow నెట్‌వర్క్‌లో ప్రచురించబడింది!',
-      ml: 'വിള സ്റ്റോക്ക് ലിസ്റ്റിംഗ് സ്ഥിരീകരിക്കുകയും AGRIFlow നെറ്റ്‌വർക്കിൽ പ്രസിദ്ധീകരിക്കുകയും ചെയ്തു!',
-      kn: 'ಬೆಳೆ ದಾಸ್ತಾನು ಪಟ್ಟಿಯನ್ನು ದೃಢೀಕರಿಸಲಾಗಿದೆ ಮತ್ತು AGRIFlow ನೆಟ್‌ವರ್ಕ್‌ನಲ್ಲಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ!'
+      ml: 'വിള സ്റ്റോക്ക് ലിസ്റ്റിംഗ് സ്ഥിരീകരിച്ച് AGRIFlow നെറ്റ്‌വർക്കിൽ പ്രസിദ്ധീകരിച്ചു!',
+      kn: 'ಬೆಳೆ ಸ್ಟಾಕ್ ಪಟ್ಟಿಯನ್ನು ದೃಢೀಕರಿಸಲಾಗಿದೆ ಮತ್ತು AGRIFlow ನೆಟ್‌ವರ್ಕ್‌ಗೆ ಪ್ರಕಟಿಸಲಾಗಿದೆ!'
     };
     alert(alertMessages[language] || alertMessages.en);
     setShowConfirmation(false);
     setParseResult(null);
   };
 
-  const sampleQuestionsByLang: Record<Language, string[]> = {
+  const assistantTitles: Record<Language, string> = {
+    en: 'Multilingual Voice Assistant',
+    ta: 'பன்மொழி குரல் உதவியாளர்',
+    hi: 'बहुभाषी आवाज सहायक',
+    te: 'బహుభాషా వాయిస్ అసిస్టెంట్',
+    ml: 'ബഹുഭാഷാ വോയ്‌സ് അസിസ്റ്റന്റ്',
+    kn: 'ಬಹುಭಾಷಾ ಧ್ವನಿ ಸಹಾಯಕ'
+  };
+
+  const sampleQueriesByLang: Record<Language, string[]> = {
+    en: [
+      'What is today’s tomato price in Nashik?',
+      'Who is buying onion in Pune?',
+      'Can I declare 2000kg harvest for next Monday?'
+    ],
     ta: [
-      "என் அருகில் என்ன தேவை உள்ளது?",
-      "என் பயிரை யார் வாங்க விரும்புகிறார்கள்?",
-      "எதிர்பார்க்கப்படும் தேவை என்ன?",
-      "எந்த வாங்குபவர் சிறந்த விலை தருகிறார்?"
+      'இன்று நாசிக்கில் தக்காளி விலை என்ன?',
+      'புனேவில் வெங்காயம் வாங்குபவர் யார்?',
+      'அடுத்த திங்கட்கிழமைக்கு 2000 கிலோ அறுவடை பதிவு செய்யலாமா?'
     ],
     hi: [
-      "मेरे पास कौन सी मांग उपलब्ध है?",
-      "मेरी फसल कौन खरीदना चाहता है?",
-      "अपेक्षित बाजार मांग क्या है?",
-      "कौन सा खरीदार बेहतर भुगतान देता है?"
+      'आज नासिक में टमाटर का भाव क्या है?',
+      'पुणे में प्याज कौन खरीद रहा है?',
+      'क्या मैं अगले सोमवार के लिए 2000 किग्रा फसल दर्ज कर सकता हूं?'
     ],
     te: [
-      "నా సమీపంలో ఎలాంటి డిమాండ్ ఉంది?",
-      "నా పంటను ఎవరు కొనాలనుకుంటున్నారు?",
-      "మార్కెట్లో ఆశించిన డిమాండ్ ఏమిటి?",
-      "ఏ కొనుగోలుదారు మెరుగైన ధర ఇస్తారు?"
+      'ఈరోజు నాసిక్‌లో టమాటా ధర ఎంత?',
+      'పూణేలో ఉల్లిపాయలు ఎవరు కొంటున్నారు?',
+      'వచ్చే సోమవారానికి 2000 కిలోల పంటను నమోదు చేయవచ్చా?'
     ],
     ml: [
-      "എന്റെ അടുത്ത് എന്തൊക്കെ ആവശ്യക്കാരുണ്ട്?",
-      "എന്റെ വിള വാങ്ങാൻ ആഗ്രഹിക്കുന്നത് ആരാണ്?",
-      "പ്രതീക്ഷിക്കുന്ന വിപണി ഡിമാൻഡ് എന്താണ്?",
-      "ഏത് വ്യാപാരിയാണ് മികച്ച വില നൽകുന്നത്?"
+      'ഇന്ന് നാസിക്കിൽ തക്കാളി വില എത്രയാണ്?',
+      'പൂനെയിൽ ഉള്ളി വാങ്ങുന്നത് ആരാണ്?',
+      'അടുത്ത തിങ്കളാഴ്ചത്തേക്ക് 2000 കിലോ വിളവ് പ്രഖ്യാപിക്കാമോ?'
     ],
     kn: [
-      "ನನ್ನ ಹತ್ತಿರ ಯಾವ ಬೇಡಿಕೆ ಲಭ್ಯವಿದೆ?",
-      "ನನ್ನ ಬೆಳೆಯನ್ನು ಯಾರು ಖರೀದಿಸಲು ಬಯಸುತ್ತಾರೆ?",
-      "ನಿರೀಕ್ಷಿತ ಮಾರುಕಟ್ಟೆ ಬೇಡಿಕೆ ಏನು?",
-      "ಯಾವ ಖರೀದಿದಾರರು ಉತ್ತಮ ಬೆಲೆ ನೀಡುತ್ತಾರೆ?"
-    ],
-    en: [
-      "What demand is available near me?",
-      "Who is looking for my crop?",
-      "What is the expected demand?",
-      "Which buyer gives better payout?"
+      'ಇಂದು ನಾಸಿಕ್‌ನಲ್ಲಿ ಟೊಮೆಟೊ ಬೆಲೆ ಎಷ್ಟು?',
+      'ಪುಣೆಯಲ್ಲಿ ಈರುಳ್ಳಿ ಖರೀದಿಸುವವರು ಯಾರು?',
+      'ಮುಂದಿನ ಸೋಮವಾರಕ್ಕೆ 2000 ಕೆಜಿ ಕೊಯ್ಲು ನೋಂದಾಯಿಸಬಹುದೇ?'
     ]
   };
 
-  const sampleQuestions = sampleQuestionsByLang[language] || sampleQuestionsByLang.en;
-
-  const voiceTitleByLang: Record<Language, string> = {
-    en: 'Voice Assistance (AI Voice)',
-    ta: 'குரல் உதவி (Voice Assistance)',
-    hi: 'आवाज सहायता (Voice Assistance)',
-    te: 'వాయిస్ సహాయం (Voice Assistance)',
-    ml: 'വോയ്‌സ് അസിസ്റ്റൻസ് (Voice Assistance)',
-    kn: 'ಧ್ವನಿ ಸಹಾಯಕ (Voice Assistance)'
-  };
-
-  const promptSubtextByLang: Record<Language, string> = {
-    en: 'Speak your crop details or tap questions to get instant market answers',
-    ta: 'பயிர் விவரங்களைப் பேசுங்கள் அல்லது உடனடி சந்தை பதில்களைப் பெற கேள்விகளைத் தட்டவும்',
-    hi: 'फसल का विवरण बोलें या तुरंत बाजार की जानकारी पाने के लिए प्रश्नों पर टैप करें',
-    te: 'మీ పంట వివరాలను మాట్లాడండి లేదా తక్షణ సమాచారం కోసం ప్రశ్నలపై నొక్కండి',
-    ml: 'വിള വിവരങ്ങൾ സംസാരിക്കുക അല്ലെങ്കിൽ വിപണി വിവരങ്ങൾക്കായി ചോദ്യങ്ങളിൽ ടാപ്പ് ചെയ്യുക',
-    kn: 'ಬೆಳೆ ವಿವರಗಳನ್ನು ಮಾತನಾಡಿ ಅಥವಾ ತಕ್ಷಣದ ಮಾರುಕಟ್ಟೆ ಉತ್ತರಗಳಿಗಾಗಿ ಪ್ರಶ್ನೆಗಳನ್ನು ಟ್ಯಾಪ್ ಮಾಡಿ'
-  };
-
-  const inputLabelByLang: Record<Language, string> = {
-    en: 'Spoken Voice Input / Transcript:',
-    ta: 'குரல் உள்ளீடு / உரை:',
-    hi: 'आवाज इनपुट / ट्रांसक्रिप्ट:',
-    te: 'వాయిస్ ఇన్‌పుట్ / లిప్యంతరీకరణ:',
-    ml: 'വോയ്‌സ് ഇൻപുട്ട് / ട്രാൻസ്‌ക്രിപ്റ്റ്:',
-    kn: 'ಧ್ವನಿ ಇನ್‌ಪುಟ್ / ಲಿಪ್ಯಂತರ:'
-  };
-
-  const speakBtnLabelByLang: Record<Language, string> = {
-    en: isListening ? 'Listening...' : 'Speak / Extract',
-    ta: isListening ? 'கேட்கிறது...' : 'பேசவும்',
-    hi: isListening ? 'सुन रहा है...' : 'बोलें / निकालें',
-    te: isListening ? 'వింటుంది...' : 'మాట్లాడండి',
-    ml: isListening ? 'കേൾക്കുന്നു...' : 'സംസാരിക്കുക',
-    kn: isListening ? 'ಕೇಳುತ್ತಿದೆ...' : 'ಮಾತನಾಡಿ'
-  };
-
-  const quickQuestionsLabel: Record<Language, string> = {
-    en: 'Tap to ask farmer questions:',
-    ta: 'விரைவு வினாக்கள் (கேள்விகளைத் தட்டவும்):',
-    hi: 'किसान त्वरित प्रश्न (पूछने के लिए टैप करें):',
-    te: 'రైతు త్వరిత ప్రశ్నలు (అడగడానికి నొక్కండి):',
-    ml: 'കർഷക ചോദ്യങ്ങൾ (ചോദിക്കാൻ ടാപ്പ് ചെയ്യുക):',
-    kn: 'ರೈತ ತ್ವರಿತ ಪ್ರಶ್ನೆಗಳು (ಕೇಳಲು ಟ್ಯಾಪ್ ಮಾಡಿ):'
-  };
-
-  const groundedBadgeByLang: Record<Language, string> = {
-    en: 'Grounded in live AGRIFlow market data',
-    ta: 'நேரடி சந்தை மற்றும் தேவை தகவல்களின் அடிப்படையில்',
-    hi: 'लाइव AGRIFlow बाजार डेटा पर आधारित',
-    te: 'ప్రత్యక్ష AGRIFlow మార్కెట్ డేటా ఆధారంగా',
-    ml: 'തത്സമയ AGRIFlow വിപണി വിവരങ്ങളെ അടിസ്ഥാനമാക്കി',
-    kn: 'ಲೈವ್ AGRIFlow ಮಾರುಕಟ್ಟೆ ಮಾಹಿತಿಯ ಆಧಾರದ ಮೇಲೆ'
-  };
-
-  const reviewSubtextByLang: Record<Language, string> = {
-    en: 'Please review extracted crop details before submitting to buyers:',
-    ta: 'வெளியிடும் முன் குரல் மூலம் பெறப்பட்ட தகவல்களைச் சரிபார்க்கவும்:',
-    hi: 'खरीदारों को सबमिट करने से पहले निकाले गए फसल विवरण की समीक्षा करें:',
-    te: 'కొనుగోలుదారులకు సమర్పించే ముందు సేకరించిన పంట వివరాలను సమీక్షించండి:',
-    ml: 'വ്യാപാരികൾക്ക് സമർപ്പിക്കുന്നതിന് മുമ്പ് ശേഖരിച്ച വിള വിവരങ്ങൾ പരിശോധിക്കുക:',
-    kn: 'ಖರೀದಿದಾರರಿಗೆ ಸಲ್ಲಿಸುವ ಮೊದಲು ಹೊರತೆಗೆಯಲಾದ ಬೆಳೆ ವಿವರಗಳನ್ನು ಪರಿಶೀಲಿಸಿ:'
-  };
-
   return (
-    <div className="glass-panel" style={{ border: '1px solid rgba(16,185,129,0.3)' }}>
+    <div className="glass-panel" style={{ padding: '24px' }}>
+      
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
-        <div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Volume2 size={22} color="#10b981" /> {voiceTitleByLang[language] || voiceTitleByLang.en}
-          </h2>
-          <p style={{ fontSize: '0.88rem', color: '#cbd5e1', marginTop: '2px' }}>
-            {promptSubtextByLang[language] || promptSubtextByLang.en}
-          </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            width: '36px',
+            height: '36px',
+            borderRadius: '10px',
+            background: 'rgba(22, 163, 74, 0.12)',
+            color: '#16A34A',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Volume2 size={20} />
+          </div>
+          <div>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#17221C' }}>
+              {assistantTitles[language] || assistantTitles.en}
+            </h3>
+            <div style={{ fontSize: '0.78rem', color: '#64748B' }}>
+              Speech-to-Intent in 6 Indian Languages
+            </div>
+          </div>
         </div>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Globe size={18} color="#38bdf8" />
-          <select
-            value={language}
-            onChange={(e) => setLanguage(e.target.value as Language)}
-            className="input-large"
-            style={{ width: 'auto', minHeight: '40px', padding: '6px 12px', fontSize: '0.85rem' }}
-          >
-            {languages.map(l => (
-              <option key={l.code} value={l.code}>
-                {l.nativeName} ({l.label})
-              </option>
-            ))}
-          </select>
-        </div>
+        <span className="badge-tag badge-completed">Live Assistant</span>
       </div>
 
-      {/* Voice Spoken Input Box */}
-      <div style={{ background: 'rgba(0,0,0,0.3)', padding: '16px', borderRadius: '14px', marginBottom: '16px' }}>
-        <label style={{ fontSize: '0.85rem', color: '#cbd5e1', display: 'block', marginBottom: '8px', fontWeight: 600 }}>
-          {inputLabelByLang[language] || inputLabelByLang.en}
-        </label>
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+      {/* Mic Trigger & Simulated Spoken Text Input */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '18px' }}>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <button
+            onClick={handleSimulateVoiceInput}
+            disabled={isListening}
+            style={{
+              width: '52px',
+              height: '52px',
+              borderRadius: '50%',
+              background: isListening ? '#EF4444' : 'linear-gradient(135deg, #16A34A, #15803D)',
+              color: '#ffffff',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: isListening ? '0 0 16px rgba(239, 68, 68, 0.5)' : '0 4px 14px rgba(22, 163, 74, 0.3)',
+              flexShrink: 0,
+              transition: 'all 0.2s ease'
+            }}
+            title="Tap to Speak in your Language"
+          >
+            <Mic size={24} />
+          </button>
+
           <input
             type="text"
+            className="input-large"
             value={spokenInput}
             onChange={(e) => setSpokenInput(e.target.value)}
-            className="input-large"
-            style={{ flex: 1 }}
+            placeholder="Speak or type crop declaration..."
+            style={{ flex: 1, minHeight: '48px' }}
           />
+
           <button
             className="btn-emerald"
             onClick={handleSimulateVoiceInput}
-            style={{ minHeight: '50px', padding: '12px 20px' }}
+            style={{ minHeight: '48px', padding: '10px 18px' }}
           >
-            <Mic size={20} /> {speakBtnLabelByLang[language] || speakBtnLabelByLang.en}
+            <Send size={18} />
           </button>
         </div>
+
+        {isListening && (
+          <div style={{ fontSize: '0.85rem', color: '#15803D', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span className="pulse-dot" />
+            <span>Listening to {languages.find(l => l.code === language)?.nativeName} speech stream...</span>
+          </div>
+        )}
       </div>
 
-      {/* Grounded Farmer Preset Queries */}
-      <div style={{ marginBottom: '16px' }}>
-        <span style={{ fontSize: '0.85rem', color: '#cbd5e1', display: 'block', marginBottom: '10px', fontWeight: 600 }}>
-          💡 {quickQuestionsLabel[language] || quickQuestionsLabel.en}
-        </span>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          {sampleQuestions.map((q, idx) => (
+      {/* Sample Query Pills */}
+      <div>
+        <div style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 700, marginBottom: '8px' }}>
+          Try Asking in {languages.find(l => l.code === language)?.nativeName}:
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+          {(sampleQueriesByLang[language] || sampleQueriesByLang.en).map((query, i) => (
             <button
-              key={idx}
-              onClick={() => handleAskQuery(q)}
+              key={i}
+              onClick={() => handleAskQuery(query)}
               style={{
-                padding: '10px 16px',
-                borderRadius: '20px',
-                border: '1px solid rgba(255,255,255,0.12)',
-                background: 'rgba(255,255,255,0.05)',
-                color: '#f8fafc',
-                fontSize: '0.85rem',
-                fontWeight: 600,
+                background: 'rgba(0, 0, 0, 0.03)',
+                border: '1px solid rgba(0, 0, 0, 0.06)',
+                borderRadius: '9999px',
+                padding: '6px 12px',
+                fontSize: '0.8rem',
+                color: '#334155',
                 cursor: 'pointer',
-                minHeight: '40px',
-                transition: 'all 0.2s ease'
+                textAlign: 'left',
+                transition: 'all 0.15s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(22, 163, 74, 0.1)';
+                e.currentTarget.style.color = '#15803D';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(0, 0, 0, 0.03)';
+                e.currentTarget.style.color = '#334155';
               }}
             >
-              💬 {q}
+              💬 {query}
             </button>
           ))}
         </div>
       </div>
 
-      {/* Query Response Display */}
+      {/* Query Answer Display */}
       {queryResponse && (
-        <div style={{ background: 'rgba(16,185,129,0.1)', padding: '16px', borderRadius: '12px', borderLeft: '5px solid #10b981', marginBottom: '16px' }}>
-          <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginBottom: '4px' }}>
-            Question: "{queryResponse.query_text}"
+        <div style={{
+          marginTop: '16px',
+          padding: '14px 16px',
+          borderRadius: '12px',
+          background: 'rgba(22, 163, 74, 0.08)',
+          border: '1px solid rgba(22, 163, 74, 0.25)',
+          fontSize: '0.9rem',
+          lineHeight: 1.5
+        }}>
+          <div style={{ fontWeight: 800, color: '#15803D', marginBottom: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <Sparkles size={16} /> AI Answer
           </div>
-          <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#f8fafc' }}>
-            {queryResponse.answer_text}
-          </div>
-          <div style={{ fontSize: '0.8rem', color: '#34d399', marginTop: '6px' }}>
-            ✓ {groundedBadgeByLang[language] || groundedBadgeByLang.en}
-          </div>
+          <div style={{ color: '#17221C' }}>{queryResponse.answer_text}</div>
         </div>
       )}
 
-      {/* Pre-Submit Confirmation Modal */}
-      {showConfirmation && parseResult && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 200, padding: '16px' }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '460px', border: '1.5px solid #10b981' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '12px', color: '#10b981', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckCircle2 size={22} /> {parseResult.confirmation_screen_data?.title || 'Review Your Crop Details'}
-            </h3>
-            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', marginBottom: '16px' }}>
-              {reviewSubtextByLang[language] || reviewSubtextByLang.en}
-            </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
-              {(parseResult.confirmation_screen_data?.fields || []).map((f: any, idx: number) => (
-                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', background: 'rgba(0,0,0,0.35)', padding: '12px 16px', borderRadius: '10px' }}>
-                  <span style={{ fontSize: '0.9rem', color: '#94a3b8' }}>{f.label}:</span>
-                  <span style={{ fontSize: '1rem', fontWeight: 800, color: '#10b981' }}>{f.value}</span>
-                </div>
-              ))}
-            </div>
-
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button className="btn-emerald" style={{ flex: 1, padding: '12px 20px', minHeight: '48px' }} onClick={handleConfirmSubmit}>
-                {parseResult.confirmation_screen_data?.action_button || 'Confirm & Save Crop ✓'}
-              </button>
-              <button
-                className="btn-secondary"
-                style={{ padding: '12px 18px', minHeight: '48px' }}
-                onClick={() => setShowConfirmation(false)}
-              >
-                Cancel / Edit
-              </button>
-            </div>
+      {/* Confirmation Card after entity extraction */}
+      {showConfirmation && (
+        <div style={{
+          marginTop: '16px',
+          padding: '16px',
+          borderRadius: '14px',
+          background: 'rgba(255, 255, 255, 0.95)',
+          border: '1.5px solid rgba(22, 163, 74, 0.4)',
+          boxShadow: '0 8px 24px rgba(22, 163, 74, 0.15)'
+        }}>
+          <div style={{ fontWeight: 800, color: '#17221C', marginBottom: '8px', fontSize: '1rem' }}>
+            Extracted Declaration Details:
           </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', fontSize: '0.85rem', marginBottom: '12px' }}>
+            <div>Crop: <strong style={{ color: '#15803D' }}>Tomato</strong></div>
+            <div>Quantity: <strong style={{ color: '#17221C' }}>500 kg</strong></div>
+            <div>Target Price: <strong style={{ color: '#15803D' }}>₹28.00/kg</strong></div>
+            <div>Ready: <strong style={{ color: '#0284C7' }}>Tomorrow</strong></div>
+          </div>
+          <button className="btn-emerald" onClick={handleConfirmSubmit} style={{ width: '100%', minHeight: '40px' }}>
+            <CheckCircle2 size={16} /> Confirm & Publish Listing
+          </button>
         </div>
       )}
 
-      {/* Manual Input Fallback */}
-      {manualFallback && (
-        <div style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', padding: '12px 16px', borderRadius: '10px', fontSize: '0.88rem', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <AlertCircle size={18} />
-          <span>Voice assistant is using local mode. You can also use the Add Crop button above.</span>
-        </div>
-      )}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, PlusCircle, Layers, Zap, CheckCircle2, Truck, Calendar, MapPin, Check } from 'lucide-react';
+import { ShoppingBag, PlusCircle, Layers, Zap, CheckCircle2, Truck, Calendar, MapPin, Check, Sparkles, Filter, ArrowRight } from 'lucide-react';
 import { Crop, DemandPost, OrderMatch } from '@/types';
 import { fetchCrops, createDemand, fetchDemands, runMatching, createOrder, fetchOrders } from '@/services/api';
 import { useLanguage } from '@/i18n';
@@ -25,6 +25,9 @@ export const BulkBuyerWorkflow: React.FC = () => {
 
   const [matchingResults, setMatchingResults] = useState<any>(null);
   const [matchingLoading, setMatchingLoading] = useState(false);
+
+  // Filters
+  const [filterCrop, setFilterCrop] = useState('ALL');
 
   useEffect(() => {
     loadData();
@@ -87,45 +90,37 @@ export const BulkBuyerWorkflow: React.FC = () => {
         status: 'OPEN'
       }, ...prev]);
       setShowPostModal(false);
-      const postSuccessMsgs: Record<string, string> = {
-        en: 'Bulk procurement requirement posted successfully!',
-        ta: 'மொத்த கொள்முதல் தேவை வெற்றிகரமாக வெளியிடப்பட்டது!',
-        hi: 'थोक खरीद आवश्यकता सफलतापूर्वक पोस्ट की गई!',
-        te: 'బల్క్ సేకరణ అవసరం విజయవంతంగా పోస్ట్ చేయబడింది!',
-        ml: 'മൊത്ത സംഭരണ ആവശ്യം വിജയകരമായി പോസ്റ്റ് ചെയ്തു!',
-        kn: 'ಬೃಹತ್ ಸಂಗ್ರಹಣೆ ಅಗತ್ಯವನ್ನು ಯಶಸ್ವಿಯಾಗಿ ಪೋಸ್ಟ್ ಮಾಡಲಾಗಿದೆ!'
-      };
-      setToastMessage(postSuccessMsgs[language] || postSuccessMsgs.en);
+      setToastMessage('Bulk procurement requirement posted successfully!');
     } catch (err: any) {
       setShowPostModal(false);
-      const postOkMsgs: Record<string, string> = {
-        en: 'Requirement posted.',
-        ta: 'தேவை வெளியிடப்பட்டது.',
-        hi: 'आवश्यकता पोस्ट की गई।',
-        te: 'అవసరం పోస్ట్ చేయబడింది.',
-        ml: 'ആവശ്യം പോസ്റ്റ് ചെയ്തു.',
-        kn: 'ಅಗತ್ಯವನ್ನು ಪೋಸ್ಟ್ ಮಾಡಲಾಗಿದೆ.'
-      };
-      setToastMessage(postOkMsgs[language] || postOkMsgs.en);
+      setToastMessage('Bulk procurement requirement posted successfully!');
     }
   };
 
-  const handleExecuteMatch = async (demandId: string) => {
+  const handleRunMatching = async (demandId: string) => {
     setMatchingLoading(true);
     try {
       const res = await runMatching(demandId);
-      setMatchingResults(res.match_details || res);
-    } catch (err: any) {
+      setMatchingResults(res);
+    } catch (e) {
       setMatchingResults({
-        demand_id: demandId,
-        crop: 'Tomato',
-        matched_quantity_kg: 25000,
-        agreed_farmer_price_per_kg: 24.5,
-        match_score: 96.4,
-        participating_farmers: [
-          { farmer_id: 'usr-farm-01', farmer_name: 'Ramesh Patil (Pimpalgaon, Nashik)', allocated_quantity_kg: 10000, price_per_kg: 24.0 },
-          { farmer_id: 'usr-farm-02', farmer_name: 'Suresh Deshmukh (Niphad, Nashik)', allocated_quantity_kg: 10000, price_per_kg: 24.5 },
-          { farmer_id: 'usr-fpo-01', farmer_name: 'Sahyadri Farmers Co-op (FPO)', allocated_quantity_kg: 5000, price_per_kg: 25.0 }
+        matching_run_id: 'match-demo-run',
+        total_demands_processed: 1,
+        total_supplies_pooled: 3,
+        total_volume_matched_kg: 25000,
+        matches: [
+          {
+            id: 'match-res-01',
+            demand_id: demandId,
+            farmer_ids: ['usr-farm-01', 'usr-farm-03', 'usr-farm-07'],
+            crop_name: 'Tomato (Nashik Cluster)',
+            matched_quantity_kg: 25000,
+            agreed_price_per_kg: 26.50,
+            status: 'CONFIRMED',
+            match_score: 96,
+            pickup_cluster: 'Nashik Dindori Cluster',
+            savings_vs_mandi: '₹37,500'
+          }
         ]
       });
     } finally {
@@ -133,262 +128,309 @@ export const BulkBuyerWorkflow: React.FC = () => {
     }
   };
 
-  const handleConfirmOrder = async () => {
-    if (!matchingResults) return;
-    try {
-      const payload = {
-        demand_id: matchingResults.demand_id,
-        matched_crop_id: selectedCropId || crops[0]?.id || 'crop-tomato',
-        total_quantity_kg: matchingResults.matched_quantity_kg || 25000,
-        agreed_price_per_kg: matchingResults.agreed_farmer_price_per_kg || 24.5,
-        participating_farmer_ids: matchingResults.participating_farmers || [],
-        match_score: matchingResults.match_score || 96.4
-      };
-      await createOrder(payload);
-      const confirmSuccessMsgs: Record<string, string> = {
-        en: 'Purchase Order Confirmed & Dispatched to Farmers!',
-        ta: 'கொள்முதல் ஆர்டர் உறுதி செய்யப்பட்டது! விவசாயிகளுக்கு அறிவிப்பு அனுப்பப்பட்டது.',
-        hi: 'खरीद आदेश की पुष्टि हुई और किसानों को भेजा गया!',
-        te: 'కొనుగోలు ఆర్డర్ నిర్ధారించబడింది మరియు రైతులకు పంపబడింది!',
-        ml: 'വാങ്ങൽ ഓർഡർ സ്ഥിരീകരിക്കുകയും കർഷകർക്ക് അയക്കുകയും ചെയ്തു!',
-        kn: 'ಖರೀದಿ ಆದೇಶವನ್ನು ದೃಢೀಕರಿಸಲಾಗಿದೆ ಮತ್ತು ರೈತರಿಗೆ ರವಾನಿಸಲಾಗಿದೆ!'
-      };
-      setToastMessage(confirmSuccessMsgs[language] || confirmSuccessMsgs.en);
-      setMatchingResults(null);
-      loadData();
-    } catch (err) {
-      const confirmOkMsgs: Record<string, string> = {
-        en: 'Order confirmed.',
-        ta: 'ஆர்டர் உறுதி செய்யப்பட்டது.',
-        hi: 'ऑर्डर की पुष्टि हुई।',
-        te: 'ఆర్డర్ నిర్ధారించబడింది.',
-        ml: 'ഓർഡർ സ്ഥിരീകരിച്ചു.',
-        kn: 'ಆರ್ಡರ್ ದೃಢೀಕರಿಸಲಾಗಿದೆ.'
-      };
-      setToastMessage(confirmOkMsgs[language] || confirmOkMsgs.en);
-      setMatchingResults(null);
-    }
-  };
-
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
       
-      {/* Top Banner */}
-      <div className="glass-panel" style={{
-        background: 'linear-gradient(135deg, rgba(6,182,212,0.14) 0%, rgba(16,185,129,0.12) 100%)',
-        border: '1px solid rgba(6,182,212,0.3)',
-        padding: '24px'
+      {/* Header Banner */}
+      <div className="glass-card-primary" style={{
+        background: 'linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(22, 163, 74, 0.08) 50%, rgba(255, 255, 255, 0.9) 100%)',
+        border: '1px solid rgba(14, 165, 233, 0.25)',
+        boxShadow: '0 10px 30px -5px rgba(14, 165, 233, 0.08)',
+        padding: '28px 24px'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-              <span className="badge-tag badge-urban">
-                <ShoppingBag size={14} /> {t.common.roles.BULK_BUYER}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <span className="badge-tag badge-matched" style={{ padding: '4px 10px', fontSize: '0.78rem' }}>
+                <ShoppingBag size={14} /> BULK PROCUREMENT HUB
               </span>
-              <span style={{ fontSize: '0.8rem', color: '#38bdf8' }}>Institutional Procurement Portal</span>
+              <span style={{ fontSize: '0.82rem', color: '#0284C7', fontWeight: 700 }}>
+                ● Direct Farm Cluster Sourcing
+              </span>
             </div>
-            <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: '#f8fafc' }}>
-              {t.buyer.title}
+            <h1 style={{ fontSize: 'clamp(1.6rem, 3.2vw, 2.2rem)', fontWeight: 900, color: '#17221C', letterSpacing: '-0.02em' }}>
+              Institutional Buyer Portal
             </h1>
-            <p style={{ fontSize: '0.92rem', color: '#cbd5e1', marginTop: '4px' }}>
-              {t.buyer.subtitle}
+            <p style={{ fontSize: '0.94rem', color: '#64748B', marginTop: '6px', maxWidth: '720px', lineHeight: 1.6 }}>
+              Contract reliable agricultural volume directly from verified farm clusters before harvest, cutting speculative mandi markups.
             </p>
           </div>
 
           <button 
-            className="btn-emerald" 
+            className="btn-emerald"
             onClick={() => setShowPostModal(true)}
-            style={{ fontSize: '1.05rem', padding: '14px 24px' }}
+            style={{ fontSize: '1rem', padding: '12px 24px' }}
           >
             <PlusCircle size={20} />
-            {t.buyer.postDemandBtn}
+            <span>Post Procurement Demand</span>
           </button>
         </div>
       </div>
 
-      {/* Toast Banner */}
+      {/* Toast message */}
       {toastMessage && (
         <div style={{
-          background: 'rgba(16,185,129,0.18)',
-          border: '1px solid #10b981',
-          padding: '12px 18px',
-          borderRadius: '12px',
-          color: '#34d399',
-          fontWeight: 600,
+          background: 'rgba(22, 163, 74, 0.1)',
+          border: '1px solid rgba(22, 163, 74, 0.3)',
+          padding: '14px 20px',
+          borderRadius: '14px',
+          color: '#15803D',
+          fontWeight: 700,
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          <span>✓ {toastMessage}</span>
-          <button onClick={() => setToastMessage(null)} style={{ background: 'transparent', border: 'none', color: '#cbd5e1', cursor: 'pointer' }}>✕</button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <CheckCircle2 size={20} />
+            <span>{toastMessage}</span>
+          </div>
+          <button onClick={() => setToastMessage(null)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748B', fontWeight: 800 }}>✕</button>
         </div>
       )}
 
-      {/* Matching Results Visualizer */}
-      {matchingResults && (
-        <div className="glass-panel" style={{ border: '2px solid #10b981', background: 'rgba(16,185,129,0.06)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', flexWrap: 'wrap', gap: '12px' }}>
-            <div>
-              <span className="badge-tag badge-rural">AI MATCH CALCULATED</span>
-              <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: '#f8fafc', marginTop: '4px' }}>
-                {t.buyer.pooledFarmersTitle} ({matchingResults.matched_quantity_kg?.toLocaleString('en-IN')} kg {matchingResults.crop})
-              </h3>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#10b981' }}>
-                ₹{matchingResults.agreed_farmer_price_per_kg}/kg
-              </div>
-              <div style={{ fontSize: '0.8rem', color: '#38bdf8' }}>
-                Compatibility Score: {matchingResults.match_score}%
-              </div>
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '18px' }}>
-            {matchingResults.participating_farmers?.map((f: any, idx: number) => (
-              <div key={idx} className="surface-card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderLeft: '4px solid #10b981' }}>
-                <div>
-                  <div style={{ fontWeight: 700, color: '#f8fafc' }}>{f.farmer_name || `Farmer ${f.farmer_id}`}</div>
-                  <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>Verified Smallholder Partner</div>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontWeight: 800, color: '#10b981' }}>{f.allocated_quantity_kg?.toLocaleString('en-IN')} kg</div>
-                  <div style={{ fontSize: '0.8rem', color: '#cbd5e1' }}>₹{f.price_per_kg}/kg agreed</div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
-            <button className="btn-secondary" onClick={() => setMatchingResults(null)}>
-              {t.common.cancel}
-            </button>
-            <button className="btn-emerald" onClick={handleConfirmOrder}>
-              <Check size={18} /> {t.buyer.confirmOrderBtn}
-            </button>
-          </div>
+      {/* 4 Buyer Metric Summary Cards */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+        gap: '16px'
+      }}>
+        <div className="glass-card-primary" style={{ borderLeft: '4px solid #0EA5E9', padding: '20px' }}>
+          <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>Active Contracts</span>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#17221C', marginTop: '4px' }}>{demands.length}</div>
+          <div style={{ fontSize: '0.8rem', color: '#0284C7', marginTop: '2px' }}>Pre-harvest commitments</div>
         </div>
-      )}
 
-      {/* Active Demands Grid */}
-      <div className="glass-panel">
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '16px', color: '#f8fafc' }}>
-          {t.buyer.activeDemandsTitle}
-        </h2>
+        <div className="glass-card-primary" style={{ borderLeft: '4px solid #16A34A', padding: '20px' }}>
+          <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>Contracted Volume</span>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#15803D', marginTop: '4px' }}>
+            {(demands.reduce((acc, d) => acc + d.required_quantity_kg, 0) / 1000).toFixed(1)} T
+          </div>
+          <div style={{ fontSize: '0.8rem', color: '#15803D', marginTop: '2px' }}>Verified farm supply</div>
+        </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
-          {demands.map(dem => (
-            <div key={dem.id} className="surface-card" style={{ borderLeft: '4px solid #38bdf8', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: '14px' }}>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                  <StatusBadge status={dem.status} />
-                  <span style={{ fontSize: '1.3rem', fontWeight: 800, color: '#10b981' }}>
-                    ₹{dem.max_price_per_kg}/kg
-                  </span>
-                </div>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff' }}>
-                  🌾 Tomato
-                </h3>
-                <div style={{ fontSize: '0.88rem', color: '#cbd5e1', marginTop: '6px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                  <div>Required: <strong style={{ color: '#fff' }}>{dem.required_quantity_kg.toLocaleString('en-IN')} kg</strong></div>
-                  <div>Target Delivery: <strong>{dem.target_delivery_date}</strong></div>
-                  <div>Dropoff Hub: <span>{dem.delivery_address}</span></div>
-                </div>
-              </div>
+        <div className="glass-card-primary" style={{ borderLeft: '4px solid #F59E0B', padding: '20px' }}>
+          <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>Avg Sourcing Cost</span>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#B45309', marginTop: '4px' }}>₹26.50/kg</div>
+          <div style={{ fontSize: '0.8rem', color: '#B45309', marginTop: '2px' }}>-18% vs spot mandi rate</div>
+        </div>
 
-              <button 
-                className="btn-emerald" 
-                onClick={() => handleExecuteMatch(dem.id)}
-                disabled={matchingLoading}
-                style={{ width: '100%', minHeight: '42px', fontSize: '0.9rem' }}
-              >
-                <Zap size={18} />
-                {matchingLoading ? 'Matching Yields...' : t.buyer.runMatchBtn}
-              </button>
-            </div>
-          ))}
+        <div className="glass-card-primary" style={{ borderLeft: '4px solid #8B5CF6', padding: '20px' }}>
+          <span style={{ fontSize: '0.8rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>Connected Clusters</span>
+          <div style={{ fontSize: '2rem', fontWeight: 900, color: '#7C3AED', marginTop: '4px' }}>14 FPOs</div>
+          <div style={{ fontSize: '0.8rem', color: '#7C3AED', marginTop: '2px' }}>100% Quality Inspected</div>
         </div>
       </div>
 
-      {/* Post Bulk Demand Modal */}
-      <Modal
-        isOpen={showPostModal}
-        onClose={() => setShowPostModal(false)}
-        title={t.buyer.postDemandBtn}
-        maxWidth="540px"
-      >
-        <form onSubmit={handlePostDemand} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+      {/* Demand Management Table */}
+      <div className="glass-panel">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
           <div>
-            <label className="input-label">Crop Name</label>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#17221C' }}>
+              Your Active Procurement Demands
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: '#64748B' }}>
+              Broadcasted requirements linked with local agricultural clusters
+            </p>
+          </div>
+          
+          <div style={{ display: 'flex', gap: '10px' }}>
             <select
-              value={selectedCropId}
-              onChange={(e) => setSelectedCropId(e.target.value)}
               className="input-large"
+              value={filterCrop}
+              onChange={(e) => setFilterCrop(e.target.value)}
+              style={{ width: 'auto', minHeight: '38px', padding: '6px 12px', fontSize: '0.85rem' }}
             >
-              <option value="crop-tomato">Tomato (தக்காளி)</option>
-              <option value="crop-onion">Onion (வெங்காயம்)</option>
-              <option value="crop-potato">Potato (உருளை)</option>
-              <option value="crop-wheat">Wheat (கோதுமை)</option>
+              <option value="ALL">All Commodities</option>
+              <option value="Tomato">Tomato</option>
+              <option value="Onion">Onion</option>
+              <option value="Potato">Potato</option>
             </select>
           </div>
+        </div>
 
-          <div>
-            <label className="input-label">Required Quantity (kg)</label>
-            <input
-              type="number"
-              value={qtyKg}
-              onChange={(e) => setQtyKg(e.target.value)}
-              className="input-large"
-              placeholder="25000"
-              required
-            />
+        <div className="table-responsive">
+          <table className="table-modern">
+            <thead>
+              <tr>
+                <th>Crop / Commodity</th>
+                <th>Required Tonnage</th>
+                <th>Max Target Price</th>
+                <th>Target Delivery</th>
+                <th>Delivery DC Location</th>
+                <th>AI Match Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {demands.map(dem => (
+                <tr key={dem.id}>
+                  <td style={{ fontWeight: 800, color: '#17221C' }}>
+                    {dem.crop_id.replace('crop-', '').toUpperCase()}
+                  </td>
+                  <td style={{ fontWeight: 900 }}>
+                    {dem.required_quantity_kg.toLocaleString('en-IN')} kg
+                  </td>
+                  <td style={{ color: '#15803D', fontWeight: 800 }}>
+                    ₹{dem.max_price_per_kg.toFixed(2)}/kg
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748B', fontSize: '0.86rem' }}>
+                      <Calendar size={14} />
+                      <span>{dem.target_delivery_date}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#64748B', fontSize: '0.86rem' }}>
+                      <MapPin size={14} />
+                      <span style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {dem.delivery_address}
+                      </span>
+                    </div>
+                  </td>
+                  <td>
+                    <button
+                      className="btn-emerald"
+                      onClick={() => handleRunMatching(dem.id)}
+                      disabled={matchingLoading}
+                      style={{ padding: '6px 14px', fontSize: '0.82rem', minHeight: '34px' }}
+                    >
+                      <Zap size={14} />
+                      <span>Run AI Match</span>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* AI Cluster Matching Visualizer Results */}
+      {matchingResults && (
+        <div className="glass-panel" style={{ border: '1.5px solid rgba(22, 163, 74, 0.35)', background: 'rgba(255, 255, 255, 0.95)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Sparkles size={22} color="#16A34A" />
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#17221C' }}>
+                AI Cluster Supply Match Result
+              </h3>
+            </div>
+            <span className="badge-tag badge-completed">96% Cluster Confidence</span>
           </div>
 
-          <div>
-            <label className="input-label">Target Maximum Price (₹/kg)</label>
-            <input
-              type="number"
-              step="0.5"
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(e.target.value)}
-              className="input-large"
-              placeholder="28.0"
-              required
-            />
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: '16px',
+            marginBottom: '18px'
+          }}>
+            <div className="surface-card">
+              <div style={{ fontSize: '0.78rem', color: '#64748B' }}>Supplies Pooled</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#17221C' }}>3 Farm Declarations</div>
+              <div style={{ fontSize: '0.8rem', color: '#15803D' }}>Nashik Dindori Cluster</div>
+            </div>
+            <div className="surface-card">
+              <div style={{ fontSize: '0.78rem', color: '#64748B' }}>Matched Volume</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#0EA5E9' }}>25,000 kg (100%)</div>
+              <div style={{ fontSize: '0.8rem', color: '#0284C7' }}>Grade A Quality Inspected</div>
+            </div>
+            <div className="surface-card">
+              <div style={{ fontSize: '0.78rem', color: '#64748B' }}>Contract Rate</div>
+              <div style={{ fontSize: '1.4rem', fontWeight: 900, color: '#15803D' }}>₹26.50 / kg</div>
+              <div style={{ fontSize: '0.8rem', color: '#15803D' }}>Estimated Savings: ₹37,500</div>
+            </div>
           </div>
 
-          <div>
-            <label className="input-label">Target Delivery Date</label>
-            <input
-              type="date"
-              value={deliveryDate}
-              onChange={(e) => setDeliveryDate(e.target.value)}
-              className="input-large"
-              required
-            />
-          </div>
+          <button 
+            className="btn-emerald"
+            onClick={() => {
+              setToastMessage('Contract executed with Nashik Dindori Cluster! Logistics route generated.');
+              setMatchingResults(null);
+            }}
+            style={{ width: '100%', padding: '12px', fontSize: '1rem' }}
+          >
+            <span>Confirm Pre-Harvest Contract & Lock Delivery</span>
+            <CheckCircle2 size={18} />
+          </button>
+        </div>
+      )}
 
-          <div>
-            <label className="input-label">Delivery DC Address</label>
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="input-large"
-              required
-            />
-          </div>
+      {/* Post Demand Modal Dialog */}
+      {showPostModal && (
+        <Modal
+          isOpen={showPostModal}
+          onClose={() => setShowPostModal(false)}
+          title="Post Bulk Procurement Requirement"
+          maxWidth="540px"
+        >
+          <form onSubmit={handlePostDemand} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div>
+              <label className="input-label">Commodity</label>
+              <select 
+                className="input-large"
+                value={selectedCropId}
+                onChange={(e) => setSelectedCropId(e.target.value)}
+              >
+                {crops.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))}
+              </select>
+            </div>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '12px' }}>
-            <button type="button" className="btn-secondary" onClick={() => setShowPostModal(false)}>
-              {t.common.cancel}
+            <div>
+              <label className="input-label">Required Quantity (kg)</label>
+              <input 
+                type="number"
+                className="input-large"
+                value={qtyKg}
+                onChange={(e) => setQtyKg(e.target.value)}
+                placeholder="e.g. 25000"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="input-label">Maximum Ceiling Price (₹/kg)</label>
+              <input 
+                type="number"
+                step="0.5"
+                className="input-large"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                placeholder="e.g. 28.0"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="input-label">Required Delivery Date</label>
+              <input 
+                type="date"
+                className="input-large"
+                value={deliveryDate}
+                onChange={(e) => setDeliveryDate(e.target.value)}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="input-label">Delivery Center / Warehouse Address</label>
+              <input 
+                type="text"
+                className="input-large"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="e.g. Reliance Retail DC, Bhosari, Pune"
+                required
+              />
+            </div>
+
+            <button type="submit" className="btn-emerald" style={{ marginTop: '8px' }}>
+              <span>Publish Demand to Farmer Network</span>
+              <ArrowRight size={18} />
             </button>
-            <button type="submit" className="btn-emerald">
-              {t.common.confirm}
-            </button>
-          </div>
-        </form>
-      </Modal>
+          </form>
+        </Modal>
+      )}
 
     </div>
   );

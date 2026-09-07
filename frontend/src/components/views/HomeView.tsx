@@ -1,66 +1,99 @@
-"use client";
+'use client';
 
 import React from 'react';
-import { useLanguage } from '@/i18n';
-import { 
-  Sprout, TrendingUp, ShieldCheck, Truck, Users, ArrowRight, CheckCircle2, 
-  Cpu, Activity, Zap, ShoppingBag, DollarSign, Calendar, MapPin, ChevronRight, HelpCircle 
-} from 'lucide-react';
+import { useLanguage } from '@/i18n/LanguageContext';
 import { UserRole } from '@/types';
+import {
+  Sprout,
+  ShoppingBag,
+  TrendingUp,
+  ShieldCheck,
+  Truck,
+  ArrowRight,
+  CheckCircle2,
+  Cpu,
+  BarChart3,
+  DollarSign,
+  Users,
+  MapPin,
+  Sparkles,
+  Play,
+  Layers,
+  ArrowUpRight
+} from 'lucide-react';
 
 interface HomeViewProps {
-  onNavigate: (view: string) => void;
+  onNavigate: (view: 'home' | 'market-pulse' | 'price-transparency' | 'demo' | 'dashboard') => void;
   onRoleSelect: (role: UserRole) => void;
 }
 
 export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onRoleSelect }) => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '56px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '56px', paddingBottom: '60px' }}>
       
       {/* ==================================================== */}
-      {/* 1. HERO SECTION */}
+      {/* 1. HERO SECTION WITH AMBIENT LIGHT BLOOMS & GLASS     */}
       {/* ==================================================== */}
       <section style={{
-        position: 'relative',
-        padding: '36px 0 24px 0',
+        textAlign: 'center',
+        padding: '48px 16px 36px 16px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        textAlign: 'center',
-        gap: '20px'
+        position: 'relative'
       }}>
-        {/* Hackathon Pill */}
+        {/* Glow backdrop behind hero */}
+        <div style={{
+          position: 'absolute',
+          top: '-10%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '700px',
+          height: '350px',
+          background: 'radial-gradient(ellipse at center, rgba(34, 197, 94, 0.15) 0%, rgba(14, 165, 233, 0.08) 45%, transparent 70%)',
+          filter: 'blur(45px)',
+          zIndex: -1,
+          pointerEvents: 'none'
+        }} />
+
+        {/* Hero Top Pill Tag */}
         <div style={{
           display: 'inline-flex',
           alignItems: 'center',
           gap: '8px',
-          padding: '6px 16px',
+          padding: '8px 18px',
           borderRadius: '9999px',
-          background: 'rgba(16, 185, 129, 0.12)',
-          border: '1px solid rgba(16, 185, 129, 0.3)',
-          color: '#34d399',
+          background: 'rgba(255, 255, 255, 0.88)',
+          border: '1px solid rgba(22, 163, 74, 0.25)',
+          boxShadow: '0 4px 14px rgba(22, 163, 74, 0.1)',
+          backdropFilter: 'blur(12px)',
           fontSize: '0.84rem',
-          fontWeight: 700
+          fontWeight: 700,
+          color: '#15803D',
+          marginBottom: '24px'
         }}>
-          <span>🌾</span>
+          <Sparkles size={15} color="#16A34A" />
           <span>{t.home.heroBadge}</span>
         </div>
 
         {/* Hero Title */}
         <h1 style={{
-          fontSize: 'clamp(2rem, 5vw, 3.4rem)',
-          fontWeight: 800,
-          maxWidth: '900px',
-          letterSpacing: '-0.03em',
-          lineHeight: 1.18
+          fontSize: 'clamp(2.3rem, 5.5vw, 3.8rem)',
+          fontWeight: 900,
+          maxWidth: '960px',
+          letterSpacing: '-0.035em',
+          lineHeight: 1.15,
+          color: '#17221C',
+          marginBottom: '20px'
         }}>
           {t.home.heroTitle}{' '}
           <span style={{
-            background: 'linear-gradient(135deg, #10b981 0%, #38bdf8 100%)',
+            background: 'linear-gradient(135deg, #16A34A 0%, #0EA5E9 100%)',
             WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
+            WebkitTextFillColor: 'transparent',
+            filter: 'drop-shadow(0 2px 10px rgba(22, 163, 74, 0.12))'
           }}>
             {t.home.heroHighlight}
           </span>
@@ -68,93 +101,187 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onRoleSelect }) 
 
         {/* Hero Subtitle */}
         <p style={{
-          fontSize: 'clamp(1rem, 2vw, 1.2rem)',
-          color: '#cbd5e1',
-          maxWidth: '720px',
-          lineHeight: 1.6
+          fontSize: 'clamp(1.05rem, 2vw, 1.22rem)',
+          color: '#334155',
+          maxWidth: '760px',
+          lineHeight: 1.65,
+          fontWeight: 400,
+          marginBottom: '32px'
         }}>
           {t.home.heroSubtitle}
         </p>
 
-        {/* Call-to-Action Buttons */}
+        {/* Call to Action Buttons */}
         <div style={{
           display: 'flex',
           gap: '14px',
           flexWrap: 'wrap',
           justifyContent: 'center',
-          marginTop: '10px'
+          marginBottom: '40px'
         }}>
-          <button
+          <button 
             className="btn-emerald"
             onClick={() => {
               onRoleSelect('FARMER');
               onNavigate('dashboard');
             }}
-            style={{ fontSize: '1.05rem', padding: '14px 28px' }}
+            style={{ padding: '14px 28px', fontSize: '1.05rem' }}
           >
-            <Sprout size={20} />
-            {t.home.getStartedBtn}
+            <Sprout size={18} />
+            <span>{t.home.getStartedBtn}</span>
+            <ArrowRight size={18} />
           </button>
-
-          <button
+          
+          <button 
             className="btn-secondary"
             onClick={() => onNavigate('demo')}
-            style={{ fontSize: '1.05rem', padding: '14px 24px' }}
+            style={{ padding: '14px 24px', fontSize: '1.02rem' }}
           >
-            <Zap size={20} color="#fbbf24" />
-            {t.home.exploreDemoBtn}
+            <Play size={17} color="#16A34A" />
+            <span>{t.home.exploreDemoBtn}</span>
           </button>
 
-          <button
+          <button 
             className="btn-outline"
             onClick={() => onNavigate('market-pulse')}
-            style={{ fontSize: '1.05rem', padding: '14px 22px' }}
+            style={{ padding: '14px 24px', fontSize: '1.02rem' }}
           >
-            <Activity size={20} />
-            {t.home.marketPulseBtn}
+            <BarChart3 size={17} />
+            <span>{t.home.marketPulseBtn}</span>
           </button>
         </div>
 
-        {/* 4 Impact Stat Cards */}
+        {/* Floating Glass Intelligence Preview Cards (Hero Graphic) */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '16px',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: '20px',
           width: '100%',
-          marginTop: '28px'
+          maxWidth: '1040px',
+          marginTop: '12px'
         }}>
-          <div className="glass-panel" style={{ borderTop: '4px solid #10b981', textAlign: 'center', padding: '20px 16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#10b981' }}>
+          {/* Card 1: Expected Demand */}
+          <div className="glass-card-floating" style={{ display: 'flex', flexDirection: 'column', gap: '12px', textAlign: 'left' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0284C7', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Pre-Harvest Demand
+              </span>
+              <span className="badge-tag badge-matched" style={{ fontSize: '0.74rem' }}>
+                +18% Peak Window
+              </span>
+            </div>
+            <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#17221C' }}>
+              1,48,500 <span style={{ fontSize: '1rem', color: '#64748B', fontWeight: 500 }}>kg</span>
+            </div>
+            <div style={{ fontSize: '0.85rem', color: '#64748B' }}>
+              Verified institutional demand for next 15 days across Nashik & Pune clusters.
+            </div>
+            <div style={{
+              height: '6px',
+              background: 'rgba(0, 0, 0, 0.06)',
+              borderRadius: '9999px',
+              overflow: 'hidden'
+            }}>
+              <div style={{ width: '78%', height: '100%', background: 'linear-gradient(90deg, #0EA5E9, #22C55E)', borderRadius: '9999px' }} />
+            </div>
+          </div>
+
+          {/* Card 2: Supply Aggregation */}
+          <div className="glass-card-floating" style={{ display: 'flex', flexDirection: 'column', gap: '12px', textAlign: 'left' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#15803D', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Available Supply Pool
+              </span>
+              <span className="badge-tag badge-completed" style={{ fontSize: '0.74rem' }}>
+                Verified Smallholders
+              </span>
+            </div>
+            <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#17221C' }}>
+              5.2 <span style={{ fontSize: '1rem', color: '#64748B', fontWeight: 500 }}>Tonnes</span>
+            </div>
+            <div style={{ fontSize: '0.85rem', color: '#64748B' }}>
+              Aggregated farmer declarations ready for pre-harvest contract matching.
+            </div>
+            <div style={{
+              height: '6px',
+              background: 'rgba(0, 0, 0, 0.06)',
+              borderRadius: '9999px',
+              overflow: 'hidden'
+            }}>
+              <div style={{ width: '92%', height: '100%', background: 'linear-gradient(90deg, #16A34A, #34D399)', borderRadius: '9999px' }} />
+            </div>
+          </div>
+
+          {/* Card 3: Direct Institutional Matching */}
+          <div className="glass-card-floating" style={{ display: 'flex', flexDirection: 'column', gap: '12px', textAlign: 'left' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#7C3AED', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Smart Yield Contracts
+              </span>
+              <span className="badge-tag badge-confirmed" style={{ fontSize: '0.74rem' }}>
+                AI Optimized
+              </span>
+            </div>
+            <div style={{ fontSize: '1.8rem', fontWeight: 900, color: '#17221C' }}>
+              8 <span style={{ fontSize: '1rem', color: '#64748B', fontWeight: 500 }}>Buyers Linked</span>
+            </div>
+            <div style={{ fontSize: '0.85rem', color: '#64748B' }}>
+              Pre-agreed fair floor prices with 0% unrecorded commission fees.
+            </div>
+            <div style={{
+              height: '6px',
+              background: 'rgba(0, 0, 0, 0.06)',
+              borderRadius: '9999px',
+              overflow: 'hidden'
+            }}>
+              <div style={{ width: '85%', height: '100%', background: 'linear-gradient(90deg, #8B5CF6, #0EA5E9)', borderRadius: '9999px' }} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================================================== */}
+      {/* 2. PLATFORM KEY METRICS SUMMARY                      */}
+      {/* ==================================================== */}
+      <section className="glass-panel" style={{ padding: '32px' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '24px',
+          textAlign: 'center'
+        }}>
+          <div>
+            <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#15803D' }}>
               {t.home.keyMetrics.farmerShare}
             </div>
-            <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '4px', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.88rem', color: '#475569', fontWeight: 600, marginTop: '4px' }}>
               {t.home.keyMetrics.farmerShareLabel}
             </div>
           </div>
 
-          <div className="glass-panel" style={{ borderTop: '4px solid #38bdf8', textAlign: 'center', padding: '20px 16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#38bdf8' }}>
+          <div>
+            <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#0EA5E9' }}>
               {t.home.keyMetrics.zeroMiddlemen}
             </div>
-            <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '4px', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.88rem', color: '#475569', fontWeight: 600, marginTop: '4px' }}>
               {t.home.keyMetrics.zeroMiddlemenLabel}
             </div>
           </div>
 
-          <div className="glass-panel" style={{ borderTop: '4px solid #fbbf24', textAlign: 'center', padding: '20px 16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#fbbf24' }}>
+          <div>
+            <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#7C3AED' }}>
               {t.home.keyMetrics.priceStack}
             </div>
-            <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '4px', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.88rem', color: '#475569', fontWeight: 600, marginTop: '4px' }}>
               {t.home.keyMetrics.priceStackLabel}
             </div>
           </div>
 
-          <div className="glass-panel" style={{ borderTop: '4px solid #a855f7', textAlign: 'center', padding: '20px 16px' }}>
-            <div style={{ fontSize: '2.2rem', fontWeight: 800, color: '#c084fc' }}>
+          <div>
+            <div style={{ fontSize: '2.5rem', fontWeight: 900, color: '#E11D48' }}>
               {t.home.keyMetrics.spoilageCut}
             </div>
-            <div style={{ fontSize: '0.85rem', color: '#cbd5e1', marginTop: '4px', fontWeight: 600 }}>
+            <div style={{ fontSize: '0.88rem', color: '#475569', fontWeight: 600, marginTop: '4px' }}>
               {t.home.keyMetrics.spoilageCutLabel}
             </div>
           </div>
@@ -162,17 +289,17 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onRoleSelect }) 
       </section>
 
       {/* ==================================================== */}
-      {/* 2. RURAL VS. URBAN MODEL COMPARISON */}
+      {/* 3. DUAL-ENGINE ARCHITECTURE (RURAL & URBAN)          */}
       {/* ==================================================== */}
       <section>
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#10b981', textTransform: 'uppercase', letterSpacing: '1px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#16A34A', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             {t.home.modelsSection.tag}
           </span>
-          <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 800, marginTop: '6px' }}>
+          <h2 style={{ fontSize: 'clamp(1.7rem, 3.5vw, 2.3rem)', fontWeight: 900, color: '#17221C', marginTop: '6px' }}>
             {t.home.modelsSection.title}
           </h2>
-          <p style={{ color: '#94a3b8', maxWidth: '680px', margin: '8px auto 0 auto' }}>
+          <p style={{ color: '#64748B', maxWidth: '680px', margin: '8px auto 0 auto', fontSize: '1rem', lineHeight: 1.6 }}>
             {t.home.modelsSection.subtitle}
           </p>
         </div>
@@ -182,109 +309,330 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onRoleSelect }) 
           gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
           gap: '24px'
         }}>
-          {/* Rural Model Card */}
-          <div className="glass-panel" style={{ border: '1.5px solid rgba(16, 185, 129, 0.4)', background: 'linear-gradient(180deg, rgba(16,185,129,0.08) 0%, rgba(18,27,43,0.9) 100%)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-              <span className="badge-tag badge-rural">🌾 50 km RADIUS</span>
-              <span style={{ fontSize: '0.8rem', color: '#34d399', fontWeight: 800 }}>ZERO UNNECESSARY CUTS</span>
+          {/* Rural Direct Model */}
+          <div className="glass-panel" style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px',
+            borderTop: '4px solid #16A34A'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <span className="badge-tag badge-rural">Direct Farm-Gate</span>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#17221C', marginTop: '8px' }}>
+                  {t.home.modelsSection.ruralTitle}
+                </h3>
+              </div>
+              <div style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '12px',
+                background: 'rgba(22, 163, 74, 0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#16A34A'
+              }}>
+                <Sprout size={24} />
+              </div>
             </div>
 
-            <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
-              {t.home.modelsSection.ruralTitle}
-            </h3>
-            <p style={{ fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '24px' }}>
+            <p style={{ fontSize: '0.92rem', color: '#475569', lineHeight: 1.6 }}>
               {t.home.modelsSection.ruralSubtitle}
             </p>
 
-            {/* Visual Step Chain */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.04)', padding: '12px 16px', borderRadius: '12px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(16,185,129,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#34d399', fontWeight: 800 }}>1</div>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(22, 163, 74, 0.15)', color: '#15803D', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>1</div>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#f8fafc' }}>{t.home.modelsSection.ruralStep1}</div>
-                  <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>{t.home.modelsSection.ruralStep1Desc}</div>
+                  <div style={{ fontWeight: 700, color: '#17221C', fontSize: '0.92rem' }}>{t.home.modelsSection.ruralStep1}</div>
+                  <div style={{ color: '#64748B', fontSize: '0.84rem' }}>{t.home.modelsSection.ruralStep1Desc}</div>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.04)', padding: '12px 16px', borderRadius: '12px' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(16,185,129,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#34d399', fontWeight: 800 }}>2</div>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(22, 163, 74, 0.15)', color: '#15803D', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>2</div>
                 <div>
-                  <div style={{ fontWeight: 700, fontSize: '0.95rem', color: '#f8fafc' }}>{t.home.modelsSection.ruralStep2}</div>
-                  <div style={{ fontSize: '0.82rem', color: '#94a3b8' }}>{t.home.modelsSection.ruralStep2Desc}</div>
+                  <div style={{ fontWeight: 700, color: '#17221C', fontSize: '0.92rem' }}>{t.home.modelsSection.ruralStep2}</div>
+                  <div style={{ color: '#64748B', fontSize: '0.84rem' }}>{t.home.modelsSection.ruralStep2Desc}</div>
                 </div>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(16,185,129,0.2)', padding: '12px 16px', borderRadius: '12px', border: '1px solid #10b981' }}>
-                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ffffff', fontWeight: 800 }}>3</div>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(22, 163, 74, 0.15)', color: '#15803D', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>3</div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#ffffff' }}>{t.home.modelsSection.ruralStep3}</div>
-                  <div style={{ fontSize: '0.82rem', color: '#cbd5e1' }}>{t.home.modelsSection.ruralStep3Desc}</div>
+                  <div style={{ fontWeight: 700, color: '#17221C', fontSize: '0.92rem' }}>{t.home.modelsSection.ruralStep3}</div>
+                  <div style={{ color: '#64748B', fontSize: '0.84rem' }}>{t.home.modelsSection.ruralStep3Desc}</div>
                 </div>
               </div>
             </div>
 
-            <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(16,185,129,0.12)', borderRadius: '10px', fontSize: '0.85rem', color: '#34d399', fontWeight: 600 }}>
-              ✓ {t.home.modelsSection.ruralBenefit}
+            <div style={{
+              marginTop: 'auto',
+              padding: '12px 16px',
+              borderRadius: '12px',
+              background: 'rgba(22, 163, 74, 0.08)',
+              border: '1px solid rgba(22, 163, 74, 0.2)',
+              color: '#15803D',
+              fontWeight: 700,
+              fontSize: '0.88rem'
+            }}>
+              ✨ {t.home.modelsSection.ruralBenefit}
             </div>
           </div>
 
-          {/* Urban Model Card */}
-          <div className="glass-panel" style={{ border: '1.5px solid rgba(6, 182, 212, 0.4)', background: 'linear-gradient(180deg, rgba(6,182,212,0.08) 0%, rgba(18,27,43,0.9) 100%)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
-              <span className="badge-tag badge-urban">🏙️ 150 km RADIUS</span>
-              <span style={{ fontSize: '0.8rem', color: '#38bdf8', fontWeight: 800 }}>PRICE STACK AUDIT</span>
+          {/* Urban Transparent Supply Chain */}
+          <div className="glass-panel" style={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px',
+            borderTop: '4px solid #0EA5E9'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div>
+                <span className="badge-tag badge-urban">Cold-Chain Traceability</span>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#17221C', marginTop: '8px' }}>
+                  {t.home.modelsSection.urbanTitle}
+                </h3>
+              </div>
+              <div style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '12px',
+                background: 'rgba(14, 165, 233, 0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#0EA5E9'
+              }}>
+                <Truck size={24} />
+              </div>
             </div>
 
-            <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
-              {t.home.modelsSection.urbanTitle}
-            </h3>
-            <p style={{ fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '24px' }}>
+            <p style={{ fontSize: '0.92rem', color: '#475569', lineHeight: 1.6 }}>
               {t.home.modelsSection.urbanSubtitle}
             </p>
 
-            {/* Visual Step Chain */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.04)', padding: '10px 14px', borderRadius: '10px' }}>
-                <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#f8fafc' }}>1. {t.home.modelsSection.urbanStep1}</span>
-                <span className="badge-tag badge-actual">₹25/kg (ACTUAL)</span>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(14, 165, 233, 0.15)', color: '#0369A1', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>1</div>
+                <div>
+                  <div style={{ fontWeight: 700, color: '#17221C', fontSize: '0.92rem' }}>{t.home.modelsSection.urbanStep1}</div>
+                  <div style={{ color: '#64748B', fontSize: '0.84rem' }}>{t.home.modelsSection.urbanStep1Desc}</div>
+                </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.04)', padding: '10px 14px', borderRadius: '10px' }}>
-                <span style={{ fontSize: '0.88rem', color: '#cbd5e1' }}>2. {t.home.modelsSection.urbanStep2}</span>
-                <span className="badge-tag badge-estimated">+₹3.50/kg (EST)</span>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(14, 165, 233, 0.15)', color: '#0369A1', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>2</div>
+                <div>
+                  <div style={{ fontWeight: 700, color: '#17221C', fontSize: '0.92rem' }}>{t.home.modelsSection.urbanStep2}</div>
+                  <div style={{ color: '#64748B', fontSize: '0.84rem' }}>{t.home.modelsSection.urbanStep2Desc}</div>
+                </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.04)', padding: '10px 14px', borderRadius: '10px' }}>
-                <span style={{ fontSize: '0.88rem', color: '#cbd5e1' }}>3. {t.home.modelsSection.urbanStep3}</span>
-                <span className="badge-tag badge-estimated">+₹5.00/kg (EST)</span>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(14, 165, 233, 0.15)', color: '#0369A1', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>3</div>
+                <div>
+                  <div style={{ fontWeight: 700, color: '#17221C', fontSize: '0.92rem' }}>{t.home.modelsSection.urbanStep3}</div>
+                  <div style={{ color: '#64748B', fontSize: '0.84rem' }}>{t.home.modelsSection.urbanStep3Desc}</div>
+                </div>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(6,182,212,0.15)', padding: '12px 14px', borderRadius: '10px', border: '1px solid #06b6d4' }}>
-                <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#ffffff' }}>4. {t.home.modelsSection.urbanStep4}</span>
-                <span style={{ fontSize: '1.15rem', fontWeight: 800, color: '#38bdf8' }}>= ₹42.00/kg</span>
+              <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(14, 165, 233, 0.15)', color: '#0369A1', fontWeight: 800, fontSize: '0.85rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>4</div>
+                <div>
+                  <div style={{ fontWeight: 700, color: '#17221C', fontSize: '0.92rem' }}>{t.home.modelsSection.urbanStep4}</div>
+                  <div style={{ color: '#64748B', fontSize: '0.84rem' }}>{t.home.modelsSection.urbanStep4Desc}</div>
+                </div>
               </div>
             </div>
 
-            <div style={{ marginTop: '20px', padding: '12px', background: 'rgba(6,182,212,0.12)', borderRadius: '10px', fontSize: '0.85rem', color: '#38bdf8', fontWeight: 600 }}>
-              ✓ {t.home.modelsSection.urbanBenefit}
+            <div style={{
+              marginTop: 'auto',
+              padding: '12px 16px',
+              borderRadius: '12px',
+              background: 'rgba(14, 165, 233, 0.08)',
+              border: '1px solid rgba(14, 165, 233, 0.2)',
+              color: '#0369A1',
+              fontWeight: 700,
+              fontSize: '0.88rem'
+            }}>
+              🔍 {t.home.modelsSection.urbanBenefit}
             </div>
           </div>
         </div>
       </section>
 
       {/* ==================================================== */}
-      {/* 3. HOW IT WORKS (4 STEPS) */}
+      {/* 4. HOW IT WORKS: 4-STAGE FLOW PIPELINE              */}
       {/* ==================================================== */}
-      <section style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '40px 24px', borderRadius: '24px', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
+      <section id="how-it-works-section" className="glass-panel" style={{ padding: '40px 32px' }}>
         <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '1px' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0EA5E9', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             {t.home.howItWorksSection.tag}
           </span>
-          <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 800, marginTop: '6px' }}>
+          <h2 style={{ fontSize: 'clamp(1.7rem, 3.5vw, 2.3rem)', fontWeight: 900, color: '#17221C', marginTop: '6px' }}>
             {t.home.howItWorksSection.title}
           </h2>
-          <p style={{ color: '#94a3b8', maxWidth: '650px', margin: '8px auto 0 auto' }}>
+          <p style={{ color: '#64748B', maxWidth: '640px', margin: '8px auto 0 auto', fontSize: '1rem', lineHeight: 1.6 }}>
             {t.home.howItWorksSection.subtitle}
+          </p>
+        </div>
+
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+          gap: '20px'
+        }}>
+          {/* Step 1 */}
+          <div className="surface-card" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '10px',
+              background: 'rgba(22, 163, 74, 0.12)',
+              color: '#16A34A',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Sprout size={22} />
+            </div>
+            <h4 style={{ fontSize: '1.08rem', fontWeight: 800, color: '#17221C' }}>
+              {t.home.howItWorksSection.step1Title}
+            </h4>
+            <p style={{ fontSize: '0.86rem', color: '#64748B', lineHeight: 1.55 }}>
+              {t.home.howItWorksSection.step1Desc}
+            </p>
+          </div>
+
+          {/* Step 2 */}
+          <div className="surface-card" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '10px',
+              background: 'rgba(14, 165, 233, 0.12)',
+              color: '#0EA5E9',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Cpu size={22} />
+            </div>
+            <h4 style={{ fontSize: '1.08rem', fontWeight: 800, color: '#17221C' }}>
+              {t.home.howItWorksSection.step2Title}
+            </h4>
+            <p style={{ fontSize: '0.86rem', color: '#64748B', lineHeight: 1.55 }}>
+              {t.home.howItWorksSection.step2Desc}
+            </p>
+          </div>
+
+          {/* Step 3 */}
+          <div className="surface-card" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '10px',
+              background: 'rgba(245, 158, 11, 0.12)',
+              color: '#D97706',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <DollarSign size={22} />
+            </div>
+            <h4 style={{ fontSize: '1.08rem', fontWeight: 800, color: '#17221C' }}>
+              {t.home.howItWorksSection.step3Title}
+            </h4>
+            <p style={{ fontSize: '0.86rem', color: '#64748B', lineHeight: 1.55 }}>
+              {t.home.howItWorksSection.step3Desc}
+            </p>
+          </div>
+
+          {/* Step 4 */}
+          <div className="surface-card" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '10px',
+              background: 'rgba(124, 58, 237, 0.12)',
+              color: '#7C3AED',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Truck size={22} />
+            </div>
+            <h4 style={{ fontSize: '1.08rem', fontWeight: 800, color: '#17221C' }}>
+              {t.home.howItWorksSection.step4Title}
+            </h4>
+            <p style={{ fontSize: '0.86rem', color: '#64748B', lineHeight: 1.55 }}>
+              {t.home.howItWorksSection.step4Desc}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================================================== */}
+      {/* 5. TRADITIONAL MANDI VS AGRIFLOW COMPARISON          */}
+      {/* ==================================================== */}
+      <section>
+        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#E11D48', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            {t.home.comparisonSection.tag}
+          </span>
+          <h2 style={{ fontSize: 'clamp(1.7rem, 3.5vw, 2.3rem)', fontWeight: 900, color: '#17221C', marginTop: '6px' }}>
+            {t.home.comparisonSection.title}
+          </h2>
+          <p style={{ color: '#64748B', maxWidth: '660px', margin: '8px auto 0 auto', fontSize: '1rem', lineHeight: 1.6 }}>
+            {t.home.comparisonSection.subtitle}
+          </p>
+        </div>
+
+        <div className="glass-panel" style={{ padding: '0px', overflow: 'hidden' }}>
+          <div className="table-responsive">
+            <table className="table-modern">
+              <thead>
+                <tr>
+                  <th style={{ width: '24%' }}>{t.home.comparisonSection.headers.factor}</th>
+                  <th style={{ width: '38%', color: '#E11D48' }}>{t.home.comparisonSection.headers.traditional}</th>
+                  <th style={{ width: '38%', color: '#15803D' }}>{t.home.comparisonSection.headers.agriflow}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {t.home.comparisonSection.rows.map((row, idx) => (
+                  <tr key={idx}>
+                    <td style={{ fontWeight: 800, color: '#17221C' }}>{row.factor}</td>
+                    <td style={{ color: '#64748B' }}>
+                      <span style={{ color: '#EF4444', marginRight: '6px', fontWeight: 900 }}>✕</span>
+                      {row.traditional}
+                    </td>
+                    <td style={{ color: '#15803D', fontWeight: 600 }}>
+                      <span style={{ color: '#16A34A', marginRight: '6px', fontWeight: 900 }}>✓</span>
+                      {row.agriflow}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================================================== */}
+      {/* 6. AI CAPABILITIES GRID                              */}
+      {/* ==================================================== */}
+      <section>
+        <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#7C3AED', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            {t.home.aiSection.tag}
+          </span>
+          <h2 style={{ fontSize: 'clamp(1.7rem, 3.5vw, 2.3rem)', fontWeight: 900, color: '#17221C', marginTop: '6px' }}>
+            {t.home.aiSection.title}
+          </h2>
+          <p style={{ color: '#64748B', maxWidth: '660px', margin: '8px auto 0 auto', fontSize: '1rem', lineHeight: 1.6 }}>
+            {t.home.aiSection.subtitle}
           </p>
         </div>
 
@@ -293,138 +641,52 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onRoleSelect }) 
           gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
           gap: '20px'
         }}>
-          {[
-            { num: '01', title: t.home.howItWorksSection.step1Title, desc: t.home.howItWorksSection.step1Desc, icon: Calendar, color: '#10b981' },
-            { num: '02', title: t.home.howItWorksSection.step2Title, desc: t.home.howItWorksSection.step2Desc, icon: Users, color: '#38bdf8' },
-            { num: '03', title: t.home.howItWorksSection.step3Title, desc: t.home.howItWorksSection.step3Desc, icon: ShieldCheck, color: '#fbbf24' },
-            { num: '04', title: t.home.howItWorksSection.step4Title, desc: t.home.howItWorksSection.step4Desc, icon: Truck, color: '#c084fc' }
-          ].map((s, idx) => {
-            const Icon = s.icon;
-            return (
-              <div key={idx} className="surface-card" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '1.8rem', fontWeight: 800, color: s.color, opacity: 0.8 }}>{s.num}</span>
-                  <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Icon size={20} color={s.color} />
-                  </div>
-                </div>
-                <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc' }}>
-                  {s.title}
-                </h3>
-                <p style={{ fontSize: '0.88rem', color: '#94a3b8', lineHeight: 1.5 }}>
-                  {s.desc}
-                </p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* ==================================================== */}
-      {/* 4. TRADITIONAL MANDI VS AGRIFLOW COMPARISON */}
-      {/* ==================================================== */}
-      <section>
-        <div style={{ textAlign: 'center', marginBottom: '28px' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#f59e0b', textTransform: 'uppercase', letterSpacing: '1px' }}>
-            {t.home.comparisonSection.tag}
-          </span>
-          <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 800, marginTop: '6px' }}>
-            {t.home.comparisonSection.title}
-          </h2>
-          <p style={{ color: '#94a3b8', maxWidth: '650px', margin: '8px auto 0 auto' }}>
-            {t.home.comparisonSection.subtitle}
-          </p>
-        </div>
-
-        <div className="table-responsive glass-panel" style={{ padding: '8px' }}>
-          <table className="table-modern">
-            <thead>
-              <tr>
-                <th style={{ width: '22%' }}>{t.home.comparisonSection.headers.factor}</th>
-                <th style={{ width: '39%', color: '#f87171' }}>⚠️ {t.home.comparisonSection.headers.traditional}</th>
-                <th style={{ width: '39%', color: '#34d399' }}>✓ {t.home.comparisonSection.headers.agriflow}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {t.home.comparisonSection.rows.map((row, idx) => (
-                <tr key={idx}>
-                  <td style={{ fontWeight: 700, color: '#f8fafc' }}>{row.factor}</td>
-                  <td style={{ color: '#cbd5e1', background: 'rgba(239, 68, 68, 0.03)' }}>{row.traditional}</td>
-                  <td style={{ color: '#ffffff', background: 'rgba(16, 185, 129, 0.05)', fontWeight: 500 }}>{row.agriflow}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* ==================================================== */}
-      {/* 5. AI-POWERED TECH HIGHLIGHTS */}
-      {/* ==================================================== */}
-      <section>
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#10b981', textTransform: 'uppercase', letterSpacing: '1px' }}>
-            {t.home.aiSection.tag}
-          </span>
-          <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 800, marginTop: '6px' }}>
-            {t.home.aiSection.title}
-          </h2>
-          <p style={{ color: '#94a3b8', maxWidth: '650px', margin: '8px auto 0 auto' }}>
-            {t.home.aiSection.subtitle}
-          </p>
-        </div>
-
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-          gap: '20px'
-        }}>
-          <div className="glass-panel" style={{ borderLeft: '4px solid #10b981' }}>
+          <div className="glass-panel" style={{ borderLeft: '4px solid #16A34A' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-              <TrendingUp size={22} color="#10b981" />
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f8fafc' }}>{t.home.aiSection.feature1Title}</h3>
+              <TrendingUp size={22} color="#16A34A" />
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#17221C' }}>{t.home.aiSection.feature1Title}</h3>
             </div>
-            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>{t.home.aiSection.feature1Desc}</p>
+            <p style={{ fontSize: '0.88rem', color: '#64748B', lineHeight: 1.6 }}>{t.home.aiSection.feature1Desc}</p>
           </div>
 
-          <div className="glass-panel" style={{ borderLeft: '4px solid #38bdf8' }}>
+          <div className="glass-panel" style={{ borderLeft: '4px solid #0EA5E9' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-              <Users size={22} color="#38bdf8" />
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f8fafc' }}>{t.home.aiSection.feature2Title}</h3>
+              <Users size={22} color="#0EA5E9" />
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#17221C' }}>{t.home.aiSection.feature2Title}</h3>
             </div>
-            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>{t.home.aiSection.feature2Desc}</p>
+            <p style={{ fontSize: '0.88rem', color: '#64748B', lineHeight: 1.6 }}>{t.home.aiSection.feature2Desc}</p>
           </div>
 
-          <div className="glass-panel" style={{ borderLeft: '4px solid #fbbf24' }}>
+          <div className="glass-panel" style={{ borderLeft: '4px solid #F59E0B' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-              <Truck size={22} color="#fbbf24" />
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f8fafc' }}>{t.home.aiSection.feature3Title}</h3>
+              <Truck size={22} color="#D97706" />
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#17221C' }}>{t.home.aiSection.feature3Title}</h3>
             </div>
-            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>{t.home.aiSection.feature3Desc}</p>
+            <p style={{ fontSize: '0.88rem', color: '#64748B', lineHeight: 1.6 }}>{t.home.aiSection.feature3Desc}</p>
           </div>
 
-          <div className="glass-panel" style={{ borderLeft: '4px solid #a855f7' }}>
+          <div className="glass-panel" style={{ borderLeft: '4px solid #7C3AED' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-              <Cpu size={22} color="#c084fc" />
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f8fafc' }}>{t.home.aiSection.feature4Title}</h3>
+              <Cpu size={22} color="#7C3AED" />
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#17221C' }}>{t.home.aiSection.feature4Title}</h3>
             </div>
-            <p style={{ fontSize: '0.88rem', color: '#cbd5e1', lineHeight: 1.6 }}>{t.home.aiSection.feature4Desc}</p>
+            <p style={{ fontSize: '0.88rem', color: '#64748B', lineHeight: 1.6 }}>{t.home.aiSection.feature4Desc}</p>
           </div>
         </div>
       </section>
 
       {/* ==================================================== */}
-      {/* 6. STAKEHOLDER BENEFITS */}
+      {/* 7. STAKEHOLDER BENEFIT CARDS                         */}
       {/* ==================================================== */}
       <section>
-        <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '1px' }}>
+        <div style={{ textAlign: 'center', marginBottom: '36px' }}>
+          <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0EA5E9', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             {t.home.benefitsSection.tag}
           </span>
-          <h2 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 800, marginTop: '6px' }}>
+          <h2 style={{ fontSize: 'clamp(1.7rem, 3.5vw, 2.3rem)', fontWeight: 900, color: '#17221C', marginTop: '6px' }}>
             {t.home.benefitsSection.title}
           </h2>
-          <p style={{ color: '#94a3b8', maxWidth: '650px', margin: '8px auto 0 auto' }}>
+          <p style={{ color: '#64748B', maxWidth: '640px', margin: '8px auto 0 auto', fontSize: '1rem', lineHeight: 1.6 }}>
             {t.home.benefitsSection.subtitle}
           </p>
         </div>
@@ -437,15 +699,15 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onRoleSelect }) 
           {/* Farmers */}
           <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(16,185,129,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Sprout size={22} color="#10b981" />
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(22, 163, 74, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#16A34A' }}>
+                <Sprout size={22} />
               </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc' }}>{t.home.benefitsSection.farmersTitle}</h3>
+              <h3 style={{ fontSize: '1.22rem', fontWeight: 800, color: '#17221C' }}>{t.home.benefitsSection.farmersTitle}</h3>
             </div>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {t.home.benefitsSection.farmersPoints.map((pt, i) => (
-                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.9rem', color: '#cbd5e1' }}>
-                  <CheckCircle2 size={18} color="#10b981" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.9rem', color: '#475569' }}>
+                  <CheckCircle2 size={18} color="#16A34A" style={{ flexShrink: 0, marginTop: '2px' }} />
                   <span>{pt}</span>
                 </li>
               ))}
@@ -455,15 +717,15 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onRoleSelect }) 
           {/* Bulk Buyers */}
           <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(6,182,212,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <ShoppingBag size={22} color="#06b6d4" />
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(14, 165, 233, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#0EA5E9' }}>
+                <ShoppingBag size={22} />
               </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc' }}>{t.home.benefitsSection.buyersTitle}</h3>
+              <h3 style={{ fontSize: '1.22rem', fontWeight: 800, color: '#17221C' }}>{t.home.benefitsSection.buyersTitle}</h3>
             </div>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {t.home.benefitsSection.buyersPoints.map((pt, i) => (
-                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.9rem', color: '#cbd5e1' }}>
-                  <CheckCircle2 size={18} color="#06b6d4" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.9rem', color: '#475569' }}>
+                  <CheckCircle2 size={18} color="#0EA5E9" style={{ flexShrink: 0, marginTop: '2px' }} />
                   <span>{pt}</span>
                 </li>
               ))}
@@ -473,15 +735,15 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onRoleSelect }) 
           {/* Family Consumers */}
           <div className="glass-panel" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(245,158,11,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <ShieldCheck size={22} color="#fbbf24" />
+              <div style={{ width: '40px', height: '40px', borderRadius: '10px', background: 'rgba(245, 158, 11, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#D97706' }}>
+                <ShieldCheck size={22} />
               </div>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#f8fafc' }}>{t.home.benefitsSection.consumersTitle}</h3>
+              <h3 style={{ fontSize: '1.22rem', fontWeight: 800, color: '#17221C' }}>{t.home.benefitsSection.consumersTitle}</h3>
             </div>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {t.home.benefitsSection.consumersPoints.map((pt, i) => (
-                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.9rem', color: '#cbd5e1' }}>
-                  <CheckCircle2 size={18} color="#fbbf24" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.9rem', color: '#475569' }}>
+                  <CheckCircle2 size={18} color="#D97706" style={{ flexShrink: 0, marginTop: '2px' }} />
                   <span>{pt}</span>
                 </li>
               ))}
@@ -491,57 +753,164 @@ export const HomeView: React.FC<HomeViewProps> = ({ onNavigate, onRoleSelect }) 
       </section>
 
       {/* ==================================================== */}
-      {/* 7. FINAL CALL TO ACTION */}
+      {/* 8. PREVIEWS: MARKET PULSE & PRICE TRANSPARENCY       */}
       {/* ==================================================== */}
       <section style={{
-        background: 'linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(6,182,212,0.18) 100%)',
-        border: '1px solid rgba(16, 185, 129, 0.4)',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+        gap: '24px'
+      }}>
+        {/* Market Pulse Preview Card */}
+        <div className="glass-panel" style={{
+          padding: '28px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          gap: '20px'
+        }}>
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '10px',
+                background: 'rgba(14, 165, 233, 0.12)',
+                color: '#0EA5E9',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <BarChart3 size={20} />
+              </div>
+              <span className="badge-tag badge-matched">Real-Time Forecasts</span>
+            </div>
+            <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#17221C', marginBottom: '8px' }}>
+              {t.nav.marketPulse}
+            </h3>
+            <p style={{ fontSize: '0.92rem', color: '#64748B', lineHeight: 1.6 }}>
+              AI-driven 15-day district demand curves, APMC arrival trends, and price advisories to guide planting and harvesting decisions.
+            </p>
+          </div>
+          <button 
+            className="btn-secondary"
+            onClick={() => onNavigate('market-pulse')}
+            style={{ width: 'fit-content' }}
+          >
+            <span>Explore Market Pulse</span>
+            <ArrowRight size={16} />
+          </button>
+        </div>
+
+        {/* Price Transparency Preview Card */}
+        <div className="glass-panel" style={{
+          padding: '28px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          gap: '20px'
+        }}>
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <div style={{
+                width: '40px',
+                height: '40px',
+                borderRadius: '10px',
+                background: 'rgba(22, 163, 74, 0.12)',
+                color: '#16A34A',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}>
+                <DollarSign size={20} />
+              </div>
+              <span className="badge-tag badge-urban">Farm-to-Consumer Waterfall</span>
+            </div>
+            <h3 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#17221C', marginBottom: '8px' }}>
+              {t.nav.priceTransparency}
+            </h3>
+            <p style={{ fontSize: '0.92rem', color: '#64748B', lineHeight: 1.6 }}>
+              Inspect where every rupee goes. Audited 5-stage supply stack proving why farmers receive up to 93% direct realization under AGRIFlow.
+            </p>
+          </div>
+          <button 
+            className="btn-secondary"
+            onClick={() => onNavigate('price-transparency')}
+            style={{ width: 'fit-content' }}
+          >
+            <span>Explore Price Transparency</span>
+            <ArrowRight size={16} />
+          </button>
+        </div>
+      </section>
+
+      {/* ==================================================== */}
+      {/* 9. FINAL CALL-TO-ACTION BANNER                       */}
+      {/* ==================================================== */}
+      <section style={{
+        background: 'linear-gradient(135deg, rgba(22, 163, 74, 0.12) 0%, rgba(14, 165, 233, 0.08) 100%), rgba(255, 255, 255, 0.85)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        border: '1.5px solid rgba(22, 163, 74, 0.3)',
         borderRadius: '24px',
-        padding: '48px 24px',
+        padding: '48px 32px',
         textAlign: 'center',
+        boxShadow: '0 20px 40px -10px rgba(22, 163, 74, 0.15)',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: '20px'
       }}>
-        <div style={{ fontSize: '2.5rem' }}>🌾🤝🏙️</div>
-        <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 800, color: '#ffffff', maxWidth: '750px' }}>
+        <div style={{
+          width: '56px',
+          height: '56px',
+          borderRadius: '16px',
+          background: 'linear-gradient(135deg, #16A34A, #15803D)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '1.8rem',
+          color: '#ffffff',
+          boxShadow: '0 8px 20px rgba(22, 163, 74, 0.35)'
+        }}>
+          🌱
+        </div>
+        <h2 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.5rem)', fontWeight: 900, color: '#17221C', maxWidth: '780px' }}>
           {t.home.finalCta.title}
         </h2>
-        <p style={{ color: '#cbd5e1', maxWidth: '600px', fontSize: '1.05rem', lineHeight: 1.6 }}>
+        <p style={{ fontSize: '1.05rem', color: '#475569', maxWidth: '640px', lineHeight: 1.6 }}>
           {t.home.finalCta.subtitle}
         </p>
-
-        <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '10px' }}>
-          <button
+        <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '6px' }}>
+          <button 
             className="btn-emerald"
             onClick={() => {
               onRoleSelect('FARMER');
               onNavigate('dashboard');
             }}
-            style={{ fontSize: '1.05rem', padding: '14px 28px' }}
+            style={{ padding: '14px 32px', fontSize: '1.05rem' }}
           >
-            <Sprout size={20} />
-            {t.home.finalCta.farmerAction}
+            <Sprout size={18} />
+            <span>{t.home.finalCta.farmerAction}</span>
+            <ArrowRight size={18} />
           </button>
-          <button
+          <button 
             className="btn-secondary"
             onClick={() => {
               onRoleSelect('BULK_BUYER');
               onNavigate('dashboard');
             }}
-            style={{ fontSize: '1.05rem', padding: '14px 24px' }}
+            style={{ padding: '14px 26px', fontSize: '1rem' }}
           >
-            <ShoppingBag size={20} />
-            {t.home.finalCta.buyerAction}
+            <ShoppingBag size={18} />
+            <span>{t.home.finalCta.buyerAction}</span>
           </button>
-          <button
+          <button 
             className="btn-outline"
             onClick={() => onNavigate('demo')}
-            style={{ fontSize: '1.05rem', padding: '14px 22px' }}
+            style={{ padding: '14px 26px', fontSize: '1rem' }}
           >
-            <Zap size={20} />
-            {t.home.finalCta.demoAction}
+            <Play size={16} />
+            <span>{t.home.finalCta.demoAction}</span>
           </button>
         </div>
       </section>

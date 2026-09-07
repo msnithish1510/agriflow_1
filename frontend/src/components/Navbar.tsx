@@ -75,27 +75,30 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       <header style={{
         position: 'sticky',
-        top: '12px',
+        top: '10px',
         zIndex: 100,
-        margin: '0 auto 20px auto',
+        margin: '0 auto 16px auto',
         maxWidth: '1360px',
         width: 'calc(100% - 24px)',
+        boxSizing: 'border-box',
         transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
       }}>
         <div style={{
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          background: scrolled ? 'rgba(255, 255, 255, 0.92)' : 'rgba(255, 255, 255, 0.82)',
+          background: scrolled ? 'rgba(255, 255, 255, 0.94)' : 'rgba(255, 255, 255, 0.86)',
           border: '1px solid rgba(255, 255, 255, 0.95)',
-          borderRadius: '24px',
+          borderRadius: '20px',
           boxShadow: scrolled 
             ? '0 16px 36px -10px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(22, 163, 74, 0.05), inset 0 1px 1px #ffffff'
             : '0 10px 30px -8px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02), inset 0 1px 1px #ffffff',
-          padding: '8px 16px 8px 20px',
+          padding: '6px 12px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: '12px'
+          gap: '8px',
+          width: '100%',
+          boxSizing: 'border-box'
         }}>
           {/* 1. Brand Logo & Tagline */}
           <div 
@@ -103,7 +106,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             style={{ 
               display: 'flex', 
               alignItems: 'center', 
-              gap: '12px', 
+              gap: '8px',
               cursor: 'pointer',
               userSelect: 'none',
               flexShrink: 0
@@ -111,74 +114,82 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <div style={{
               background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
-              width: '40px',
-              height: '40px',
-              borderRadius: '12px',
+              width: '36px',
+              height: '36px',
+              borderRadius: '10px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '1.25rem',
+              fontSize: '1.15rem',
               color: '#ffffff',
-              boxShadow: '0 4px 14px rgba(22, 163, 74, 0.35)',
-              border: '1px solid rgba(255, 255, 255, 0.4)'
+              boxShadow: '0 4px 12px rgba(22, 163, 74, 0.3)',
+              border: '1px solid rgba(255, 255, 255, 0.4)',
+              flexShrink: 0
             }}>
               🌱
             </div>
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{
-                  fontSize: '1.35rem',
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span className="nav-brand-title" style={{
+                  fontSize: '1.25rem',
                   fontWeight: 900,
                   letterSpacing: '-0.5px',
-                  color: '#17221C'
+                  color: '#17221C',
+                  whiteSpace: 'nowrap'
                 }}>
                   AGRIFlow
                 </span>
                 <span style={{
-                  fontSize: '0.68rem',
-                  padding: '2px 8px',
-                  borderRadius: '20px',
+                  fontSize: '0.65rem',
+                  padding: '2px 6px',
+                  borderRadius: '16px',
                   background: 'rgba(22, 163, 74, 0.1)',
                   color: '#15803D',
                   border: '1px solid rgba(22, 163, 74, 0.25)',
                   fontWeight: 700,
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '4px'
+                  gap: '3px',
+                  whiteSpace: 'nowrap'
                 }}>
-                  <span className="pulse-dot" style={{ width: '6px', height: '6px' }} />
+                  <span className="pulse-dot" style={{ width: '5px', height: '5px' }} />
                   SIH26033
                 </span>
               </div>
-              <div style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 500, letterSpacing: '0.01em' }}>
+              <div className="nav-brand-tagline" style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 500, letterSpacing: '0.01em', whiteSpace: 'nowrap' }}>
                 {t.common.tagline}
               </div>
             </div>
           </div>
 
           {/* 2. Desktop Navigation Links */}
-          <nav style={{
+          <nav className="nav-desktop-only" style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '4px'
-          }} className="hide-on-mobile">
+            gap: '2px',
+            flexShrink: 1,
+            minWidth: 0,
+            overflow: 'hidden'
+          }}>
             {navLinks.map((link) => {
               const isActive = activeView === link.id;
               return (
                 <button
                   key={link.id}
                   onClick={() => handleNavClick(link.id)}
+                  className="nav-link-btn"
                   style={{
                     background: isActive ? 'rgba(22, 163, 74, 0.10)' : 'transparent',
                     color: isActive ? '#15803D' : '#334155',
                     fontWeight: isActive ? 700 : 500,
-                    fontSize: '0.9rem',
-                    padding: '8px 14px',
-                    borderRadius: '12px',
+                    fontSize: '0.85rem',
+                    padding: '6px 10px',
+                    borderRadius: '10px',
                     border: isActive ? '1px solid rgba(22, 163, 74, 0.25)' : '1px solid transparent',
                     cursor: 'pointer',
                     transition: 'all 0.15s ease',
-                    whiteSpace: 'nowrap'
+                    whiteSpace: 'nowrap',
+                    flexShrink: 0
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
@@ -199,96 +210,109 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* 3. Action Controls: Scope Toggle, 6-Lang Switcher, Persona, Auth */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* 3. Action Controls Container: Rural/Urban Switcher, Notification, Language, Persona, Login */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            flexShrink: 0,
+            marginLeft: 'auto'
+          }}>
             
-            {/* Scope Mode Switch (Rural vs. Urban) */}
+            {/* 3a. Scope Mode Switch (Rural vs. Urban) */}
             <div 
               onClick={() => onModeToggle(!isUrbanMode)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                padding: '5px 10px',
-                borderRadius: '12px',
+                gap: '5px',
+                padding: '6px 10px',
+                borderRadius: '10px',
                 background: 'rgba(0, 0, 0, 0.03)',
                 border: '1px solid rgba(0, 0, 0, 0.06)',
                 cursor: 'pointer',
                 userSelect: 'none',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
+                flexShrink: 0
               }}
               title="Toggle Pre-Harvest Scope"
-              className="hide-on-mobile"
+              className="nav-desktop-only nav-control-btn"
             >
               <span style={{ fontSize: '0.8rem' }}>{isUrbanMode ? '🏙️' : '🌾'}</span>
               <span style={{ 
                 fontSize: '0.78rem', 
                 fontWeight: 700, 
-                color: isUrbanMode ? '#0284C7' : '#15803D' 
+                color: isUrbanMode ? '#0284C7' : '#15803D',
+                whiteSpace: 'nowrap'
               }}>
                 {isUrbanMode ? 'Urban 150km' : 'Rural 50km'}
               </span>
             </div>
 
-            {/* Notification Bell */}
+            {/* 3b. Notification Bell */}
             <button
               onClick={() => alert('🌾 Live Agricultural Alerts:\n• Tomato demand surge in Chennai (+28%)\n• 4 cold-chain trucks available in Erode\n• Minimum Price advisory updated for Salem')}
               style={{
                 background: 'rgba(255, 255, 255, 0.85)',
                 border: '1px solid rgba(0, 0, 0, 0.08)',
-                borderRadius: '12px',
-                width: '38px',
-                height: '38px',
+                borderRadius: '10px',
+                width: '36px',
+                height: '36px',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: '#334155',
                 cursor: 'pointer',
                 position: 'relative',
-                transition: 'all 0.2s ease'
+                transition: 'all 0.2s ease',
+                flexShrink: 0
               }}
               title="Live Agricultural Notifications"
               aria-label="Notifications"
             >
-              <Bell size={18} />
+              <Bell size={16} />
               <span style={{
                 position: 'absolute',
-                top: '7px',
-                right: '7px',
-                width: '7px',
-                height: '7px',
+                top: '6px',
+                right: '6px',
+                width: '6px',
+                height: '6px',
                 background: '#EF4444',
                 borderRadius: '50%',
                 boxShadow: '0 0 4px #EF4444'
               }} />
             </button>
 
-            {/* 6-LANGUAGE DROPDOWN SELECTOR */}
-            <div style={{ position: 'relative' }}>
+            {/* 3c. 6-LANGUAGE DROPDOWN SELECTOR */}
+            <div style={{ position: 'relative', flexShrink: 0 }}>
               <button
                 onClick={() => {
                   setLangDropdownOpen(!langDropdownOpen);
                   setRoleDropdownOpen(false);
                 }}
+                className="nav-control-btn"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: '7px 12px',
-                  borderRadius: '12px',
+                  gap: '5px',
+                  padding: '6px 10px',
+                  borderRadius: '10px',
                   background: langDropdownOpen ? 'rgba(22, 163, 74, 0.1)' : 'rgba(255, 255, 255, 0.85)',
                   border: '1px solid rgba(0, 0, 0, 0.08)',
                   cursor: 'pointer',
                   color: '#17221C',
-                  fontSize: '0.85rem',
+                  fontSize: '0.82rem',
                   fontWeight: 600,
-                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.02)'
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.02)',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0
                 }}
                 aria-label="Select Language"
               >
-                <Globe size={16} color="#16A34A" />
-                <span>{currentLangObj.nativeName}</span>
-                <ChevronDown size={14} style={{
+                <Globe size={15} color="#16A34A" />
+                <span style={{ whiteSpace: 'nowrap' }}>{currentLangObj.nativeName}</span>
+                <ChevronDown size={13} style={{
                   transform: langDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                   transition: 'transform 0.2s ease',
                   color: '#64748B'
@@ -304,20 +328,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                   backdropFilter: 'blur(20px)',
                   WebkitBackdropFilter: 'blur(20px)',
                   border: '1px solid rgba(0, 0, 0, 0.08)',
-                  borderRadius: '16px',
-                  padding: '8px',
-                  minWidth: '210px',
+                  borderRadius: '14px',
+                  padding: '6px',
+                  minWidth: '200px',
                   boxShadow: '0 16px 36px -8px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04)',
                   zIndex: 200,
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '4px'
+                  gap: '3px'
                 }}>
-                  <div style={{ 
-                    fontSize: '0.72rem', 
-                    fontWeight: 700, 
-                    color: '#64748B', 
-                    padding: '6px 10px',
+                  <div style={{
+                    fontSize: '0.7rem',
+                    fontWeight: 700,
+                    color: '#64748B',
+                    padding: '4px 8px',
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em'
                   }}>
@@ -336,8 +360,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
-                          padding: '9px 12px',
-                          borderRadius: '10px',
+                          padding: '8px 10px',
+                          borderRadius: '8px',
                           background: isSelected ? 'rgba(22, 163, 74, 0.1)' : 'transparent',
                           border: 'none',
                           cursor: 'pointer',
@@ -352,18 +376,18 @@ export const Navbar: React.FC<NavbarProps> = ({
                         }}
                       >
                         <div>
-                          <div style={{ 
-                            fontSize: '0.9rem', 
+                          <div style={{
+                            fontSize: '0.85rem',
                             fontWeight: isSelected ? 700 : 500,
                             color: isSelected ? '#15803D' : '#17221C'
                           }}>
                             {lang.nativeName}
                           </div>
-                          <div style={{ fontSize: '0.74rem', color: '#64748B' }}>
+                          <div style={{ fontSize: '0.72rem', color: '#64748B' }}>
                             {lang.label}
                           </div>
                         </div>
-                        {isSelected && <Check size={16} color="#16A34A" />}
+                        {isSelected && <Check size={15} color="#16A34A" />}
                       </button>
                     );
                   })}
@@ -371,43 +395,47 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* ROLE PERSONA SWITCHER */}
-            <div style={{ position: 'relative' }} className="hide-on-mobile">
+            {/* 3d. ROLE PERSONA SWITCHER */}
+            <div style={{ position: 'relative', flexShrink: 0 }} className="nav-desktop-only">
               <button
                 onClick={() => {
                   setRoleDropdownOpen(!roleDropdownOpen);
                   setLangDropdownOpen(false);
                 }}
+                className="nav-control-btn"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  padding: '7px 12px',
-                  borderRadius: '12px',
+                  gap: '6px',
+                  padding: '6px 10px',
+                  borderRadius: '10px',
                   background: 'rgba(255, 255, 255, 0.85)',
                   border: '1px solid rgba(0, 0, 0, 0.08)',
                   cursor: 'pointer',
                   color: '#17221C',
-                  fontSize: '0.85rem',
+                  fontSize: '0.82rem',
                   fontWeight: 600,
-                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.02)'
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.02)',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0
                 }}
                 aria-label="Switch Persona"
               >
                 <div style={{
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '6px',
+                  width: '22px',
+                  height: '22px',
+                  borderRadius: '5px',
                   background: `${currentRoleObj.color}18`,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: currentRoleObj.color
+                  color: currentRoleObj.color,
+                  flexShrink: 0
                 }}>
-                  <CurrentRoleIcon size={14} />
+                  <CurrentRoleIcon size={13} />
                 </div>
-                <span>{currentRoleObj.label}</span>
-                <ChevronDown size={14} style={{
+                <span style={{ whiteSpace: 'nowrap' }}>{currentRoleObj.label}</span>
+                <ChevronDown size={13} style={{
                   transform: roleDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)',
                   transition: 'transform 0.2s ease',
                   color: '#64748B'
@@ -423,20 +451,20 @@ export const Navbar: React.FC<NavbarProps> = ({
                   backdropFilter: 'blur(20px)',
                   WebkitBackdropFilter: 'blur(20px)',
                   border: '1px solid rgba(0, 0, 0, 0.08)',
-                  borderRadius: '16px',
-                  padding: '8px',
-                  minWidth: '220px',
+                  borderRadius: '14px',
+                  padding: '6px',
+                  minWidth: '210px',
                   boxShadow: '0 16px 36px -8px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.04)',
                   zIndex: 200,
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: '4px'
+                  gap: '3px'
                 }}>
-                  <div style={{ 
-                    fontSize: '0.72rem', 
-                    fontWeight: 700, 
-                    color: '#64748B', 
-                    padding: '6px 10px',
+                  <div style={{
+                    fontSize: '0.7rem',
+                    fontWeight: 700,
+                    color: '#64748B',
+                    padding: '4px 8px',
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em'
                   }}>
@@ -455,9 +483,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                         style={{
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '10px',
-                          padding: '9px 12px',
-                          borderRadius: '10px',
+                          gap: '8px',
+                          padding: '8px 10px',
+                          borderRadius: '8px',
                           background: isSelected ? 'rgba(22, 163, 74, 0.1)' : 'transparent',
                           border: 'none',
                           cursor: 'pointer',
@@ -472,21 +500,22 @@ export const Navbar: React.FC<NavbarProps> = ({
                         }}
                       >
                         <div style={{
-                          width: '24px',
-                          height: '24px',
-                          borderRadius: '6px',
+                          width: '22px',
+                          height: '22px',
+                          borderRadius: '5px',
                           background: `${r.color}18`,
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          color: r.color
+                          color: r.color,
+                          flexShrink: 0
                         }}>
-                          <RoleIcon size={14} />
+                          <RoleIcon size={13} />
                         </div>
-                        <div style={{ flex: 1, fontSize: '0.88rem', fontWeight: isSelected ? 700 : 500, color: '#17221C' }}>
+                        <div style={{ flex: 1, fontSize: '0.84rem', fontWeight: isSelected ? 700 : 500, color: '#17221C' }}>
                           {r.label}
                         </div>
-                        {isSelected && <Check size={16} color="#16A34A" />}
+                        {isSelected && <Check size={15} color="#16A34A" />}
                       </button>
                     );
                   })}
@@ -494,45 +523,48 @@ export const Navbar: React.FC<NavbarProps> = ({
               )}
             </div>
 
-            {/* USER / AUTH PROFILE BUTTON */}
+            {/* 3e. USER / AUTH PROFILE BUTTON */}
             <button
               onClick={() => setAuthModalOpen(true)}
+              className="nav-control-btn"
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                padding: '7px 14px',
-                borderRadius: '12px',
+                gap: '5px',
+                padding: '6px 12px',
+                borderRadius: '10px',
                 background: 'linear-gradient(135deg, #16A34A 0%, #15803D 100%)',
                 border: '1px solid rgba(255, 255, 255, 0.3)',
                 color: '#ffffff',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 fontWeight: 700,
                 cursor: 'pointer',
                 boxShadow: '0 2px 10px rgba(22, 163, 74, 0.3)',
-                userSelect: 'none'
+                userSelect: 'none',
+                whiteSpace: 'nowrap',
+                flexShrink: 0
               }}
               title="User Account & Login"
             >
-              <User size={15} />
-              <span className="hide-on-mobile">Login</span>
+              <User size={14} />
+              <span style={{ whiteSpace: 'nowrap' }}>Login</span>
             </button>
 
-            {/* MOBILE HAMBURGER BUTTON */}
+            {/* 3f. MOBILE HAMBURGER BUTTON */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               style={{
-                display: 'none',
                 background: 'rgba(255, 255, 255, 0.85)',
                 border: '1px solid rgba(0, 0, 0, 0.08)',
                 borderRadius: '10px',
-                padding: '8px',
+                padding: '6px',
                 cursor: 'pointer',
                 color: '#17221C',
                 alignItems: 'center',
-                justifyContent: 'center'
+                justifyContent: 'center',
+                flexShrink: 0
               }}
-              className="show-on-mobile"
+              className="nav-mobile-only"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -544,20 +576,20 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* MOBILE NAVIGATION DRAWER */}
         {mobileMenuOpen && (
           <div style={{
-            marginTop: '10px',
+            marginTop: '8px',
             background: 'rgba(255, 255, 255, 0.96)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
             border: '1px solid rgba(255, 255, 255, 0.9)',
-            borderRadius: '20px',
-            padding: '18px',
+            borderRadius: '18px',
+            padding: '14px',
             boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.12)',
             display: 'flex',
             flexDirection: 'column',
-            gap: '12px'
+            gap: '10px'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#64748B', textTransform: 'uppercase' }}>
                 Navigation Menu
               </span>
               <div 
@@ -571,7 +603,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   background: 'rgba(0, 0, 0, 0.04)',
                   fontSize: '0.78rem',
                   fontWeight: 700,
-                  color: isUrbanMode ? '#0284C7' : '#15803D'
+                  color: isUrbanMode ? '#0284C7' : '#15803D',
+                  cursor: 'pointer'
                 }}
               >
                 <span>{isUrbanMode ? '🏙️' : '🌾'}</span>
@@ -579,7 +612,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
               {navLinks.map((link) => {
                 const isActive = activeView === link.id;
                 return (
@@ -590,9 +623,9 @@ export const Navbar: React.FC<NavbarProps> = ({
                       background: isActive ? 'rgba(22, 163, 74, 0.12)' : 'rgba(0, 0, 0, 0.02)',
                       color: isActive ? '#15803D' : '#17221C',
                       fontWeight: isActive ? 700 : 500,
-                      fontSize: '0.88rem',
-                      padding: '12px',
-                      borderRadius: '12px',
+                      fontSize: '0.85rem',
+                      padding: '10px',
+                      borderRadius: '10px',
                       border: isActive ? '1px solid rgba(22, 163, 74, 0.3)' : '1px solid rgba(0, 0, 0, 0.05)',
                       textAlign: 'center',
                       cursor: 'pointer'
@@ -606,7 +639,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             {/* Mobile Persona Switcher */}
             <div style={{ paddingTop: '8px', borderTop: '1px solid rgba(0, 0, 0, 0.06)' }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#64748B', marginBottom: '8px' }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#64748B', marginBottom: '6px' }}>
                 Select Active Persona
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
@@ -621,7 +654,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }}
                       style={{
                         padding: '8px 6px',
-                        borderRadius: '10px',
+                        borderRadius: '8px',
                         background: isSelected ? 'rgba(22, 163, 74, 0.12)' : 'rgba(0, 0, 0, 0.02)',
                         border: isSelected ? '1px solid #16A34A' : '1px solid rgba(0, 0, 0, 0.05)',
                         color: isSelected ? '#15803D' : '#334155',
@@ -649,12 +682,43 @@ export const Navbar: React.FC<NavbarProps> = ({
       />
 
       <style jsx global>{`
-        @media (max-width: 900px) {
-          .hide-on-mobile {
+        @media (max-width: 1023px) {
+          .nav-desktop-only {
             display: none !important;
           }
-          .show-on-mobile {
+          .nav-mobile-only {
             display: flex !important;
+          }
+        }
+        @media (min-width: 1024px) {
+          .nav-desktop-only {
+            display: flex !important;
+          }
+          .nav-mobile-only {
+            display: none !important;
+          }
+        }
+        @media (max-width: 1359px) {
+          .nav-brand-tagline {
+            display: none !important;
+          }
+        }
+        @media (min-width: 1360px) {
+          .nav-brand-tagline {
+            display: block !important;
+          }
+        }
+        @media (min-width: 1024px) and (max-width: 1279px) {
+          .nav-link-btn {
+            padding: 5px 7px !important;
+            font-size: 0.78rem !important;
+          }
+          .nav-control-btn {
+            padding: 5px 7px !important;
+            font-size: 0.76rem !important;
+          }
+          .nav-brand-title {
+            font-size: 1.1rem !important;
           }
         }
       `}</style>

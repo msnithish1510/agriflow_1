@@ -2,7 +2,11 @@
 
 import React, { useState } from 'react';
 import { Navbar } from '@/components/Navbar';
-import { SIHDemoRunner } from '@/components/SIHDemoRunner';
+import { Footer } from '@/components/Footer';
+import { HomeView } from '@/components/views/HomeView';
+import { MarketPulseView } from '@/components/views/MarketPulseView';
+import { PriceTransparencyView } from '@/components/views/PriceTransparencyView';
+import { InteractiveDemoView } from '@/components/views/InteractiveDemoView';
 import { FarmerWorkflow } from '@/components/views/FarmerWorkflow';
 import { FPOWorkflow } from '@/components/views/FPOWorkflow';
 import { BulkBuyerWorkflow } from '@/components/views/BulkBuyerWorkflow';
@@ -12,52 +16,99 @@ import { AdminWorkflow } from '@/components/views/AdminWorkflow';
 import { PriceBreakdownWidget } from '@/components/PriceBreakdownWidget';
 import { VoiceAssistantWidget } from '@/components/VoiceAssistantWidget';
 import { UserRole } from '@/types';
-import { Language } from '@/services/translations';
+import { useLanguage } from '@/i18n';
 
 export default function Home() {
+  const { t, language } = useLanguage();
+  const [activeView, setActiveView] = useState<string>('home');
   const [currentRole, setCurrentRole] = useState<UserRole>('FARMER');
-  const [isUrbanMode, setIsUrbanMode] = useState(false);
-  const [language, setLanguage] = useState<Language>('en');
-  const [activeScenarioId, setActiveScenarioId] = useState<number | null>(null);
+  const [isUrbanMode, setIsUrbanMode] = useState<boolean>(false);
 
-  const handleScenarioSelect = (id: number) => {
-    setActiveScenarioId(id);
-    if (id === 1 || id === 2) setCurrentRole('FARMER');
-    else if (id === 3) { setCurrentRole('CONSUMER'); setIsUrbanMode(true); }
-    else if (id === 4) setCurrentRole('ADMIN');
-    else if (id === 5) setCurrentRole('LOGISTICS_PARTNER');
-    else if (id === 6) setCurrentRole('FARMER');
+  const handleRoleSelect = (role: UserRole) => {
+    setCurrentRole(role);
+    if (role === 'CONSUMER') {
+      setIsUrbanMode(true);
+    }
+  };
+
+  const handleNavigate = (view: string) => {
+    setActiveView(view);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 16px 40px 16px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Top Application Navbar */}
       <Navbar
+        activeView={activeView}
+        onNavigate={handleNavigate}
         currentRole={currentRole}
-        onRoleChange={setCurrentRole}
+        onRoleChange={handleRoleSelect}
         isUrbanMode={isUrbanMode}
         onModeToggle={setIsUrbanMode}
-        language={language}
-        onLanguageChange={setLanguage}
       />
 
-      {/* Interactive SIH 2026 Demo Controller Bar */}
-      <SIHDemoRunner onSelectScenario={handleScenarioSelect} />
+      {/* Main Content Area */}
+      <main className="app-container" style={{ flex: 1, paddingBottom: '40px' }}>
+        
+        {/* 1. HOMEPAGE */}
+        {activeView === 'home' && (
+          <HomeView 
+            onNavigate={handleNavigate} 
+            onRoleSelect={handleRoleSelect} 
+          />
+        )}
 
-      {/* Active Role Workflow View */}
-      <div style={{ marginBottom: '24px' }}>
-        {currentRole === 'FARMER' && <FarmerWorkflow language={language} />}
-        {currentRole === 'FPO' && <FPOWorkflow />}
-        {currentRole === 'BULK_BUYER' && <BulkBuyerWorkflow />}
-        {currentRole === 'CONSUMER' && <ConsumerWorkflow />}
-        {currentRole === 'LOGISTICS_PARTNER' && <LogisticsWorkflow />}
-        {currentRole === 'ADMIN' && <AdminWorkflow />}
-      </div>
+        {/* 2. HOW IT WORKS (Direct navigation to explainer section) */}
+        {activeView === 'how-it-works' && (
+          <HomeView 
+            onNavigate={handleNavigate} 
+            onRoleSelect={handleRoleSelect} 
+          />
+        )}
 
-      {/* Auxiliary Supporting Modules */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px' }}>
-        <PriceBreakdownWidget />
-        <VoiceAssistantWidget />
-      </div>
-    </main>
+        {/* 3. MARKET PULSE */}
+        {activeView === 'market-pulse' && (
+          <MarketPulseView />
+        )}
+
+        {/* 4. PRICE TRANSPARENCY */}
+        {activeView === 'price-transparency' && (
+          <PriceTransparencyView />
+        )}
+
+        {/* 5. INTERACTIVE DEMO */}
+        {activeView === 'demo' && (
+          <InteractiveDemoView />
+        )}
+
+        {/* 6. ROLE DASHBOARDS */}
+        {activeView === 'dashboard' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+            {currentRole === 'FARMER' && <FarmerWorkflow />}
+            {currentRole === 'BULK_BUYER' && <BulkBuyerWorkflow />}
+            {currentRole === 'CONSUMER' && <ConsumerWorkflow />}
+            {currentRole === 'LOGISTICS_PARTNER' && <LogisticsWorkflow />}
+            {currentRole === 'FPO' && <FPOWorkflow />}
+            {currentRole === 'ADMIN' && <AdminWorkflow />}
+
+            {/* Auxiliary Supporting Modules for Farmer/Consumer */}
+            {(currentRole === 'FARMER' || currentRole === 'CONSUMER') && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '24px', marginTop: '12px' }}>
+                <PriceBreakdownWidget />
+                <VoiceAssistantWidget />
+              </div>
+            )}
+          </div>
+        )}
+
+      </main>
+
+      {/* Global Application Footer */}
+      <Footer 
+        onNavigate={handleNavigate} 
+        onRoleSelect={handleRoleSelect} 
+      />
+    </div>
   );
 }

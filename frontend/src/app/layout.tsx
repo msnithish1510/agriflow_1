@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: 'AGRIFlow 🌾⚡ | AI-Driven Pre-Market Agricultural Coordination',
-  description: 'Smart India Hackathon 2026 Problem SIH26033 solution connecting farmers, FPOs, bulk buyers, and consumers for demand-driven agricultural transactions and transparent price breakdowns.',
+  title: 'AGRIFlow 🌾 | Pre-Harvest Agricultural Coordination & Price Transparency',
+  description: 'Connect agricultural demand before harvest. Reduce waste, guarantee fair farmer payouts, and audit urban price transparency with AGRIFlow.',
+  keywords: 'agriculture, farmers, harvest, pre-market, price transparency, Tamil Nadu, Smart India Hackathon, FPO, bulk buyer',
 };
 
 export default function RootLayout({
@@ -13,7 +15,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+      </head>
+      <body>
+        <Providers>
+          {children}
+        </Providers>
+      </body>
     </html>
   );
 }

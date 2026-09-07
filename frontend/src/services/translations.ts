@@ -1,4 +1,4 @@
-export type Language = 'en' | 'ta';
+export type Language = 'en' | 'ta' | 'hi' | 'te' | 'ml' | 'kn';
 
 export interface TranslationDictionary {
   appName: string;
@@ -403,5 +403,9 @@ export const translations: Record<Language, TranslationDictionary> = {
       pauseSimulation: "நிறுத்து",
       resetSimulation: "மீட்டமை"
     }
-  }
+  },
+  hi: undefined as any,
+  te: undefined as any,
+  ml: undefined as any,
+  kn: undefined as any
 };

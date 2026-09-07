@@ -19,12 +19,12 @@ export default function TrackPage() {
   return (
     <main style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 16px 40px 16px' }}>
       <Navbar
+        activeView="track"
+        onNavigate={() => router.push('/')}
         currentRole={currentRole}
         onRoleChange={setCurrentRole}
         isUrbanMode={isUrbanMode}
         onModeToggle={setIsUrbanMode}
-        language={language}
-        onLanguageChange={setLanguage}
       />
 
       <div style={{ marginTop: '20px' }}>

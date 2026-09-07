@@ -19,21 +19,29 @@ class SpeechSynthesisService {
   /**
    * Speak text aloud in the specified language
    */
-  speak(text: string, language: 'en' | 'ta'): void {
+  speak(text: string, language: string): void {
     if (!this.isSupported() || this.isMutedState) return;
 
     // Stop any current speech
     this.stop();
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = language === 'ta' ? 'ta-IN' : 'en-IN';
+    const langCodes: Record<string, string> = {
+      ta: 'ta-IN',
+      hi: 'hi-IN',
+      te: 'te-IN',
+      ml: 'ml-IN',
+      kn: 'kn-IN',
+      en: 'en-IN'
+    };
+    utterance.lang = langCodes[language] || 'en-IN';
     utterance.rate = 0.9;
     utterance.pitch = 1.0;
     utterance.volume = 1.0;
 
     // Try to find the best voice for the language
     const voices = window.speechSynthesis.getVoices();
-    const targetLang = language === 'ta' ? 'ta' : 'en';
+    const targetLang = language;
 
     const preferredVoice = voices.find(v =>
       v.lang.startsWith(targetLang) && v.lang.includes('IN')
